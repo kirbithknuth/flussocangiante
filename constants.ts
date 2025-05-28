@@ -1,5 +1,5 @@
 
-export const APP_TITLE = "Flusso Cangiante";
+export const APP_TITLE = "Adventure in the ever-changing flow of universe";
 
 export const INTRO_APP_TITLE = "Alien Morphosys: Cosmic Adventure";
 export const INTRO_MESSAGE_TEXT = "Sei sull'orlo di una realtà che si piega al pensiero, un vortice di possibilità infinite. Ogni scelta è un universo, ogni eco una verità. Il Flusso ti chiama a te stesso. Hai il coraggio di rispondere?";
@@ -19,3 +19,4 @@ export const NO_STORY_LOADED_MESSAGE = "Al momento non c'è nessuna storia da gi
 
 export const ITEM_ACQUIRED_TEXT = "Oggetto ottenuto:";
 export const KNOWLEDGE_ACQUIRED_TEXT = "Conoscenza acquisita:";
+export const DEAD_END_TEXT = "Non hai più opzioni disponibili. L'avventura termina qui.";

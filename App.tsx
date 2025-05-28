@@ -13,7 +13,8 @@ import {
   NO_STORY_LOADED_TITLE,
   NO_STORY_LOADED_MESSAGE,
   ITEM_ACQUIRED_TEXT,
-  KNOWLEDGE_ACQUIRED_TEXT
+  KNOWLEDGE_ACQUIRED_TEXT,
+  DEAD_END_TEXT
 } from './constants';
 import { THE_ADVENTURERS_GUILD_STORY, INITIAL_STORY_NODE_ID } from './storyData';
 import StoryDisplay from './components/StoryDisplay';
@@ -40,26 +41,30 @@ const App: React.FC = () => {
     const node = graph[nodeId];
     if (node) {
       setCurrentStoryNode(node);
+      setAppError(null); // Clear previous errors on successful node load
       
       let blocksToAdd: StoryBlockData[] = [];
+      const narrativeBlockText = node.text;
       
       if (isInitialLoad) {
+         // For initial load, set the first narrative block directly.
+         // Subsequent item/knowledge/ending blocks will be appended.
          setStoryBlocks([{
           id: crypto.randomUUID(),
           type: StoryBlockType.NARRATIVE,
-          text: node.text,
+          text: narrativeBlockText,
           timestamp: new Date(),
         }]);
       } else {
+         // For subsequent loads, add narrative to blocksToAdd array.
          blocksToAdd.push({
           id: crypto.randomUUID(),
           type: StoryBlockType.NARRATIVE,
-          text: node.text,
+          text: narrativeBlockText,
           timestamp: new Date(),
         });
       }
 
-      // Handle acquiring items/knowledge
       if (node.acquireItem) {
         setPlayerInventory(prev => new Set(prev).add(node.acquireItem!));
         blocksToAdd.push({
@@ -79,8 +84,6 @@ const App: React.FC = () => {
         });
       }
       
-      setAppError(null);
-
       if (node.isEnding || node.choices.length === 0) {
         setIsStoryEnded(true);
         const endMessageText = node.endingText || STORY_END_TEXT;
@@ -101,15 +104,15 @@ const App: React.FC = () => {
     } else {
       const errorMessage = getErrorNodeNotFoundMessage(nodeId);
       setAppError({ title: ERROR_NODE_NOT_FOUND_TITLE, message: errorMessage });
-      const errorBlock: StoryBlockData = {
+      const errorBlockData: StoryBlockData = {
         id: crypto.randomUUID(),
         type: StoryBlockType.ERROR,
         text: errorMessage,
         timestamp: new Date(),
       };
        setStoryBlocks(prevBlocks => {
-          if (isInitialLoad && prevBlocks.length === 0) return [errorBlock]; // if first load fails, show only error
-          return [...prevBlocks, errorBlock]; // else append error
+          if (isInitialLoad && prevBlocks.length === 0) return [errorBlockData];
+          return [...prevBlocks, errorBlockData];
       });
       setCurrentStoryNode(null); 
       setIsStoryEnded(true); 
@@ -133,7 +136,7 @@ const App: React.FC = () => {
       addStoryBlock(StoryBlockType.ERROR, `${NO_STORY_LOADED_TITLE}\n\n${NO_STORY_LOADED_MESSAGE}`);
       setIsStoryEnded(true);
     }
-  }, [storyData, INITIAL_STORY_NODE_ID, resetGameState, loadStoryNode, addStoryBlock]);
+  }, [storyData, resetGameState, loadStoryNode, addStoryBlock]);
 
 
   useEffect(() => {
@@ -143,11 +146,10 @@ const App: React.FC = () => {
     if (storyGraph && Object.keys(storyGraph).length > 0 && initialNodeId && storyGraph[initialNodeId]) {
       setStoryData(storyGraph);
       setIsStoryPresent(true);
-      // Intro screen will be shown if showIntroScreen is true, actual game starts with handleStartStory
     } else {
       setIsStoryPresent(false);
       setStoryData(null);
-      setShowIntroScreen(false); // No intro if no story
+      setShowIntroScreen(false); 
       addStoryBlock(StoryBlockType.SYSTEM, `${NO_STORY_LOADED_TITLE}\n\n${NO_STORY_LOADED_MESSAGE}`);
       setIsStoryEnded(true);
     }
@@ -159,7 +161,7 @@ const App: React.FC = () => {
   }, [startGameCore]);
 
   const handleRestartStory = useCallback(() => {
-    setShowIntroScreen(false); // Ensure intro is not shown on restart
+    setShowIntroScreen(false); 
     startGameCore();
   }, [startGameCore]);
 
@@ -180,14 +182,29 @@ const App: React.FC = () => {
     });
   }, [currentStoryNode, playerInventory, playerKnowledge]);
 
+  useEffect(() => {
+    if (currentStoryNode && !isStoryEnded && getFilteredChoices().length === 0) {
+      // This handles the case where a node is not an explicit ending, but all choices become unavailable.
+      // We check node.choices.length in loadStoryNode for explicit endings with no choices from the start.
+      // This effect catches "soft locks" due to requirements.
+      const isExplicitEnding = currentStoryNode.isEnding || currentStoryNode.choices.length === 0;
+      if (!isExplicitEnding) { // Only add dead end message if not already handled as an explicit end by loadStoryNode
+        setIsStoryEnded(true);
+        addStoryBlock(StoryBlockType.SYSTEM, DEAD_END_TEXT);
+      }
+    }
+  }, [currentStoryNode, isStoryEnded, getFilteredChoices, addStoryBlock]);
+
 
   if (!isStoryPresent) {
     return (
       <div className="flex flex-col h-screen bg-gray-900 text-white font-sans items-center justify-center p-4">
-        <header className="bg-slate-800 p-4 shadow-md rounded-lg mb-4">
+        <header className="bg-slate-800 p-4 shadow-md rounded-lg mb-4 w-full max-w-3xl">
           <h1 className="text-2xl md:text-3xl font-bold text-center text-purple-400">{APP_TITLE}</h1>
         </header>
-        <StoryDisplay blocks={storyBlocks} /> 
+        <div className="w-full max-w-3xl flex-grow overflow-hidden flex flex-col">
+         <StoryDisplay blocks={storyBlocks} /> 
+        </div>
       </div>
     );
   }
