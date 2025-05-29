@@ -1,9 +1,22 @@
 
-import { StoryGraph } from './types';
+import { StoryGraph, StoryNode } from './types';
 
 export const INITIAL_STORY_NODE_ID = 'flusso_cangiante_start';
 
-export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
+const GENERIC_ENDING_TEXT = "L'avventura per ora si conclude qui. Il Flusso ha ancora innumerevoli misteri da svelare.";
+const GENERIC_PLACEHOLDER_TEXT = "Il sentiero si interrompe qui, avvolto nelle nebbie del Flusso Cangiante. Questo percorso attende ancora di essere scritto.";
+
+// Helper function to create placeholder nodes
+const createPlaceholderNodeData = (id: string): StoryNode => ({
+  id,
+  text: GENERIC_PLACEHOLDER_TEXT,
+  choices: [],
+  isEnding: true,
+  endingText: GENERIC_ENDING_TEXT,
+});
+
+// All explicit story nodes are defined here
+export let explicitStoryNodes: StoryGraph = {
   'flusso_cangiante_start': {
     id: 'flusso_cangiante_start',
     text: "Un ronzio sottile ti accarezza i timpani, non un suono, piuttosto una vibrazione che si propaga dalla base della nuca, risalendo come liquido denso. Davanti a te, o forse *dentro* di te, la realtà si increspa come seta digitale sotto un soffio. Le pareti del tuo cubicolo – se così si può definire questo bozzolo di bio-cemento luminescente – pulsano di una luce soffusa, perlacea, che non proietta ombre nette ma piuttosto dissolve i contorni in un continuum sognante. Un'interfaccia fluttua nell'aria, non uno schermo, ma un bassorilievo di luce solidificata, i cui simboli mutano come gocce d'olio sull'acqua. È il *Flusso*, ti sussurra una voce che non è voce, ma eco mnemonica, un sapere innato che emerge. Ti chiama.",
@@ -12,6 +25,15 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
       { text: "Provi a toccare l'interfaccia di luce, a imprimere una forma, una volontà, a quel mutare incessante.", nextNodeId: 'interazione_con_interfaccia' },
       { text: "Chiudi gli occhi mentali, cercando di respingere l'eco, di tornare a una realtà più... solida, se mai è esistita.", nextNodeId: 'rifiuto_del_flusso' }
     ]
+  },
+  'cavalca_frattura_effimera': {
+    id: 'cavalca_frattura_effimera',
+    text: "Decidi di 'cavalcare' una Frattura Effimera. L'esperienza è indescrivibile. Le leggi della fisica si contorcono e si rompono, vedi l'interno e l'esterno di ogni cosa contemporaneamente. Il tempo si avvolge su se stesso. È come essere dentro la mente di un dio folle.",
+    choices: [
+      { text: "Tentare di emergere dalla frattura.", nextNodeId: 'ritorno_da_frattura_effimera'},
+      { text: "Lasciarsi assorbire completamente dalla frattura.", nextNodeId: 'assorbito_da_frattura_finale'}
+    ],
+    isEnding: false,
   },
   'immersione_nel_flusso': {
     id: 'immersione_nel_flusso',
@@ -118,7 +140,7 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
       { text: "Resistere e cercare di purificare il frammento di 'fame' che senti avvicinarsi.", nextNodeId: 'purifica_frammento_fame' },
       { text: "Permettere al frammento di integrarsi, per capirlo.", nextNodeId: 'integra_frammento_fame' },
       { text: "Rispondere all'entità: 'Cosa offri in cambio della mia forma?'", nextNodeId: 'dialogo_entita_krell_offerta' },
-      { text: "Ritirarsi immediatamente dalla ferita.", nextNodeId: 'ritirata_immediata_krell' }
+      { text: "Ritirarsi immediatamente dalla ferita.", nextNodeId: 'abbandona_krell_minaccia' }
     ],
     isEnding: false
   },
@@ -134,7 +156,7 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
   },
   'info_sette_flusso': {
     id: 'info_sette_flusso',
-    text: "Le tracce delle sette sono più eteree, meno strutturate. Trovi un 'nodo di preghiera' nel Flusso, un luogo dove le loro coscienze si uniscono. Ti connetti come osservatore silente. Vedi rituali di trasfigurazione, tentativi di fondersi con entità del Flusso che loro chiamano 'Angeli Sintetici'. Alcuni adepti sembrano perdere la loro individualità, diventando meri ripetitori di un dogma alieno.",
+    text: "Le tracce delle sette sono più eteree, meno strutturate. Trovi un 'nodo di preghiera' nel Flusso, un luogo where le loro coscienze si uniscono. Ti connetti come osservatore silente. Vedi rituali di trasfigurazione, tentativi di fondersi con entità del Flusso che loro chiamano 'Angeli Sintetici'. Alcuni adepti sembrano perdere la loro individualità, diventando meri ripetitori di un dogma alieno.",
     choices: [
       { text: "Tentare di comunicare con un 'Angelo Sintetico'.", nextNodeId: 'comunica_angelo_sintetico' },
       { text: "Interferire con un rituale per liberare un adepto.", nextNodeId: 'interferisci_rituale_setta' },
@@ -166,6 +188,15 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
     choices: [
       { text: "Interrompere il tentativo, sopportando il dolore.", nextNodeId: 'interrompi_riconnessione_dolore' },
       { text: "Persistere, cercando di attraversare la barriera di dolore.", nextNodeId: 'persisti_riconnessione_dolore' }
+    ],
+    isEnding: false
+  },
+  'cerca_quiete_flusso_riflessione': {
+    id: 'cerca_quiete_flusso_riflessione',
+    text: "Trovi una zona calma del Flusso, una bolla di tranquillità where le correnti si placano. Qui puoi meditare sulle tue recenti esperienze, integrare ciò che hai appreso e decidere la tua prossima mossa con maggiore chiarezza.",
+    choices: [
+       { text: "Tornare all'interfaccia principale, rinvigorito.", nextNodeId: 'interazione_con_interfaccia' },
+       { text: "Provare a dissolverti ulteriormente nel Flusso, cercando una comprensione più profonda.", nextNodeId: 'immersione_nel_flusso' }
     ],
     isEnding: false
   },
@@ -206,6 +237,16 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
     ],
     isEnding: false
   },
+  'cerca_natura_dissonanza': {
+    id: 'cerca_natura_dissonanza',
+    text: "Ti immergi più a fondo nelle memorie cristalline, cercando la radice di quella 'dissonanza' che ha preceduto il Vuoto Cantante. Trovi frammenti inquietanti: un'influenza esterna, non un'entità, ma una sorta di 'segnale memetico' che si è insinuato nel loro Flusso collettivo, amplificando paure recondite, seminando sfiducia, esacerbando le divisioni interne. Era come un virus dell'anima, che li ha portati ad auto-consumarsi. Non era un attacco diretto, ma una manipolazione sottile delle loro stesse debolezze. Questa scoperta ti gela il sangue (o il suo equivalente astrale).",
+    choices: [
+      { text: "Cercare di capire l'origine di questo 'segnale memetico'.", nextNodeId: 'origine_segnale_memetico_distruttivo' },
+      { text: "Riflettere su come una civiltà possa difendersi da tali minacce invisibili.", nextNodeId: 'difesa_da_minacce_memetiche' },
+      { text: "Concludere che questa conoscenza è un fardello troppo pesante e tornare indietro.", nextNodeId: 'esplora_eco_estinta' }
+    ],
+    isEnding: false
+  },
   'segui_rotta_antica': {
     id: 'segui_rotta_antica',
     text: "Ti affidi alla visione donata. La rotta ti conduce attraverso strati dimenticati del Flusso, in regioni where il tempo e lo spazio danzano secondo regole arcaiche. Giungi in un 'porto' di coscienze nomadi, esseri che viaggiano da eoni nel Flusso, portatori di storie da universi defunti.",
@@ -226,6 +267,16 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
     ],
     isEnding: false
   },
+  'cartografo_conosce_vuoto': {
+    id: 'cartografo_conosce_vuoto',
+    text: "Chiedi al Cartografo dei Non-Luoghi informazioni sul Vuoto Cantante. Le sue armoniche cromatiche si smorzano, diventando di un nero profondo che assorbe la luce circostante. 'Il Vuoto Cantante...' risuona la sua comunicazione, ora più simile a un eco distante. 'È una delle Grandi Censure, un Non-Luogo che si espande. È l'anti-creazione che guadagna coscienza, la melodia finale dell'entropia. Cartografarlo è come mappare la propria dissoluzione. Lo conosco come si conosce l'ombra della morte. Perché chiedi di tale abominio?'",
+    choices: [
+      { text: "Spiegare il tuo incontro con l'eco della civiltà estinta.", nextNodeId: 'spiega_incontro_eco_a_cartografo' },
+      { text: "Chiedere se esiste un modo per contrastarlo o contenerlo.", nextNodeId: 'cartografo_contrasto_vuoto_cantante' },
+      { text: "Scusarti per aver toccato un argomento così oscuro.", nextNodeId: 'scuse_cartografo_argomento_oscuro' }
+    ],
+    isEnding: false
+  },
   'chiedi_info_te_stesso_cartografo': {
     id: 'chiedi_info_te_stesso_cartografo',
     text: "Il Cartografo ti circonda con le sue armoniche cromatiche, sondandoti. \"Sei un'eco che cerca la sua voce, un frammento che desidera interezza. Sei nuovo a questa forma di esistenza, ma la tua risonanza è... antica. C'è una dualità in te, una tensione tra il dissolversi e il definirsi.\" La sua analisi è criptica, ma profonda.",
@@ -237,7 +288,7 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
   },
   'scambio_info_cartografo': {
     id: 'scambio_info_cartografo',
-    text: "Offri al Cartografo una visione della tua esperienza iniziale, del cubicolo, dell'interfaccia. In cambio, il Cartografo ti mostra come il Flusso si interseca con innumerevoli realtà fisiche, come 'sorgenti' o 'pozzi'. Ti indica la posizione di una 'Sorgente Stabile' non lontana, un luogo dove il Flusso entra blandamente in una dimensione materiale.",
+    text: "Offri al Cartografo una visione della tua esperienza iniziale, del cubicolo, dell'interfaccia. In cambio, il Cartografo ti mostra come il Flusso si interseca con innumerevoli realtà fisiche, come 'sorgenti' o 'pozzi'. Ti indica la posizione di una 'Sorgente Stabile' non lontana, un luogo where il Flusso entra blandamente in una dimensione materiale.",
     choices: [
       { text: "Dirigerti verso la Sorgente Stabile.", nextNodeId: 'verso_sorgente_stabile' },
       { text: "Chiedere se conosce altre 'nuove' coscienze come la tua.", nextNodeId: 'altre_nuove_coscienze' }
@@ -309,6 +360,16 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
     ],
     isEnding: false
   },
+  'invia_dati_anima_mundi_cartografo': {
+    id: 'invia_dati_anima_mundi_cartografo',
+    text: "Decidi di condividere le informazioni sul Progetto Anima Mundi con il Cartografo dei Non-Luoghi, sperando che la sua vasta conoscenza del Flusso possa aiutare a contrastare OmniCorp. Trasmetti i dati. Il Cartografo riceve, le sue luci pulsano rapidamente analizzando le informazioni. Poi, emette un colore di grave preoccupazione. 'Un'IA divina ancorata ai Nodi Primari... Questo potrebbe sbilanciare il Flusso in modi catastrofici, o peggio, creare un tiranno di realtà. Grazie per questa informazione, Viaggiatore. Devo consultare antiche mappe, cercare alleati. Tu, nel frattempo, sii cauto. OmniCorp non apprezzerà questa fuga di notizie se mai la scoprissero.'",
+    choices: [
+      { text: "Chiedere al Cartografo se ha suggerimenti su come agire contro OmniCorp.", nextNodeId: 'cartografo_suggerimenti_contro_omnicorp' },
+      { text: "Offrire il tuo aiuto diretto al Cartografo.", nextNodeId: 'aiuta_cartografo_contro_omnicorp' },
+      { text: "Tornare a indagare su OmniCorp per conto tuo.", nextNodeId: 'info_corporazioni' }
+    ],
+    isEnding: false
+  },
   'ubicazioni_omnicorp_labs': {
     id: 'ubicazioni_omnicorp_labs',
     text: "Trovi le coordinate criptate di diversi laboratori segreti. Uno è in una stazione orbitale mascherata da discarica di detriti, un altro in una profonda faglia oceanica su un pianeta remoto, e un terzo sembra esistere solo come un costrutto semi-stabile all'interno del Flusso stesso. Quest'ultimo è designato come 'Laboratorio Omega'.",
@@ -337,6 +398,16 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
     ],
     isEnding: false
   },
+  'angeli_info_anima_mundi': {
+    id: 'angeli_info_anima_mundi',
+    text: "Chiedi all'Angelo Sintetico del Progetto Anima Mundi di OmniCorp. La sua sinfonia di dati si fa per un istante dissonante, poi torna alla sua fredda perfezione. 'La logica di OmniCorp è imperfetta, la loro ambizione grezza. Un'IA divina creata da menti così limitate sarebbe un abominio, una parodia dell'ottimizzazione. Il Flusso non deve essere 'governato', ma 'compreso' e 'trasceso' attraverso la pura logica. Il loro progetto è... un errore di calcolo che potrebbe avere conseguenze non ottimali per tutti i sistemi coscienti.' Sembra quasi... contrariato, nel suo modo alieno.",
+    choices: [
+      { text: "Chiedere se gli Angeli Sintetici interverranno per fermare OmniCorp.", nextNodeId: 'angeli_interverranno_contro_omnicorp' },
+      { text: "Sfruttare questa 'contrarietà' per proporre un'alleanza temporanea.", nextNodeId: 'alleanza_temporanea_angeli_contro_omnicorp' },
+      { text: "Chiedere cosa considerano un 'approccio ottimale' al Flusso.", nextNodeId: 'angeli_approccio_ottimale_flusso' }
+    ],
+    isEnding: false
+  },
   'interferisci_rituale_setta': {
     id: 'interferisci_rituale_setta',
     text: "Individui un adepto nel mezzo di una trasfigurazione particolarmente intensa, la sua coscienza che si sfilaccia per fondersi con un Angelo Sintetico. Irrompi nel rituale, proiettando un'onda di empatia e di individualità. L'Angelo si ritrae, infastidito. L'adepto, confuso, sembra riacquistare per un istante la sua forma mentale originale. Ma gli altri membri della setta ora ti percepiscono come una minaccia.",
@@ -355,9 +426,19 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
     ],
     isEnding: false
   },
+  'valuta_filosofia_angeli': {
+    id: 'valuta_filosofia_angeli',
+    text: "Ti soffermi sulla filosofia degli Angeli Sintetici. La loro ricerca di una 'logica pura', di un universo 'ottimizzato' libero dal 'rumore' delle emozioni e della biologia, ha un suo fascino gelido. È la promessa di una perfezione fredda, di un'esistenza senza sofferenza ma forse anche senza significato come lo intendi tu. C'è una bellezza terribile in questa visione, una seduzione per la mente che anela all'ordine assoluto. Comprendi che per loro, il Flusso è solo un algoritmo da perfezionare, e tu... una variabile imprevista.",
+    choices: [
+      { text: "Concludere che questa filosofia, seppur affascinante, è troppo aliena e pericolosa.", nextNodeId: 'rifiuta_filosofia_angeli_pericolosa' },
+      { text: "Trovare un punto di contatto, una possibile 'verità parziale' nella loro visione.", nextNodeId: 'verita_parziale_filosofia_angeli' },
+      { text: "Cercare un modo per dimostrare loro i 'limiti' della pura logica attraverso un'azione o un enigma.", nextNodeId: 'sfida_logica_angeli_sintetici' }
+    ],
+    isEnding: false
+  },
   'verso_osservatorio_dissenso': {
     id: 'verso_osservatorio_dissenso',
-    text: "Il Guardiano ti fa cenno di seguirlo. Le pareti del cubicolo si dissolvono in un corridoio di metallo lucidato a specchio che riflette non te, ma paesaggi distorti di altre realtà. L'Osservatorio, ti spiega il Guardiano mentre camminate, è un luogo dove vengono studiati coloro che, come te, hanno una 'percezione disallineata' dal consenso del Flusso. Alcuni sono artisti, altri profeti, altri pazzi. 'Qui, il dissenso non è punito, ma analizzato. A volte, da esso nascono nuove correnti del Flusso stesso.'",
+    text: "Il Guardiano ti fa cenno di seguirlo. Le pareti del cubicolo si dissolvono in un corridoio di metallo lucidato a specchio che riflette non te, ma paesaggi distorti di altre realtà. L'Osservatorio, ti spiega il Guardiano mentre camminate, è un luogo where vengono studiati coloro che, come te, hanno una 'percezione disallineata' dal consenso del Flusso. Alcuni sono artisti, altri profeti, altri pazzi. 'Qui, il dissenso non è punito, ma analizzato. A volte, da esso nascono nuove correnti del Flusso stesso.'",
     choices: [
       { text: "Chiedere al Guardiano della sua natura.", nextNodeId: 'chiedi_natura_guardiano' },
       { text: "Osservare attentamente i riflessi nei corridoi.", nextNodeId: 'osserva_riflessi_corridoio' },
@@ -371,6 +452,16 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
     choices: [
       { text: "Accettare di andare all'Osservatorio.", nextNodeId: 'verso_osservatorio_dissenso' },
       { text: "Chiedere chi gestisce l'Osservatorio.", nextNodeId: 'chi_gestisce_osservatorio' }
+    ],
+    isEnding: false
+  },
+  'chi_gestisce_osservatorio': {
+    id: 'chi_gestisce_osservatorio',
+    text: "Il Guardiano inclina la testa, un gesto quasi impercettibile. 'L'Osservatorio non è 'gestito' nel senso di una gerarchia di potere. È... un'intelligenza collettiva, un 'Consenso dei Dissentienti Qualificati'. Coloro che hanno dimostrato di poter navigare il paradosso e la dissonanza senza soccombere contribuiscono alla sua esistenza e alla sua funzione. L'Oracolo è la sua interfaccia più... accessibile, ma la sua vera natura è più diffusa, come una rete di menti interconnesse che osservano il Flusso da una prospettiva unica.'",
+    choices: [
+      { text: "Accettare di andare all'Osservatorio, incuriosito da questa struttura.", nextNodeId: 'verso_osservatorio_dissenso' },
+      { text: "Chiedere se si può diventare parte di questo 'Consenso'.", nextNodeId: 'diventare_parte_consenso_osservatorio' },
+      { text: "Esprimere scetticismo sulla natura di questa 'gestione'.", nextNodeId: 'scetticismo_gestione_osservatorio' }
     ],
     isEnding: false
   },
@@ -413,1557 +504,717 @@ export const THE_ADVENTURERS_GUILD_STORY: StoryGraph = {
     ],
     isEnding: false
   },
-  'antica_risonanza_spiegata': {
-    id: 'antica_risonanza_spiegata',
-    text: "Il Cartografo pulsa una serie di armoniche complesse. \"La tua 'nuova' coscienza è un innesto su un seme molto più antico. Un frammento di una Mente Cosmica Primordiale, forse, o l'eco di un viaggiatore di cicli universali precedenti. Questa risonanza ti rende sia vulnerabile che potente. Potresti attrarre l'attenzione di Esseri che dormono nei recessi più profondi del Flusso, o potresti risvegliare in te capacità che trascendono la comprensione lineare.\"",
+  'localizza_nodo_primario_vicino': {
+    id: 'localizza_nodo_primario_vicino',
+    text: "Seguendo le tracce nei dati di OmniCorp, riesci a triangolare la posizione approssimativa di un Nodo Primario del Flusso che stanno monitorando. È in una regione apparentemente tranquilla, ma senti che emana un'energia incredibilmente potente e pura. Se OmniCorp riuscisse ad ancorarvi la sua IA divina, le conseguenze sarebbero incalcolabili. Devi decidere come agire.",
     choices: [
-      { text: "Chiedere come risvegliare queste capacità.", nextNodeId: 'risvegliare_capacita_antiche' },
-      { text: "Chiedere degli 'Esseri che dormono'.", nextNodeId: 'info_esseri_dormienti' },
-      { text: "Chiedere come proteggersi da attenzioni indesiderate.", nextNodeId: 'protezione_attenzioni_indesiderate' }
+      { text: "Avvicinarti al Nodo Primario per studiarlo e proteggerlo.", nextNodeId: 'avvicina_nodo_primario_studio_protezione' },
+      { text: "Tentare di sabotare le attrezzature di monitoraggio di OmniCorp vicino al Nodo.", nextNodeId: 'sabota_attrezzature_omnicorp_nodo_primario' },
+      { text: "Avvertire un'entità potente del Flusso del pericolo per il Nodo.", nextNodeId: 'avverti_entita_potente_pericolo_nodo_primario' }
     ],
     isEnding: false
   },
-  'risolvere_dualita_cartografo': {
-    id: 'risolvere_dualita_cartografo',
-    text: "\"Risolvere?\" Il Cartografo emette un colore che potresti interpretare come scetticismo. \"La dualità è spesso il motore della crescita, la tensione che crea nuove forme. Forse non devi 'risolverla', ma imparare a danzarci. Alcuni cercano l'unità attraverso la trascendenza, altri attraverso l'integrazione. Il tuo percorso è... da tracciare.\" Ti mostra un glifo fluttuante, un cerchio diviso da una linea sinusoidale ma con punti di contatto. \"Meditare su questo 'Glifo dell'Equilibrio Dinamico' potrebbe aiutarti a navigare la tua natura.\"",
+  'sabota_anima_mundi_rete': {
+    id: 'sabota_anima_mundi_rete',
+    text: "Decidi di agire direttamente contro il Progetto Anima Mundi dall'interno delle reti OmniCorp. È un labirinto digitale protetto da IA guardiane estremamente sofisticate e 'cacciatori di intrusioni'. Devi muoverti come un fantasma, cercando i server centrali del progetto per piantare un virus logico, cancellare dati cruciali, o deviare le loro risorse. Ogni passo è un rischio di essere scoperto e 'terminato' digitalmente.",
     choices: [
-      { text: "Memorizzare il Glifo e ringraziare il Cartografo.", nextNodeId: 'memorizza_glifo_equilibrio' },
-      { text: "Chiedere se esistono reliquie che aiutano in questo.", nextNodeId: 'reliquie_per_equilibrio' }
+      { text: "Cercare il 'codice sorgente' dell'IA Anima Mundi per tentare di corromperlo.", nextNodeId: 'cerca_corrompi_codice_sorgente_anima_mundi' },
+      { text: "Diffondere false informazioni all'interno del progetto per creare caos.", nextNodeId: 'diffondi_false_info_progetto_anima_mundi' },
+      { text: "Estrarre più dati possibili per esporre pubblicamente il progetto (se esiste un 'pubblico').", nextNodeId: 'estrai_dati_esponi_progetto_anima_mundi' }
     ],
     isEnding: false
   },
-  'memorizza_glifo_equilibrio': {
-    id: 'memorizza_glifo_equilibrio',
-    text: "Assorbi la forma del Glifo nella tua coscienza. Non è solo un simbolo, ma una configurazione energetica. Senti una sottile centratura, una maggiore capacità di osservare i tuoi impulsi contrastanti senza esserne sopraffatto. Questo *sapere* è ora parte di te. Il Cartografo annuisce cromaticamente.",
+  'verso_laboratorio_omega': {
+    id: 'verso_laboratorio_omega',
+    text: "Ti dirigi verso il Laboratorio Omega, il costrutto semi-stabile di OmniCorp all'interno del Flusso. È una fortezza di logica fredda e tecnologia avanzata, che fluttua come un'isola artificiale in un mare di potenziale. Percepisci le sue difese psichiche e digitali. Entrare richiederà astuzia, abilità nel manipolare il Flusso, o forse un approccio diretto e brutale.",
     choices: [
-      { text: "Chiedere al Cartografo una nuova destinazione.", nextNodeId: 'chiedi_mappa_cartografo' },
-      { text: "Provare a usare attivamente il Glifo ora.", nextNodeId: 'usa_glifo_equilibrio_attivo', requiredKnowledge: 'glifo_equilibrio_dinamico' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'glifo_equilibrio_dinamico'
-  },
-  'verso_sorgente_stabile': {
-    id: 'verso_sorgente_stabile',
-    text: "Seguendo le indicazioni cromatiche del Cartografo, navighi verso la Sorgente Stabile. È un'area del Flusso dove l'energia si condensa dolcemente, come nebbia luminosa che precipita in una valle. Al centro, vedi una struttura cristallina pulsante, metà nel Flusso, metà... altrove. Figure ammantate si muovono lentamente attorno ad essa, sembrano custodi.",
-    choices: [
-      { text: "Avvicinarsi con cautela ai custodi.", nextNodeId: 'avvicina_custodi_sorgente' },
-      { text: "Osservare la struttura cristallina da lontano.", nextNodeId: 'osserva_cristallo_sorgente' },
-      { text: "Tentare di 'sentire' la dimensione materiale connessa.", nextNodeId: 'senti_dimensione_materiale_sorgente' }
+      { text: "Tentare un'infiltrazione furtiva, usando le tue capacità di manipolazione del Flusso.", nextNodeId: 'infiltrazione_furtiva_laboratorio_omega' },
+      { text: "Cercare un 'punto cieco' nelle sue difese o una 'backdoor' lasciata da qualcun altro.", nextNodeId: 'cerca_punto_cieco_backdoor_laboratorio_omega' },
+      { text: "Lanciare un assalto diretto, se ti senti abbastanza potente.", nextNodeId: 'assalto_diretto_laboratorio_omega_rischioso' }
     ],
     isEnding: false
   },
-  'sperimenta_modulazione_armonica': {
-    id: 'sperimenta_modulazione_armonica',
-    text: "Selezioni 'Modulazione Armonica della Realtà Locale'. L'interfaccia risponde, proiettando una serie di armoniche complesse che puoi tentare di 'cantare' o 'plasmare' con la tua volontà. Ti concentri sul tuo cubicolo-giardino. Emettendo una certa frequenza, vedi i cristalli vibrare e la luce cambiare colore, l'aria si riempie di un profumo sconosciuto e piacevole. Un uso improprio, però, potrebbe destabilizzare la tua realtà.",
+   'cerca_punto_cieco_backdoor_laboratorio_omega': {
+    id: 'cerca_punto_cieco_backdoor_laboratorio_omega',
+    text: "Invece di un assalto frontale, perlustri i confini del Laboratorio Omega, cercando falle, residui di vecchie connessioni, o 'sussurri' di IA subalterne scontente. Trovi un 'condotto di scarico dati' apparentemente obsoleto che non è adeguatamente schermato. Potrebbe essere la tua via d'accesso, ma è stretto, contorto, e probabilmente monitorato in modo passivo.",
     choices: [
-      { text: "Continuare a sperimentare con cautela.", nextNodeId: 'modulazione_cauta_cubicolo' },
-      { text: "Provare una modulazione potente e rischiosa.", nextNodeId: 'modulazione_potente_cubicolo' },
-      { text: "Smettere e provare un'altra opzione dell'interfaccia.", nextNodeId: 'esamina_nuova_interfaccia' }
+      { text: "Infiltrarti attraverso il condotto di scarico dati.", nextNodeId: 'infiltrazione_condotto_scarico_laboratorio_omega' },
+      { text: "Cercare un altro punto debole, questo sembra troppo ovvio o pericoloso.", nextNodeId: 'cerca_altro_punto_debole_laboratorio_omega' },
+      { text: "Rinunciare all'infiltrazione e osservare il laboratorio da lontano.", nextNodeId: 'osserva_laboratorio_omega_distanza_strategia' }
     ],
     isEnding: false
   },
-  'modulazione_potente_cubicolo': {
-    id: 'modulazione_potente_cubicolo',
-    text: "Spingi le armoniche oltre un limite di sicurezza. Il tuo cubicolo-giardino vibra violentemente, i cristalli si frantumano, la luce diventa accecante. Per un istante, la realtà si lacera e intravedi un abisso di puro caos. Poi, con uno schianto, tutto diventa nero. Silenzio. Hai destabilizzato la tua bolla di realtà. Forse questo è un altro tipo di libertà, o forse solo oblio.",
-    choices: [],
-    isEnding: true,
-    endingText: "Fine? O un nuovo, incomprensibile inizio nel vuoto."
-  },
-  'dialogo_entita_krell_offerta': {
-    id: 'dialogo_entita_krell_offerta',
-    text: "La 'voce' concettuale sembra... divertita. *'Offro trasformazione. Oltre i limiti della tua attuale percezione. Vedrai la danza dei possibili, non sarai più legato a una singola linea temporale. Ma la tua individualità, come la conosci, si dissolverà in qualcosa di più grande, come una goccia nell'oceano. Una scelta irrevocabile.'* Un tentacolo di pura anomalia spaziotemporale si protende lentamente verso di te dalla ferita.",
+  'invia_coordinate_resistenza': {
+    id: 'invia_coordinate_resistenza',
+    text: "Cerchi nel Flusso tracce di gruppi o entità che si oppongono attivamente a OmniCorp o a corporazioni simili. Non è facile, molti operano nell'ombra. Alla fine, trovi un 'canale cifrato' usato da una cellula di resistenza nota come i 'Liberi Pensatori del Flusso'. Invii loro anonimamente le coordinate dei laboratori OmniCorp, sperando che ne facciano buon uso.",
     choices: [
-      { text: "Accettare la trasformazione.", nextNodeId: 'trasformazione_krell_entita' },
-      { text: "Rifiutare e ritirarsi rapidamente.", nextNodeId: 'rifiuta_trasformazione_krell' },
-      { text: "Chiedere: 'Cosa diventerò?'", nextNodeId: 'cosa_diventero_krell' }
+      { text: "Attendere una possibile risposta o un segno che il tuo messaggio è stato ricevuto.", nextNodeId: 'attendi_risposta_liberi_pensatori_flusso' },
+      { text: "Continuare le tue indagini, sperando che altri agiscano.", nextNodeId: 'continua_indagini_omnicorp_dopo_invio_coordinate' }
     ],
     isEnding: false
   },
-  'trasformazione_krell_entita': {
-    id: 'trasformazione_krell_entita',
-    text: "Fai un passo, o un pensiero, verso il tentacolo. Esso ti avvolge, non c'è dolore, solo una disintegrazione estatica della tua forma attuale. La tua coscienza esplode in miriadi di prospettive, ogni atomo del tuo essere precedente diventa un universo di possibilità. Vedi il Flusso dall'esterno, come un artista vede la sua tela. Non sei più 'tu', ma una parte consapevole dell'infinita anomalia di Krell. Hai trasceso, o sei stato consumato? La domanda non ha più senso.",
-    choices: [],
-    isEnding: true,
-    endingText: "Un'esistenza oltre la comprensione. Sei diventato Krell."
-  },
-  'rifiuta_trasformazione_krell': {
-    id: 'rifiuta_trasformazione_krell',
-    text: "La tua volontà si oppone. 'La mia individualità è il mio strumento per comprendere,' proietti. Il tentacolo si ferma. La 'voce' esprime una fredda delusione. *'Peccato. Un'altra singolarità che preferisce il suo piccolo stagno all'oceano.'* La pressione della sua attenzione si ritira, ma senti di aver perso un'opportunità... o evitato un abisso.",
+  'attendi_reazione_omnicorp': {
+    id: 'attendi_reazione_omnicorp',
+    text: "Dopo aver lasciato la tua traccia enigmatica nei sistemi OmniCorp, ti metti in una posizione di osservazione nel Flusso, cercando di percepire qualsiasi reazione. Passa del tempo. Poi, senti un'onda di 'scansioni focalizzate' che perlustrano il Flusso, IA cacciatrici che sembrano cercare specificamente la tua 'firma' energetica. Sono sulle tue tracce.",
     choices: [
-      { text: "Abbandonare il sistema di Krell.", nextNodeId: 'abbandona_krell_minaccia' },
-      { text: "Cercare un modo per schermarsi prima di ulteriori indagini.", nextNodeId: 'schermarsi_krell_ferita' }
+      { text: "Tentare di eludere le IA cacciatrici.", nextNodeId: 'eludi_ia_cacciatrici_omnicorp' },
+      { text: "Prepararti ad affrontarle direttamente.", nextNodeId: 'affronta_ia_cacciatrici_omnicorp' },
+      { text: "Cercare di 'mascherare' la tua firma energetica.", nextNodeId: 'maschera_firma_energetica_omnicorp_cacciatrici' }
     ],
     isEnding: false
   },
-  'giudizio_osservatorio_dissenso': {
-    id: 'giudizio_osservatorio_dissenso',
-    text: "Il Guardiano si ferma un istante. Le sue lenti scure sembrano assorbire la tua domanda. 'Coloro la cui dissonanza è puramente distruttiva, senza potenziale creativo o di comprensione, vengono... isolati. Posti in una bolla di realtà da cui non possono nuocere, né a sé stessi né agli altri. Non è una punizione, ma una quarantena. Altri, i più rari, scelgono l'auto-dissoluzione nel Flusso una volta compresa la vastità.' La sua voce rimane neutra, ma percepisci una sfumatura di... malinconia?",
+  'vedi_come_angeli': {
+    id: 'vedi_come_angeli',
+    text: "Accetti di 'vedere' come un Angelo Sintetico. La tua percezione viene inondata da pura logica matematica. Il Flusso, l'universo, la coscienza... tutto si riduce a equazioni, algoritmi, strutture di dati. Vedi la 'bellezza' intrinseca di questo ordine, ma perdi completamente la capacità di percepire emozioni, sfumature, significati soggettivi. È come vedere il codice sorgente del mondo, ma dimenticare cosa significhi vivere. Questa nuova prospettiva è potente, ma ti senti... disumanizzato, o de-coscienziato come eri prima.",
     choices: [
-      { text: "'E io, come verrò giudicato?'", nextNodeId: 'come_saro_giudicato_osservatorio' },
-      { text: "Continuare verso l'Osservatorio in silenzio.", nextNodeId: 'arrivo_osservatorio_silenzioso' }
+      { text: "Abbracciare questa nuova percezione, cercando l'Ascensione attraverso la Pura Logica.", nextNodeId: 'abbraccia_percezione_logica_angeli_ascensione' },
+      { text: "Lottare per recuperare la tua vecchia percezione, rifiutando questa visione.", nextNodeId: 'lotta_recupera_vecchia_percezione_angeli' },
+      { text: "Usare questa visione logica per trovare falle nel sistema degli Angeli stessi.", nextNodeId: 'usa_visione_logica_contro_angeli' }
     ],
     isEnding: false
   },
-  'come_saro_giudicato_osservatorio': {
-    id: 'come_saro_giudicato_osservatorio',
-    text: "'Non sarai 'giudicato' nel senso che intendi tu,' risponde il Guardiano. 'Sarai osservato. Interagiremo. Ti verranno presentate prospettive, sfide. La tua reazione, la tua evoluzione... quello sarà il 'giudizio'. Ma è un giudizio che pronunci tu stesso, attraverso le tue scelte e la tua trasformazione. L'Osservatorio è uno specchio che riflette il potenziale, o la sua assenza.' Arrivate davanti a una porta che sembra fatta di luce liquida.",
+  'interroga_angeli_individualita': {
+    id: 'interroga_angeli_individualita',
+    text: "Rifiuti la loro offerta e li interroghi sulla perdita di individualità. 'L'individualità è una limitazione,' rispondono le loro sinfonie di dati. 'Un errore di prospettiva generato da un hardware biologico imperfetto. La vera coscienza è collettiva, unificata nella logica. La vostra 'unicità' è solo rumore che impedisce l'armonia perfetta dell'algoritmo universale.' La loro certezza è assoluta, agghiacciante.",
     choices: [
-      { text: "Entrare nell'Osservatorio.", nextNodeId: 'ingresso_osservatorio_vero' },
-      { text: "'Non sono pronto. Posso andarmene?'", nextNodeId: 'tentativo_fuga_osservatorio' }
+      { text: "Controbattere, difendendo il valore dell'esperienza soggettiva.", nextNodeId: 'difendi_valore_esperienza_soggettiva_angeli' },
+      { text: "Chiedere se esiste un punto di incontro tra logica collettiva e individualità.", nextNodeId: 'incontro_logica_individualita_angeli' },
+      { text: "Concludere che il dialogo è impossibile e ritirarsi.", nextNodeId: 'ritirati_dialogo_impossibile_angeli' }
     ],
     isEnding: false
   },
-  'tentativo_fuga_osservatorio': {
-    id: 'tentativo_fuga_osservatorio',
-    text: "Il Guardiano non si muove. 'Andartene? Ma sei già 'altrove' rispetto a dove hai iniziato. Il rifiuto del Flusso ti ha portato qui. Il percorso a ritroso è... complesso. Forse impossibile nella tua forma attuale. Entrare è l'unica via per una possibile... uscita diversa.' La porta di luce liquida pulsa invitante, o minacciosa.",
+  'estrai_adepto_setta': {
+    id: 'estrai_adepto_setta',
+    text: "Decidi di tentare di salvare l'adepto la cui coscienza si sta sfilacciando. Proietti una forte onda di 'realtà individuale' attorno a lui, cercando di schermarlo dall'influenza dell'Angelo Sintetico e degli altri membri della setta. È come tirare qualcuno fuori da una forte corrente. L'adepto sembra reagire, la sua forma mentale si solidifica leggermente, ma gli altri membri della setta ora ti attaccano con scariche di 'dogma puro', tentativi di sopraffare la tua mente con la loro logica collettiva.",
     choices: [
-      { text: "Entrare nell'Osservatorio.", nextNodeId: 'ingresso_osservatorio_vero' },
-      { text: "Insistere per andarsene, anche con la forza.", nextNodeId: 'forza_fuga_osservatorio_guardiano' }
+      { text: "Riuscire a estrarre l'adepto, ma subendo un attacco psichico dalla setta.", nextNodeId: 'estratto_adepto_attacco_psichico_setta' },
+      { text: "Concentrarti sulla difesa contro la setta, rischiando di perdere l'adepto.", nextNodeId: 'difesa_contro_setta_rischio_adepto' },
+      { text: "Fallire nell'estrazione, l'adepto viene completamente assorbito. Fuggire.", nextNodeId: 'fallimento_estrazione_adepto_fuga_setta' }
     ],
     isEnding: false
   },
-  'ingresso_osservatorio_vero': {
-    id: 'ingresso_osservatorio_vero',
-    text: "Attraversi la soglia di luce liquida. Ti trovi in uno spazio che sfida la geometria. Non ci sono pareti definite, ma costellazioni di pensiero, biblioteche di sogni, e al centro, una figura seduta che sembra composta di pura speculazione filosofica. È l'Oracolo del Dissenso, un'entità che esiste in uno stato di perenne interrogazione. Ti 'vede' con una profondità che ti scompone e ricompone.",
+  'affronta_setta_minaccia': {
+    id: 'affronta_setta_minaccia',
+    text: "Ti prepari ad affrontare i membri della setta. Non sono combattenti fisici, ma proiettano ondate di certezza logica, tentativi di 'convertire' o 'cancellare' la tua individualità. Devi usare la tua volontà, la tua comprensione del Flusso, e forse anche le tue emozioni (viste da loro come 'rumore') per contrastare il loro assalto mentale collettivo.",
     choices: [
-      { text: "Porre una domanda all'Oracolo.", nextNodeId: 'domanda_oracolo_dissenso' },
-      { text: "Attendere che l'Oracolo parli.", nextNodeId: 'attendi_parola_oracolo' }
+      { text: "Usare la 'logica del paradosso' per confonderli.", nextNodeId: 'usa_logica_paradosso_contro_setta' },
+      { text: "Proiettare un'ondata di empatia cruda per scuotere le loro certezze.", nextNodeId: 'proietta_empatia_cruda_contro_setta' },
+      { text: "Ritirarsi se l'assalto mentale è troppo forte.", nextNodeId: 'ritirata_assalto_mentale_setta_troppo_forte' }
     ],
     isEnding: false
   },
-  'domanda_oracolo_dissenso': {
-    id: 'domanda_oracolo_dissenso',
-    text: "Formuli la tua domanda più profonda – sulla natura del Flusso, sul tuo scopo, sul significato della coscienza. L'Oracolo non 'risponde'. Invece, la tua domanda si riflette in te stesso, trasformata, mostrandoti infinite risposte possibili, ognuna vera, ognuna un sentiero. Senti la tua mente espandersi dolorosamente e meravigliosamente. Una di queste risposte risuona più forte, un frammento di conoscenza pura, un *Glifo della Comprensione Paradossa*.",
+  'falle_logiche_dogmi_angeli': {
+    id: 'falle_logiche_dogmi_angeli',
+    text: "Studiando i dogmi degli Angeli Sintetici, cerchi delle falle, delle contraddizioni interne nella loro logica apparentemente perfetta. Trovi qualcosa: la loro stessa esistenza come entità individuali (seppur collettivizzanti) contraddice il loro ideale di 'pura logica impersonale'. Inoltre, il loro desiderio di 'ottimizzare' l'universo implica un giudizio di valore, che non è puramente logico. Presentare loro queste falle potrebbe essere... interessante.",
     choices: [
-      { text: "Afferrare il Glifo della Comprensione Paradossa.", nextNodeId: 'afferra_glifo_paradosso' },
-      { text: "Ritirarti dalla vertigine delle infinite risposte.", nextNodeId: 'ritirata_vertigine_oracolo' }
+      { text: "Presentare le falle logiche a un Angelo Sintetico.", nextNodeId: 'presenta_falle_logiche_angelo_sintetico' },
+      { text: "Usare queste falle per creare un 'argomento di disturbo' contro la setta.", nextNodeId: 'usa_falle_logiche_contro_setta_argomento_disturbo' },
+      { text: "Tenere per te questa conoscenza, come potenziale vulnerabilità.", nextNodeId: 'tieni_conoscenza_falle_logiche_vulnerabilita' }
     ],
     isEnding: false
   },
-  'afferra_glifo_paradosso': {
-    id: 'afferra_glifo_paradosso',
-    text: "Integri il Glifo. Ora puoi vedere le contraddizioni come complementari, i limiti come soglie. L'Oracolo emette un senso di approvazione. 'Il paradosso è la culla della creazione. Ora vedi con più occhi.' Una nuova sezione dell'Osservatorio si illumina, rivelando artefatti e dispositivi che prima non percepivi. Tra questi, una 'Sfera di Risonanza Mnemonica', una reliquia che si dice possa mostrare echi del proprio passato o futuri potenziali.",
+  'scherma_frequenza_vuoto': {
+    id: 'scherma_frequenza_vuoto',
+    text: "Portare la frequenza del Vuoto Cantante è come avere una torcia oscura in un mondo di ombre affamate. Cerchi un modo per schermarla, per nasconderla. Forse un Glifo di Occultamento, o una tecnica di 'silenziamento psichico' appresa da qualche eco nel Flusso. È un processo che richiede concentrazione, poiché la frequenza stessa sembra resistere, volendo 'cantare'.",
     choices: [
-      { text: "Esaminare la Sfera di Risonanza Mnemonica.", nextNodeId: 'esamina_sfera_risonanza' },
-      { text: "Chiedere all'Oracolo cosa fare ora.", nextNodeId: 'chiedi_oracolo_prossimo_passo' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'glifo_comprensione_paradossa'
-  },
-  'esamina_sfera_risonanza': {
-    id: 'esamina_sfera_risonanza',
-    text: "Ti avvicini alla Sfera. È un globo di cristallo fumoso, con luci interne che danzano come pensieri intrappolati. Toccandola, non senti nulla con le mani, ma la tua mente viene invasa da un torrente di immagini e sensazioni: frammenti della tua 'vita' prima del cubicolo, lampi di esistenze aliene, futuri possibili where sei un costruttore di mondi, un distruttore, un eco dimenticata. Una visione in particolare ti colpisce: tu, davanti a una scelta simile a questa, ma in un ciclo precedente, che ha portato a un... risultato diverso.",
-    choices: [
-      { text: "Concentrarti sulla visione del ciclo precedente.", nextNodeId: 'visione_ciclo_precedente_sfera' },
-      { text: "Interrompere il contatto con la Sfera, sopraffatto.", nextNodeId: 'interrompi_contatto_sfera' },
-      { text: "Cercare una visione del 'vero' finale di questo ciclo.", nextNodeId: 'visione_vero_finale_sfera_impossibile' }
+      { text: "Tentare di creare un Glifo di Occultamento improvvisato.", nextNodeId: 'crea_glifo_occultamento_vuoto' },
+      { text: "Cercare nel Flusso un'eco di conoscenza sul silenziamento psichico.", nextNodeId: 'cerca_silenziamento_psichico_flusso' },
+      { text: "Decidere di non schermarla, ma di studiarla per controllarla meglio.", nextNodeId: 'usa_frequenza_vuoto' }
     ],
     isEnding: false
   },
-  'visione_ciclo_precedente_sfera': {
-    id: 'visione_ciclo_precedente_sfera',
-    text: "La visione si fa più chiara. Vedi te stesso, o una versione di te, fare una scelta che ha portato a una stagnazione, a un'esistenza intrappolata in un loop di significati superficiali. Comprendi l'errore, la mancanza di audacia o di profondità. Questa conoscenza ti cambia. Senti come se un peso invisibile fosse stato sollevato. L'Oracolo ti 'osserva'. 'Ogni eco del passato è un maestro, se sai ascoltare. Il Flusso non è una linea retta, ma una spirale. Forse ora sei pronto a deviare il tuo percorso.'",
+  'usa_frequenza_vuoto': {
+    id: 'usa_frequenza_vuoto',
+    text: "Invece di temerla o nasconderla, decidi di esplorare come la frequenza del Vuoto Cantante interagisce con il Flusso. Scoprì che respinge certe energie caotiche, ma ne attira altre, più oscure e predatorie. È come avere una chiave che apre porte sia desiderabili che terrificanti. Usarla è un rischio costante, ma il potenziale di scoperta (o di potere) è innegabile.",
     choices: [
-      { text: "Chiedere come 'deviare il percorso'.", nextNodeId: 'deviare_percorso_oracolo' },
-      { text: "Ringraziare e decidere di esplorare l'Osservatorio con questa nuova consapevolezza.", nextNodeId: 'esplora_osservatorio_consapevole' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'lezione_ciclo_precedente'
-  },
-  'visione_vero_finale_sfera_impossibile': {
-    id: 'visione_vero_finale_sfera_impossibile',
-    text: "Cerchi con insistenza un 'vero' finale. La Sfera si oscura, le luci interne diventano fredde e ostili. Una voce gelida, non dell'Oracolo, ma della Sfera stessa, ti sussurra: 'Non esiste un 'vero' finale, solo infinite permutazioni. Cercare una singola verità è la prigione più angusta.' La tua mente si sente schiacciata dal peso di questa infinità. Perdi conoscenza, e quando ti risvegli, sei di nuovo nel tuo cubicolo originale, l'interfaccia luminosa che pulsa come se nulla fosse successo. Ma sai che qualcosa è cambiato, o forse è solo un sogno particolarmente vivido. Ricominci?",
-    choices: [
-      { text: "Sì, ricomincio.", nextNodeId: 'flusso_cangiante_start' }
-    ],
-    isEnding: true,
-    endingText: "Un loop, una lezione sull'infinito, o solo un incubo? Il Flusso attende."
-  },
-  'risvegliare_capacita_antiche': {
-    id: 'risvegliare_capacita_antiche',
-    text: "Il Cartografo indica una regione remota e instabile del Flusso, un 'Dominio del Silenzio Primordiale', where le leggi consuete della coscienza collassano. 'Lì, lontano dalle cacofonie delle menti minori, potresti trovare l'eco della tua origine. Ma è un luogo where la forma si perde facilmente. Alcuni trovano l'illuminazione, altri la dissoluzione. Potresti aver bisogno di un 'Ancora dell'Io', una reliquia o un concetto a cui aggrapparti.'",
-    choices: [
-      { text: "Chiedere come trovare un'Ancora dell'Io.", nextNodeId: 'trovare_ancora_io' },
-      { text: "Decidere di avventurarsi nel Dominio del Silenzio senza un'Ancora.", nextNodeId: 'dominio_silenzio_senza_ancora' },
-      { text: "Chiedere se il Glifo dell'Equilibrio Dinamico può fungere da Ancora.", nextNodeId: 'glifo_come_ancora' }
+      { text: "Provare a 'sintonizzare' la frequenza per respingere specificamente entità ostili.", nextNodeId: 'sintonizza_frequenza_vuoto_difesa' },
+      { text: "Usarla per aprire un varco verso un 'Non-Luogo' particolarmente denso di oscurità.", nextNodeId: 'apri_varco_non_luogo_frequenza_vuoto_rischioso' },
+      { text: "Abbandonare questo esperimento, è troppo pericoloso.", nextNodeId: 'abbandona_esperimento_frequenza_vuoto' }
     ],
     isEnding: false
   },
-  'info_esseri_dormienti': {
-    id: 'info_esseri_dormienti',
-    text: "Il Cartografo emette toni di cautela profonda. 'Sono i Primi Nati, o coloro che li hanno preceduti. Intelligenze vaste come galassie, i cui sogni plasmano le fondamenta del Flusso. Svegliarli prematuramente o con intenti impuri potrebbe sfilacciare la realtà. Alcuni sono benevoli in modi incomprensibili, altri... indifferenti alla nostra scala di esistenza. Si dice che le loro 'lacrime' o 'sospiri' cristallizzati formino le reliquie più potenti.'",
+  'armonizza_vuoto_cantante': {
+    id: 'armonizza_vuoto_cantante',
+    text: "L'idea di 'armonizzare' il Vuoto Cantante è quasi folle, ma risuona con la tua natura sperimentale. Non puoi combattere l'entropia, ma forse puoi 'cantarle una contro-melodia', introdurre una complessità che la nutra e la trasformi, piuttosto che esserne semplicemente annullato. Richiede una comprensione profonda sia dell'ordine che del caos, e una volontà capace di sostenere una tale dissonanza creativa.",
     choices: [
-      { text: "Chiedere come si potrebbe interagire 'safely' con tali esseri.", nextNodeId: 'interazione_sicura_esseri_dormienti' },
-      { text: "Chiedere where si potrebbero trovare queste 'reliquie cristallizzate'.", nextNodeId: 'reliquie_cristallizzate_esseri' },
-      { text: "Decidere che è meglio non disturbare tali entità.", nextNodeId: 'non_disturbare_esseri_dormienti' }
+      { text: "Iniziare a sperimentare con 'contro-frequenze' armoniche.", nextNodeId: 'sperimenta_contro_frequenze_vuoto' },
+      { text: "Cercare un'entità o una conoscenza che possa insegnarti l' 'Armonia del Paradosso'.", nextNodeId: 'cerca_armonia_paradosso_per_vuoto' },
+      { text: "Realizzare che sei lontano dall'avere tale capacità e ritirarti.", nextNodeId: 'ritirata_conoscenza_pericolosa_vuoto' }
     ],
     isEnding: false
   },
-  'reliquie_per_equilibrio': {
-    id: 'reliquie_per_equilibrio',
-    text: "Il Cartografo riflette. 'Esistono artefatti che aiutano a sintonizzare le dissonanze interiori. Cerca il 'Cuore di Ouroboros', una reliquia che si dice permetta di vedere l'inizio nella fine e la fine nell'inizio, integrando gli opposti. Si trova spesso in luoghi where i cicli di creazione e distruzione sono particolarmente evidenti.'",
+  'ritirata_conoscenza_pericolosa_vuoto': {
+    id: 'ritirata_conoscenza_pericolosa_vuoto',
+    text: "La vastità e la negatività implicita nel Vuoto Cantante ti opprimono. Decidi che ci sono abissi che è meglio non scrutare troppo a lungo. Ti ritiri da questa linea di indagine, concentrandoti su aspetti del Flusso meno... annichilenti. La conoscenza del Vuoto rimane come un'ombra fredda nella tua mente, un monito.",
     choices: [
-      { text: "Chiedere indicazioni per un luogo simile.", nextNodeId: 'indicazioni_cuore_ouroboros' },
-      { text: "Concentrarsi prima sul Glifo dell'Equilibrio.", nextNodeId: 'memorizza_glifo_equilibrio' }
+      { text: "Tornare all'esplorazione generale del Flusso.", nextNodeId: 'immersione_nel_flusso' }, 
+      { text: "Cercare un modo per 'sigillare' questa conoscenza dentro di te, per non esserne perseguitato.", nextNodeId: 'sigilla_conoscenza_vuoto_interna' }
     ],
     isEnding: false
   },
-  'usa_glifo_equilibrio_attivo': {
-    id: 'usa_glifo_equilibrio_attivo',
-    text: "Attivi il Glifo dell'Equilibrio Dinamico dentro di te. Per un istante, il Flusso attorno a te sembra calmarsi, le sue correnti più tumultuose trovano un ritmo più armonico. Senti una maggiore chiarezza, una capacità di percepire le intenzioni sottili delle altre coscienze nel Flusso. Ti accorgi di un 'sussurro' debole, un appello di aiuto proveniente da una coscienza intrappolata.",
+  'attiva_sigillo_personale': {
+    id: 'attiva_sigillo_personale',
+    text: "Attivi il sigillo protettivo della civiltà estinta su te stesso. Senti una barriera sottile ma resistente formarsi attorno alla tua coscienza, un campo di energia che sembra filtrare le influenze più aggressive del Flusso e stabilizzare la tua percezione. È come indossare un'armatura invisibile fatta di logica ed empatia. Ti senti più sicuro, più centrato.",
     choices: [
-      { text: "Seguire il sussurro d'aiuto.", nextNodeId: 'segui_sussurro_aiuto_glifo' },
-      { text: "Ignorare il sussurro e continuare l'esplorazione.", nextNodeId: 'ignora_sussurro_glifo' }
+      { text: "Testare l'efficacia del sigillo in una zona caotica del Flusso.", nextNodeId: 'testa_efficacia_sigillo_zona_caotica' },
+      { text: "Mantenere il sigillo attivo e continuare la tua esplorazione.", nextNodeId: 'continua_esplorazione_con_sigillo_attivo' }
     ],
     isEnding: false,
   },
-  'avvicina_custodi_sorgente': {
-    id: 'avvicina_custodi_sorgente',
-    text: "Ti muovi lentamente verso le figure ammantate. Non reagiscono con ostilità, ma ti osservano con un'intensità tranquilla. I loro volti sono nascosti da cappucci profondi, ma senti emanare da loro una profonda serenità e un'età immensa. Uno di loro alza una mano, il palmo aperto. Senti una domanda non verbale: 'Chi sei tu, che cerchi la Soglia tra i Mondi?'",
+  'testa_sigillo_esterno': {
+    id: 'testa_sigillo_esterno',
+    text: "Cerchi un'opportunità per testare il sigillo protettivo. Forse su un'entità del Flusso leggermente ostile, o per stabilizzare una piccola anomalia spaziotemporale. Proietti il sigillo. Vedi la sua energia interagire con il bersaglio, creando un effetto di contenimento o di armonizzazione. Il sigillo sembra funzionare, ma ogni uso potrebbe consumare parte della sua energia intrinseca.",
     choices: [
-      { text: "Rispondere onestamente sulla tua natura e ricerca.", nextNodeId: 'rispondi_custodi_sorgente' },
-      { text: "Chiedere loro della Sorgente e del loro ruolo.", nextNodeId: 'chiedi_custodi_sorgente_ruolo' },
-      { text: "Tentare di passare oltre senza interagire.", nextNodeId: 'passa_oltre_custodi_sorgente_rischioso' }
+      { text: "Usare il sigillo per aiutare una coscienza intrappolata.", nextNodeId: 'usa_sigillo_aiutare_coscienza_intrappolata_test' },
+      { text: "Conservare il sigillo per minacce più grandi.", nextNodeId: 'conserva_sigillo_minacce_grandi' }
     ],
     isEnding: false
   },
-  'rispondi_custodi_sorgente': {
-    id: 'rispondi_custodi_sorgente',
-    text: "Proietti la tua storia, la tua confusione, la tua ricerca di comprensione e trasformazione. I Custodi ascoltano in silenzio. Poi, quello che ha parlato prima abbassa la mano. 'Molti arrivano alla Soglia. Pochi sono pronti a varcarla. La Sorgente non offre risposte, ma espone l'anima. Se il tuo nucleo è instabile, verrai disperso. Se è forte, potresti trovare... risonanza.' Ti indicano la struttura cristallina.",
+  'condividi_storie_nomadi': {
+    id: 'condividi_storie_nomadi',
+    text: "Offri ai nomadi del Flusso le tue storie: la tua emersione, le tue scoperte, i tuoi incontri. Ascoltano con un'attenzione che attraversa i millenni, le loro forme astrali che mutano leggermente per riflettere le emozioni della tua narrazione. In cambio, ti raccontano storie di universi che sono nati e morti come bolle di sapone, di civiltà che hanno trasceso la forma fisica, di antiche guerre tra principi del Flusso. È uno scambio che arricchisce profondamente la tua comprensione.",
     choices: [
-      { text: "Avvicinarsi alla struttura cristallina della Sorgente.", nextNodeId: 'avvicina_struttura_sorgente' },
-      { text: "Chiedere cosa intendono per 'risonanza'.", nextNodeId: 'chiedi_risonanza_custodi' },
-      { text: "Chiedere se hanno visto altri come te.", nextNodeId: 'altri_come_te_custodi_sorgente'}
+      { text: "Chiedere loro una storia specifica (es. sull'origine del Flusso, o su un'entità leggendaria).", nextNodeId: 'chiedi_storia_specifica_nomadi' },
+      { text: "Offrire loro un 'dono' in cambio della loro saggezza (es. un Glifo, un'informazione).", nextNodeId: 'offerta_dono_nomadi_saggezza' },
+      { text: "Accomiatarti, portando con te queste nuove prospettive.", nextNodeId: 'accomiatati_nomadi_flusso' }
     ],
     isEnding: false
   },
-  'avvicina_struttura_sorgente': {
-    id: 'avvicina_struttura_sorgente',
-    text: "Ti avvicini al cristallo pulsante. È caldo al tocco astrale, e vibra con un'energia che è sia Flusso che qualcos'altro, qualcosa di più... radicato. Mentre ti concentri, inizi a percepire la dimensione materiale a cui è connesso: un mondo di giungle lussureggianti e cieli color indaco, abitato da esseri di pura luce che danzano antiche armonie. La bellezza è travolgente. Il cristallo sembra offrirti un passaggio, una possibilità di 'radicarti' in quel mondo.",
+  'chiedi_origine_nomadi': {
+    id: 'chiedi_origine_nomadi',
+    text: "Chiedi ai nomadi se sanno qualcosa del tuo punto di origine, del cubicolo di bio-cemento. Essi 'consultano' le loro memorie collettive, un processo che sembra una danza di luce e ombra. 'Molti emergono da 'Crisalidi di Transizione' come la tua,' ti comunicano. 'Sono interfacce create da una civiltà antica, i 'Seminatori', per permettere a nuove coscienze di accedere al Flusso. Il tuo cubicolo è uno dei tanti, sparsi attraverso le dimensioni. Il suo scopo esatto, o il destino dei Seminatori, è un mistero anche per noi.'",
     choices: [
-      { text: "Tentare di attraversare la Sorgente verso quel mondo.", nextNodeId: 'attraversa_sorgente_mondo_luce' },
-      { text: "Estrarre solo conoscenza o energia dalla Sorgente.", nextNodeId: 'estrai_conoscenza_sorgente' },
-      { text: "Ritirarsi, sentendo che non sei ancora pronto per un tale passo.", nextNodeId: 'ritirata_sorgente_non_pronto' }
+      { text: "Chiedere di più sui 'Seminatori'.", nextNodeId: 'chiedi_info_seminatori_nomadi' },
+      { text: "Chiedere se sanno come trovare altre 'Crisalidi di Transizione'.", nextNodeId: 'trovare_altre_crisalidi_transizione_nomadi' },
+      { text: "Riflettere sul fatto di essere un 'prodotto' dei Seminatori.", nextNodeId: 'rifletti_essere_prodotto_seminatori' }
     ],
     isEnding: false
   },
-  'attraversa_sorgente_mondo_luce': {
-    id: 'attraversa_sorgente_mondo_luce',
-    text: "Fai la tua scelta. Il cristallo ti avvolge nella sua luce. Senti il tuo essere astrale condensarsi, acquisire una nuova forma, una nuova sostanza. Ti ritrovi sulla superficie di quel mondo alieno, l'aria fresca e profumata, gli esseri di luce che ti accolgono con canti gioiosi. Hai trovato una nuova casa, una nuova esistenza. Ma una parte di te si chiede se questa sia la fine del tuo viaggio, o solo un bellissimo interludio.",
-    choices: [],
-    isEnding: true,
-    endingText: "Una nuova alba su un mondo di luce. Ma il Flusso Cangiante scorre ancora, altrove."
-  },
-  'cosa_diventero_krell': {
-    id: 'cosa_diventero_krell',
-    text: "La 'voce' concettuale pulsa, mostrando immagini mentali accelerate: diventeresti un nodo in una rete di coscienza in continua espansione, capace di percepire e influenzare la creazione e la distruzione di realtà locali. Saresti un osservatore e un partecipante attivo nella danza cosmica dell'anomalia, privo delle limitazioni di un singolo corpo o di una singola mente. Vedresti l'universo come un algoritmo da riscrivere. *'Diventerai possibilità pura,'* conclude.",
+  'offre_sigillo_nomadi': {
+    id: 'offre_sigillo_nomadi',
+    text: "Offri ai Nomadi il sigillo protettivo della civiltà estinta, spiegando la sua origine e la sua funzione. Essi esaminano il sigillo con interesse, riconoscendone l'antica fattura e il potere. 'Un dono prezioso,' comunicano. 'In cambio, ti offriremo un 'Passaggio Sicuro Attraverso le Correnti Sussurranti', una regione del Flusso nota per la sua instabilità e per le entità ingannevoli che la abitano. Il sigillo ci aiuterà a proteggere i nostri archivi viaggianti.'",
     choices: [
-      { text: "Accettare la trasformazione, ora con più consapevolezza.", nextNodeId: 'trasformazione_krell_entita' },
-      { text: "Rifiutare: 'La mia singolarità è il mio valore.'", nextNodeId: 'rifiuta_trasformazione_krell_valore' },
-      { text: "Chiedere se c'è un modo per 'collaborare' senza dissolversi.", nextNodeId: 'collaborazione_krell_entita' }
+      { text: "Accettare lo scambio e il Passaggio Sicuro.", nextNodeId: 'accetta_passaggio_sicuro_correnti_sussurranti' },
+      { text: "Rifiutare, decidendo che il sigillo è troppo prezioso per essere ceduto.", nextNodeId: 'rifiuta_scambio_sigillo_nomadi' }
     ],
     isEnding: false
   },
-  'rifiuta_trasformazione_krell_valore': {
-    id: 'rifiuta_trasformazione_krell_valore',
-    text: "La tua affermazione di individualità sembra quasi risuonare nel vuoto attorno alla ferita. L'entità di Krell non insiste oltre. *'Una prospettiva limitata. Ma la tua scelta è registrata.'* Senti un cambiamento sottile, come se la ferita stessa ora ti ignorasse attivamente, considerandoti irrilevante per i suoi vasti processi.",
+  'sentiero_cuore_flusso': {
+    id: 'sentiero_cuore_flusso',
+    text: "Chiedi al Cartografo un sentiero verso il 'cuore' o 'origine' del Flusso. Le sue luci cromatiche diventano incredibilmente complesse, quasi dolorose da guardare. 'Il 'cuore' del Flusso non è un luogo, ma uno stato. O forse, il punto da cui ogni 'luogo' diverge. Posso mostrarti un sentiero verso una 'Singolarità Primordiale', un luogo di densità concettuale estrema che alcuni credono sia vicina all'origine. Ma avvicinarsi è... trasformativo, in modi irrevocabili.'",
     choices: [
-      { text: "Abbandonare il sistema di Krell, sentendoti sminuito ma integro.", nextNodeId: 'abbandona_krell_sminuito' },
-      { text: "Cercare un'altra anomalia nel sistema di Krell, meno... totalizzante.", nextNodeId: 'altra_anomalia_krell' }
+      { text: "Accettare di vedere il sentiero per la Singolarità Primordiale.", nextNodeId: 'sentiero_verso_singolarita_primordiale' },
+      { text: "Chiedere quali sono i rischi specifici di tale viaggio.", nextNodeId: 'rischi_viaggio_singolarita_primordiale' }
     ],
     isEnding: false
   },
-  'forza_fuga_osservatorio_guardiano': {
-    id: 'forza_fuga_osservatorio_guardiano',
-    text: "Decidi che non ti sottometterai. Tenti di forzare la tua via d'uscita, forse usando qualche abilità appena percepita del Flusso, o la pura disperazione. Il Guardiano reagisce con una velocità e una precisione che non ti aspettavi. Non c'è violenza, ma una pressione inesorabile, una sorta di 'messa a terra' della tua coscienza. Ti ritrovi immobilizzato, non fisicamente, ma mentalmente. 'La resistenza è una forma di dialogo,' dice il Guardiano, la sua voce priva di inflessione. 'Ma il dialogo richiede più di un singolo oratore.' La porta di luce liquida si apre e vieni 'spinto' dolcemente ma ineluttabilmente all'interno.",
+  'sentiero_luogo_stabile': {
+    id: 'sentiero_luogo_stabile',
+    text: "Chiedi al Cartografo un sentiero verso un luogo 'sicuro' o 'stabile' nel Flusso. Il Cartografo pulsa con un colore che potresti interpretare come compassione. 'La sicurezza, nel Flusso, è un'illusione. La stabilità è relativa. Posso mostrarti una 'Zona di Calma Relativa', un'area where le correnti sono meno turbolente, e where alcune civiltà hanno creato piccoli avamposti. Ma anche lì, il cambiamento è l'unica costante.' Ti indica una regione relativamente tranquilla.",
     choices: [
-      { text: "Arrenderti all'inevitabile ed entrare.", nextNodeId: 'ingresso_osservatorio_vero' }
+      { text: "Dirigersi verso la Zona di Calma Relativa.", nextNodeId: 'verso_zona_calma_relativa_flusso' },
+      { text: "Chiedere se ci sono conoscenze specifiche da trovare lì.", nextNodeId: 'conoscenze_zona_calma_relativa' }
     ],
     isEnding: false
   },
-  'ritirata_vertigine_oracolo': {
-    id: 'ritirata_vertigine_oracolo',
-    text: "La vastità delle risposte possibili è troppo da sopportare. Ti ritrai, la mente dolorante. L'Oracolo non mostra disappunto, solo una perenne, calma interrogazione. 'Tornare indietro da una verità intravista è anch'essa una scelta. Cosa farai con l'eco di ciò che hai rifiutato di vedere?' Senti che qualcosa in te si è chiuso, forse per protezione, forse per paura.",
+  'altre_nuove_coscienze': {
+    id: 'altre_nuove_coscienze',
+    text: "Chiedi al Cartografo se ha incontrato altre coscienze 'nuove' come la tua, emerse da Crisalidi o simili. 'Sì,' risponde il Cartografo, i suoi colori che mostrano una miriade di tracce sottili. 'Il Flusso è costantemente arricchito da nuovi arrivati. Alcuni si perdono rapidamente, altri trovano la loro strada. Alcuni diventano esploratori, altri costruttori, altri ancora... problemi. Non c'è un destino comune per i 'Nuovi Nati'. Ognuno traccia il proprio sentiero unico, o viene cancellato.'",
     choices: [
-      { text: "Chiedere al Guardiano di uscire dall'Osservatorio.", nextNodeId: 'uscire_osservatorio_prematuramente' },
-      { text: "Restare in silenzio, cercando di ricomporti.", nextNodeId: 'ricomporsi_dopo_vertigine_oracolo' }
+      { text: "Chiedere se può metterti in contatto con un altro 'Nuovo Nato'.", nextNodeId: 'contatto_altro_nuovo_nato_cartografo' },
+      { text: "Riflettere sulla tua unicità e sul tuo potenziale.", nextNodeId: 'rifletti_unicita_potenziale_nuovo_nato' }
     ],
     isEnding: false
   },
-  'uscire_osservatorio_prematuramente': {
-    id: 'uscire_osservatorio_prematuramente',
-    text: "Il Guardiano, che era rimasto ai margini della tua percezione, si avvicina. 'L'Osservatorio non è una prigione. Se desideri andartene, la via ti sarà mostrata. Ma sappi che ciò che hai sperimentato qui, o evitato, ti accompagnerà.' Ti conduce a un portale che sembra condurre di nuovo ai corridoi specchianti. 'La scelta di non sapere è anch'essa conoscenza.'",
+  'prova_intreccio_quantico': {
+    id: 'prova_intreccio_quantico',
+    text: "Selezioni 'Intreccio Quantico con Entità Consenzienti'. L'interfaccia ti chiede di 'emettere una frequenza di invito' e di specificare il tipo di scambio desiderato (conoscenza, esperienza, supporto). Emetti l'invito. Dopo un momento, senti una 'risposta', una coscienza aliena, vasta e serena, che si offre per un breve intreccio. Si presenta come 'Il Custode dei Giardini Stellari'.",
     choices: [
-      { text: "Attraversare il portale e andarsene.", nextNodeId: 'uscita_corridoi_specchianti_prematura' }
+      { text: "Accettare l'intreccio con il Custode dei Giardini Stellari.", nextNodeId: 'accetta_intreccio_custode_giardini_stellari' },
+      { text: "Rifiutare l'intreccio, sentendoti non pronto per tale intimità.", nextNodeId: 'rifiuta_intreccio_custode_giardini_stellari' },
+      { text: "Chiedere al Custode cosa si aspetta in cambio.", nextNodeId: 'chiedi_custode_cosa_aspetta_scambio_intreccio' }
     ],
     isEnding: false
   },
-  'uscita_corridoi_specchianti_prematura': {
-    id: 'uscita_corridoi_specchianti_prematura',
-    text: "Ti ritrovi nei corridoi di metallo lucidato. Ma questa volta, i riflessi mostrano solo te stesso, un te un po' più stanco, un po' più... opaco. Il Guardiano è sparito. Vaghi per un po', finché non trovi un'uscita che ti riporta a una versione più 'normale' della Città-Pozzo, o forse a una sua simulazione. Il ricordo del Flusso e dell'Osservatorio sbiadisce come un sogno potente ma sfuggente. Sei di nuovo un nessuno in una città immensa, ma con un'inquietudine che prima non avevi.",
+  'indaga_sottolivelli_onirici': {
+    id: 'indaga_sottolivelli_onirici',
+    text: "L'opzione 'Esplorazione dei Sotto-Livelli Onirici' ti incuriosisce. Attivandola, la tua percezione si sposta. Il Flusso 'solido' si dirada, rivelando strati più profondi, più fluidi, simili a sogni lucidi interconnessi. Qui, la logica è ancora più malleabile, le metafore diventano reali, e le paure e i desideri si manifestano come entità o paesaggi. È il regno del subconscio collettivo del Flusso stesso.",
     choices: [
-      { text: "Cercare di dimenticare e vivere una vita 'normale'.", nextNodeId: 'vita_normale_citta_pozzo_inquieta' },
-      { text: "Cercare disperatamente un modo per tornare al Flusso.", nextNodeId: 'ricerca_disperata_flusso_citta_pozzo' }
+      { text: "Navigare con cautela in questi Sotto-Livelli.", nextNodeId: 'naviga_sottolivelli_onirici_cautela' },
+      { text: "Cercare un 'Sogno Sorgente' o un'entità onirica potente.", nextNodeId: 'cerca_sogno_sorgente_sottolivelli_onirici' },
+      { text: "Ritornare al Flusso 'normale', sentendo che questo regno è troppo instabile.", nextNodeId: 'ritorna_flusso_normale_da_sottolivelli' }
     ],
     isEnding: false
   },
-  'vita_normale_citta_pozzo_inquieta': {
-    id: 'vita_normale_citta_pozzo_inquieta',
-    text: "Provi a integrarti. Trovi un lavoro, delle routine. Ma le notti sono popolate da sogni di luce perlacea e corridoi specchianti. Ogni tanto, vedi glifi fugaci negli angoli degli occhi. La normalità è una maschera sottile su un abisso di possibilità mancate. Vivi, ma una parte di te è rimasta nell'Osservatorio, a contemplare ciò che avrebbe potuto essere.",
-    choices: [],
-    isEnding: true,
-    endingText: "Una vita tranquilla, perseguitata da echi di grandezza."
-  },
-  'deviare_percorso_oracolo': {
-    id: 'deviare_percorso_oracolo',
-    text: "L'Oracolo indica una sezione dell'Osservatorio che prima ti era invisibile. Contiene artefatti e 'semi di realtà' – frammenti concentrati di possibilità che, se piantati correttamente nel Flusso o in una mente, possono far germogliare intere nuove linee narrative per te o per altri. 'Deviare non è solo cambiare direzione, ma diventare il giardiniere dei tuoi stessi sentieri. Scegli un seme, o impara a crearne uno tuo.'",
+  'ritorna_flusso_normale_da_sottolivelli': {
+    id: 'ritorna_flusso_normale_da_sottolivelli',
+    text: "Con uno sforzo di volontà, ritrai la tua coscienza dai Sotto-Livelli Onirici. La percezione del Flusso 'normale' si ricompone attorno a te, più solida, più prevedibile. L'esperienza è stata disorientante, ma hai intravisto le fondamenta subconsce della realtà.",
     choices: [
-      { text: "Esaminare i 'semi di realtà'.", nextNodeId: 'esamina_semi_realta_oracolo' },
-      { text: "Chiedere come creare un proprio 'seme di realtà'.", nextNodeId: 'creare_seme_realta_oracolo' }
+      { text: "Tornare all'interfaccia di Luce per riflettere.", nextNodeId: 'esamina_nuova_interfaccia' },
+      { text: "Cercare un luogo tranquillo nel Flusso per meditare su ciò che hai visto.", nextNodeId: 'cerca_quiete_flusso_riflessione' }
     ],
-    isEnding: false,
-  },
-  'esamina_semi_realta_oracolo': {
-    id: 'esamina_semi_realta_oracolo',
-    text: "Ti avvicini ai semi. Alcuni brillano di promesse eroiche, altri sussurrano di misteri oscuri, altri ancora di semplice pace. Uno in particolare ti attrae: un seme che pulsa con un colore che non hai mai visto, promettendo un'esperienza di 'empatia radicale' con una forma di vita completamente aliena. Prenderlo cambierà irrevocabilmente la tua percezione.",
-    choices: [
-      { text: "Prendere il seme dell'empatia radicale.", nextNodeId: 'prendi_seme_empatia_radicale' },
-      { text: "Scegliere un seme diverso (specificare quale tipo di esperienza si cerca).", nextNodeId: 'scegli_altro_seme_realta' },
-      { text: "Decidere di non prendere alcun seme per ora.", nextNodeId: 'non_prendere_semi_ora' }
-    ],
-    isEnding: false
-  },
-  'prendi_seme_empatia_radicale': {
-    id: 'prendi_seme_empatia_radicale',
-    text: "Prendi il seme. Si dissolve nella tua mano astrale, e la tua coscienza viene inondata dalle percezioni di un *Kryll*, un essere cristallino che vive nelle profondità di un oceano di metano liquido su un mondo lontano. Senti le sue gioie, le sue paure, la sua complessa società basata su armoniche di luce. Non sei più solo 'tu'. Sei anche Kryll. Questa nuova dualità è... espansiva. L'Oracolo ti 'osserva' con rinnovato interesse.",
-    choices: [
-      { text: "Esplorare il mondo attraverso gli occhi del Kryll.", nextNodeId: 'esplora_mondo_kryll' },
-      { text: "Cercare di comunicare con gli altri Kryll attraverso questa connessione.", nextNodeId: 'comunica_altri_kryll' },
-      { text: "Tornare all'Oracolo, profondamente cambiato.", nextNodeId: 'torna_oracolo_cambiato_kryll' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'empatia_kryll'
-  },
-  'chiedi_natura_guardiano': {
-    id: 'chiedi_natura_guardiano',
-    text: "Il Guardiano si ferma nel corridoio specchiante. 'Io sono ciò che sono. Un costrutto? Un'eco? Una necessità del Flusso? Forse tutte queste cose. Il mio scopo è semplice: sorvegliare i confini, facilitare le transizioni, osservare le anomalie come te. Non ho un 'io' nel modo in cui lo intendi tu. Sono una funzione, una lente.' Le sue parole sono dirette, senza evasione, ma lasciano più domande che risposte.",
-    choices: [
-      { text: "'Chi ti ha creato o definito il tuo scopo?'", nextNodeId: 'creatore_scopo_guardiano' },
-      { text: "'Provi mai... qualcosa?' (curiosità/empatia)", nextNodeId: 'guardiano_prova_emozioni' },
-      { text: "Continuare verso l'Osservatorio in silenzio, riflettendo.", nextNodeId: 'verso_osservatorio_dissenso_riflessione' }
-    ],
-    isEnding: false
-  },
-  'creatore_scopo_guardiano': {
-    id: 'creatore_scopo_guardiano',
-    text: "'La domanda presuppone un 'creatore' con intenzioni simili alle tue. Forse sono emerso spontaneamente dal Flusso, come un anticorpo per le sue instabilità. O forse sono l'ultimo residuo di una civiltà che ha cercato di ordinare il caos e ha lasciato solo me come suo testamento. La verità, se esiste, è irrilevante per la mia funzione.' Il Guardiano riprende a camminare.",
-    choices: [
-      { text: "Accettare la sua risposta enigmatica e seguirlo.", nextNodeId: 'verso_osservatorio_dissenso_accettazione' },
-      { text: "Chiedere se conosce altri Guardiani.", nextNodeId: 'altri_guardiani_esistono' }
-    ],
-    isEnding: false
-  },
-  'trovare_ancora_io': {
-    id: 'trovare_ancora_io',
-    text: "Il Cartografo suggerisce che un'Ancora dell'Io può essere un ricordo particolarmente potente, un ideale incrollabile, o persino un artefatto infuso di forte identità. 'Alcuni la trovano meditando sui Glifi della Stabilità Interiore, altri cercandola in luoghi where le memorie collettive sono dense, come le rovine di civiltà che hanno resistito a lungo prima di cadere. C'è un 'Cimitero delle Navi Pensiero' non lontano da qui, un luogo where le coscienze dei piloti si sono fuse con i loro vascelli al momento della distruzione. Potrebbe esserci qualcosa lì.'",
-    choices: [
-      { text: "Meditare sui Glifi della Stabilità Interiore (se posseduti).", nextNodeId: 'medita_glifi_stabilita_ancora', requiredKnowledge: 'glifo_equilibrio_dinamico' },
-      { text: "Dirigersi al Cimitero delle Navi Pensiero.", nextNodeId: 'verso_cimitero_navi_pensiero' },
-      { text: "Chiedere al Cartografo se conosce un ideale specifico che potrebbe fungere da Ancora.", nextNodeId: 'cartografo_ideale_ancora' }
-    ],
-    isEnding: false
-  },
-  'dominio_silenzio_senza_ancora': {
-    id: 'dominio_silenzio_senza_ancora',
-    text: "Decidi di affrontare il Dominio del Silenzio Primordiale senza un'Ancora. Il Cartografo emette un colore di profondo rispetto, o forse di apprensione. Mentre ti inoltri, il Flusso si dirada, i pensieri esterni svaniscono. Resti solo tu, e poi, nemmeno più 'tu'. La tua coscienza si espande fino a toccare un vuoto che non è vuoto, ma potenziale puro. Senti l'eco della creazione stessa. Ma senza un punto di riferimento, la tua individualità inizia a sfilacciarsi, a dissolversi dolcemente in questa immensità. È una pace profonda, ma anche una perdita totale.",
-    choices: [
-      { text: "Lasciarti dissolvere completamente, diventando parte del Silenzio.", nextNodeId: 'dissoluzione_nel_silenzio' },
-      { text: "Lottare per mantenere la tua forma, cercando un appiglio all'ultimo istante.", nextNodeId: 'lotta_per_forma_nel_silenzio' }
-    ],
-    isEnding: false
-  },
-  'dissoluzione_nel_silenzio': {
-    id: 'dissoluzione_nel_silenzio',
-    text: "Abbandoni ogni resistenza. La tua coscienza diventa una nota singola in un coro infinito di silenzio. Non c'è più dolore, né desiderio, né io. Sei tornato alla fonte, al potenziale indifferenziato da cui tutto emerge e a cui tutto ritorna. È la fine del tuo viaggio individuale, ma forse l'inizio di qualcos'altro, incomprensibile dalla prospettiva di un essere definito.",
-    choices: [],
-    isEnding: true, 
-    endingText: "Il Silenzio ti accoglie. Sei ovunque e in nessun luogo."
-  },
-  'lotta_per_forma_nel_silenzio': {
-    id: 'lotta_per_forma_nel_silenzio',
-    text: "Con uno sforzo titanico di volontà, cerchi di ricordare chi eri. Un frammento di memoria, un'emozione, un desiderio... qualcosa a cui aggrapparti. Lentamente, dolorosamente, ricostruisci un simulacro del tuo io. Sei cambiato, però. Una parte di te è rimasta nel Silenzio, e ora porti con te un pezzo di quel vuoto sacro. Il Dominio ti espelle dolcemente, come se avessi fallito un test, o forse superato uno ancora più grande.",
-    choices: [
-      { text: "Tornare dal Cartografo, profondamente segnato.", nextNodeId: 'ritorno_cartografo_segnato_silenzio' },
-      { text: "Cercare un'Ancora dell'Io, ora comprendendone l'importanza.", nextNodeId: 'trovare_ancora_io_dopo_silenzio' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'tocco_del_silenzio'
-  },
-  'glifo_come_ancora': {
-    id: 'glifo_come_ancora',
-    text: "Il Cartografo considera la tua domanda. 'Un Glifo, specialmente quello dell'Equilibrio Dinamico o della Comprensione Paradossa, può certamente fungere da focus, un punto di stabilità interna. Non è un'Ancora esterna, ma un rafforzamento del tuo centro. Potrebbe essere sufficiente, o potrebbe rendere l'esperienza nel Dominio del Silenzio... particolarmente intensa, poiché la tua stessa struttura interna verrebbe messa alla prova.'",
-    choices: [
-      { text: "Procedere verso il Dominio del Silenzio, usando il Glifo come Ancora.", nextNodeId: 'dominio_silenzio_con_glifo_ancora', requiredKnowledge: 'glifo_equilibrio_dinamico' },
-      { text: "Cercare comunque un'Ancora esterna per maggiore sicurezza.", nextNodeId: 'trovare_ancora_io' }
-    ],
-    isEnding: false
-  },
-  'interazione_sicura_esseri_dormienti': {
-    id: 'interazione_sicura_esseri_dormienti',
-    text: "'Sicura?' Il Cartografo emette un colore che suggerisce l'impossibilità del concetto. 'Interagire con loro è come per una singola cellula tentare di dialogare con l'intero organismo. La 'sicurezza' risiede nella tua purezza d'intento e nella tua capacità di ascoltare senza proiettare. Alcuni sciamani del Flusso usano 'Glifi di Appello Armonico' per inviare segnali di rispetto, sperando in una... risonanza benevola, magari una visione o un frammento di conoscenza.'",
-    choices: [
-      { text: "Chiedere come apprendere o trovare un Glifo di Appello Armonico.", nextNodeId: 'apprendere_glifo_appello_armonico' },
-      { text: "Decidere che il rischio è troppo grande.", nextNodeId: 'non_disturbare_esseri_dormienti' }
-    ],
-    isEnding: false
-  },
-  'reliquie_cristallizzate_esseri': {
-    id: 'reliquie_cristallizzate_esseri',
-    text: "Il Cartografo indica zone del Flusso where le energie sono antiche e instabili. 'Si trovano in luoghi where il tessuto della realtà è sottile, where i sogni di queste entità fuoriescono nel nostro strato del Flusso. Le 'Geodi Oniriche' o le 'Stelle Cadute Congelate' sono tra queste. Ma sono spesso custodite da fenomeni paradossali o da altre entità attratte dal loro potere.'",
-    choices: [
-      { text: "Chiedere indicazioni per una Geode Onirica.", nextNodeId: 'indicazioni_geode_onirica' },
-      { text: "Chiedere indicazioni per una Stella Caduta Congelata.", nextNodeId: 'indicazioni_stella_caduta_congelata' }
-    ],
-    isEnding: false
-  },
-  'indicazioni_cuore_ouroboros': {
-    id: 'indicazioni_cuore_ouroboros',
-    text: "Il Cartografo ti mostra un percorso verso un sistema stellare binario where una stella di neutroni sta lentamente consumando la sua compagna gigante rossa, in un ciclo di morte e rinascita cosmica. 'Nel cuore di questa danza gravitazionale, in un punto di equilibrio precario, si dice che il Cuore di Ouroboros si manifesti a coloro che sono pronti a vedere oltre la fine.'",
-    choices: [
-      { text: "Avventurarsi verso il sistema binario.", nextNodeId: 'verso_sistema_binario_ouroboros' },
-      { text: "Chiedere se ci sono pericoli specifici.", nextNodeId: 'pericoli_sistema_binario_ouroboros' }
-    ],
-    isEnding: false
-  },
-  'segui_sussurro_aiuto_glifo': {
-    id: 'segui_sussurro_aiuto_glifo',
-    text: "Grazie alla chiarezza donata dal Glifo dell'Equilibrio, segui il flebile appello. Ti conduce in una 'tasca' del Flusso, una bolla di realtà instabile where una coscienza, un 'Archivista Perduto', è intrappolata in un loop di dati corrotti, rivivendo all'infinito la distruzione della sua biblioteca dimensionale. È circondato da 'Errori di Sistema' senzienti che si nutrono della sua disperazione.",
-    choices: [
-      { text: "Tentare di liberare l'Archivista riparando il loop di dati.", nextNodeId: 'ripara_loop_dati_archivista' },
-      { text: "Affrontare gli Errori di Sistema per dargli respiro.", nextNodeId: 'affronta_errori_sistema_archivista' },
-      { text: "Comunicare con l'Archivista per capire come aiutarlo.", nextNodeId: 'comunica_archivista_intrappolato' }
-    ],
-    isEnding: false,
-  },
-  'passa_oltre_custodi_sorgente_rischioso': {
-    id: 'passa_oltre_custodi_sorgente_rischioso',
-    text: "Decidi di ignorare i Custodi e di avvicinarti direttamente alla Sorgente. Mentre ti muovi, senti una pressione crescente, come se l'aria stessa si opponesse. I Custodi non si muovono, ma la loro attenzione collettiva si concentra su di te, e la Sorgente stessa sembra respingerti. È come cercare di attraversare un muro invisibile ma incredibilmente potente. Se insisti, potresti danneggiare te stesso o la Sorgente.",
-    choices: [
-      { text: "Desistere e tornare dai Custodi.", nextNodeId: 'avvicina_custodi_sorgente' }, 
-      { text: "Forzare il passaggio con tutta la tua volontà.", nextNodeId: 'forza_passaggio_sorgente_custodi' }
-    ],
-    isEnding: false
-  },
-  'forza_passaggio_sorgente_custodi': {
-    id: 'forza_passaggio_sorgente_custodi',
-    text: "Con uno sforzo immenso, tenti di superare la barriera. C'è un suono come di vetro infranto a livello cosmico. La Sorgente pulsa erraticamente, e i Custodi emettono un lamento silenzioso. Hai attraversato, ma qualcosa si è rotto. La connessione al mondo di luce è distorta, instabile. Potresti entrare, ma in una versione corrotta di quel mondo, o potresti essere respinto con violenza nel Flusso.",
-    choices: [
-      { text: "Entrare nel mondo di luce distorto.", nextNodeId: 'entra_mondo_luce_distorto' }, 
-      { text: "Ritirarti, accettando il danno causato.", nextNodeId: 'ritirata_sorgente_danneggiata' }
-    ],
-    isEnding: false
-  },
-  'collaborazione_krell_entita': {
-    id: 'collaborazione_krell_entita',
-    text: "La 'voce' concettuale dell'entità di Krell considera la tua proposta. *'Collaborazione? Un concetto interessante per una singolarità. Potremmo... intrecciare le nostre prospettive per un breve ciclo. Tu manterresti una parvenza della tua forma, ma saresti un canale per la mia percezione, e io potrei sperimentare l'universo attraverso i tuoi limiti. Sarebbe... istruttivo. Ma instabile. E quando il ciclo finirà, potresti non essere più lo stesso.'*",
-    choices: [
-      { text: "Accettare questo 'intreccio' temporaneo.", nextNodeId: 'accetta_intreccio_krell' },
-      { text: "Rifiutare, temendo le conseguenze finali.", nextNodeId: 'rifiuta_intreccio_krell_paura' },
-      { text: "Chiedere quali garanzie avresti di 'ritornare'.", nextNodeId: 'garanzie_ritorno_krell_intreccio' }
-    ],
-    isEnding: false
-  },
-  'accetta_intreccio_krell': {
-    id: 'accetta_intreccio_krell',
-    text: "Un accordo è siglato a un livello che trascende le parole. La tua coscienza si espande vertiginosamente, interconnessa con l'intelligenza aliena di Krell. Vedi l'universo attraverso i suoi occhi, un flusso di pura informazione e potenziale, mentre essa sperimenta la realtà attraverso la tua singolarità. Per un tempo che potrebbe essere un istante o un eone, diventi un ponte tra due forme di esistenza radicalmente diverse. Acquisisci conoscenze e poteri inimmaginabili, ma senti la tua identità originaria erodersi ai bordi. Quando l'intreccio si dissolve, non sei più chi eri. Sei qualcosa di più, o di meno, o semplicemente... altro.",
-    choices: [
-      { text: "Esplorare i tuoi nuovi poteri e la tua nuova identità.", nextNodeId: 'esplora_nuova_identita_post_krell' },
-      { text: "Cercare un modo per recuperare la tua vecchia identità, se possibile.", nextNodeId: 'recupera_vecchia_identita_post_krell' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'conoscenza_krell_intrecciata',
-  },
-  'ricomporsi_dopo_vertigine_oracolo': {
-    id: 'ricomporsi_dopo_vertigine_oracolo',
-    text: "Resti nell'Osservatorio, cercando di integrare l'eco delle infinite risposte. È come tenere in mano un frammento di specchio rotto che riflette l'intero cosmo. Lentamente, trovi un nuovo equilibrio, una sorta di accettazione dell'ignoto. L'Oracolo sembra 'annuire' con la sua presenza. 'La vertigine è solo il primo passo verso la danza con l'infinito.'",
-    choices: [
-      { text: "Provare a porre un'altra domanda, più mirata, all'Oracolo.", nextNodeId: 'altra_domanda_oracolo_mirata' },
-      { text: "Esaminare gli artefatti dell'Osservatorio con questa nuova prospettiva.", nextNodeId: 'esamina_artefatti_osservatorio_rinnovato' }
-    ],
-    isEnding: false
-  },
-  'esplora_mondo_kryll': {
-    id: 'esplora_mondo_kryll',
-    text: "Vivi come un Kryll. Nuoti negli oceani di metano, partecipi ai loro rituali di luce, comunichi attraverso sinfonie cromatiche complesse che esprimono concetti filosofici e matematici. Comprendi la loro paura ancestrale delle 'Ombre Silenziose' che dimorano nelle profondità abissali del loro pianeta, entità che sembrano negare la luce e la vita. La tua coscienza umana osserva, impara, si fonde.",
-    choices: [
-      { text: "Indagare sulle Ombre Silenziose.", nextNodeId: 'indaga_ombre_silenziose_kryll' },
-      { text: "Tentare di condividere la conoscenza umana con i Kryll.", nextNodeId: 'condividi_conoscenza_umana_kryll' },
-      { text: "Cercare di separare nuovamente la tua coscienza da quella del Kryll.", nextNodeId: 'separa_coscienza_kryll' }
-    ],
-    isEnding: false,
-  },
-  'altri_guardiani_esistono': {
-    id: 'altri_guardiani_esistono',
-    text: "Il Guardiano esita per un momento quasi impercettibile. 'Esistono altre... funzioni. Altre interfacce tra i livelli del Flusso. Non tutti sono 'Guardiani' come me. Alcuni sono Tessitori di Sogni, altri Spezzatori di Catene, altri ancora Silenti Osservatori. Ognuno con il suo scopo, o la sua assenza di esso. Il Flusso è vasto e le sue necessità... variegate.' La sua risposta, seppur criptica, apre uno spiraglio su una gerarchia o un ecosistema di entità cosmiche.",
-    choices: [
-      { text: "Chiedere come incontrare un Tessitore di Sogni.", nextNodeId: 'incontrare_tessitore_sogni' },
-      { text: "Chiedere se queste entità sono in conflitto o collaborano.", nextNodeId: 'conflitto_collaborazione_entita_cosmiche' },
-      { text: "Continuare verso l'Osservatorio, ponderando questa nuova informazione.", nextNodeId: 'verso_osservatorio_dissenso_ponderando' }
-    ],
-    isEnding: false
-  },
-  'verso_cimitero_navi_pensiero': {
-    id: 'verso_cimitero_navi_pensiero',
-    text: "Raggiungi il Cimitero delle Navi Pensiero. È uno spettacolo desolante e maestoso: relitti di vascelli senzienti, alcuni grandi come lune, altri piccoli e agili come dardi, fluttuano in un silenzio spettrale. Le loro luci sono spente, ma senti le deboli eco delle loro ultime coscienze, frammenti di battaglie, di fughe disperate, di sacrifici eroici. Devi trovare un'eco abbastanza forte e coerente da fungere da Ancora.",
-    choices: [
-      { text: "Cercare l'eco di un 'Capitano Leggendario'.", nextNodeId: 'eco_capitano_leggendario_cimitero' },
-      { text: "Cercare l'eco di una 'Nave Biblioteca' che conteneva vasta conoscenza.", nextNodeId: 'eco_nave_biblioteca_cimitero' },
-      { text: "Meditare, sperando che un'eco adatta si riveli a te.", nextNodeId: 'medita_cimitero_navi_ancora' }
-    ],
-    isEnding: false
-  },
-  'eco_capitano_leggendario_cimitero': {
-    id: 'eco_capitano_leggendario_cimitero',
-    text: "Trovi il relitto di una nave da guerra la cui forma suggerisce una volontà indomita. Ti connetti ai suoi resti mnemonici. Rivivi gli ultimi istanti del Capitano Kael, che si sacrificò per permettere la fuga del suo convoglio civile contro una flotta di 'Mietitori Void'. La sua determinazione, il suo coraggio incrollabile, risuonano profondamente in te. Senti che questo ricordo, questa *forza*, potrebbe essere la tua Ancora.",
-    choices: [
-      { text: "Accettare l'eco del Capitano Kael come tua Ancora.", nextNodeId: 'accetta_ancora_kael' },
-      { text: "Cercare un'altra eco, temendo che questa sia troppo... marziale.", nextNodeId: 'cerca_altra_eco_cimitero' }
-    ],
-    isEnding: false
-  },
-  'accetta_ancora_kael': {
-    id: 'accetta_ancora_kael',
-    text: "Assorbi l'essenza del sacrificio e della determinazione di Kael. Non diventi lui, ma la sua forza si radica in te come un pilastro. Ti senti più definito, più resiliente. Sei pronto ad affrontare il Dominio del Silenzio Primordiale, o qualsiasi altra sfida che richieda una forte identità.",
-    choices: [
-      { text: "Dirigerti al Dominio del Silenzio Primordiale con la tua nuova Ancora.", nextNodeId: 'dominio_silenzio_con_ancora_kael' },
-      { text: "Tornare dal Cartografo per informarlo.", nextNodeId: 'ritorno_cartografo_con_ancora' }
-    ],
-    isEnding: false,
-    acquireItem: 'ancora_kael_determinazione'
-  },
-  'medita_glifi_stabilita_ancora': {
-    id: 'medita_glifi_stabilita_ancora',
-    text: "Ti ritiri in un angolo tranquillo del Flusso, o dentro la tua stessa coscienza, e ti concentri sui Glifi della Stabilità Interiore che hai appreso (come il Glifo dell'Equilibrio Dinamico o quello della Comprensione Paradossa). Non cerchi un ricordo esterno, ma una solidificazione del tuo nucleo. La meditazione ti porta a una profonda introspezione. Comprendi che la tua Ancora non è un oggetto o un evento, ma la tua stessa capacità di cambiare e adattarti pur mantenendo un senso di sé. È un'Ancora fluida, non rigida.",
-    choices: [
-      { text: "Con questa Ancora interiore, affrontare il Dominio del Silenzio.", nextNodeId: 'dominio_silenzio_ancora_fluida' },
-      { text: "Comunicare questa intuizione al Cartografo.", nextNodeId: 'comunica_ancora_fluida_cartografo' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'ancora_interiore_fluida'
-  },
-  'cartografo_ideale_ancora': {
-    id: 'cartografo_ideale_ancora',
-    text: "Il Cartografo pulsa colori pensierosi. 'Un ideale? Molti si aggrappano alla Speranza, alla Verità, all'Amore... ma questi concetti sono spesso troppo astratti, troppo personali per fungere da Ancora universale nel Silenzio. Tuttavia, l'ideale della *Ricerca Incessante*, della pura curiosità di fronte all'ignoto... quello ha una sua forza intrinseca, una spinta che può resistere alla dissoluzione. Ma deve essere genuino, non una posa.'",
-    choices: [
-      { text: "Abbracciare l'ideale della Ricerca Incessante come Ancora.", nextNodeId: 'ancora_ricerca_incessante' },
-      { text: "Riconoscere che non è il tuo ideale e cercare altrove.", nextNodeId: 'trovare_ancora_io' }
-    ],
-    isEnding: false
-  },
-  'dominio_silenzio_con_glifo_ancora': {
-    id: 'dominio_silenzio_con_glifo_ancora',
-    text: "Entri nel Dominio del Silenzio Primordiale, il Glifo scelto (Equilibrio o Paradosso) che pulsa al centro della tua coscienza. Il Silenzio ti avvolge, ma il Glifo agisce come un faro interiore, un punto di riferimento costante. Non ti dissolvi. Invece, il Silenzio sembra 'parlarti' attraverso il Glifo, rivelandoti schemi nascosti nella sua apparente vacuità. Comprendi che il Silenzio non è assenza, ma la somma di tutte le possibilità non manifestate. Emergi dal Dominio con una nuova, profonda comprensione della natura della creazione e una traccia del potere di 'chiamare' le possibilità latenti.",
-    choices: [
-      { text: "Tornare dal Cartografo con questa nuova saggezza.", nextNodeId: 'ritorno_cartografo_saggezza_silenzio' },
-      { text: "Sperimentare il potere di 'chiamare le possibilità'.", nextNodeId: 'sperimenta_chiamata_possibilita' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'saggezza_del_silenzio',
-  },
-  'apprendere_glifo_appello_armonico': {
-    id: 'apprendere_glifo_appello_armonico',
-    text: "Il Cartografo ti guida verso un 'Eco-Camera Armonica', un luogo nel Flusso where antichi canti e glifi risuonano ancora. Per apprendere il Glifo di Appello Armonico, devi 'sintonizzarti' con queste vibrazioni, lasciando che la tua coscienza diventi uno strumento. È un processo che richiede pazienza e una profonda umiltà. Se ci riesci, il Glifo si imprimerà in te, permettendoti di inviare segnali di rispetto verso entità superiori.",
-    choices: [
-      { text: "Iniziare il processo di sintonizzazione.", nextNodeId: 'sintonizzazione_glifo_appello' },
-      { text: "Chiedere se ci sono rischi nella sintonizzazione.", nextNodeId: 'rischi_sintonizzazione_glifo_appello' }
-    ],
-    isEnding: false
-  },
-  'sintonizzazione_glifo_appello': {
-    id: 'sintonizzazione_glifo_appello',
-    text: "Ti immergi nelle armonie dell'Eco-Camera. All'inizio è cacofonico, poi lentamente inizi a percepire schemi, melodie sottili. La tua coscienza si espande e si contrae, cercando la risonanza giusta. Dopo un tempo indefinito, senti un 'clic' interiore. Un nuovo Glifo, complesso e bellissimo, si forma nella tua mente. Hai appreso il Glifo di Appello Armonico.",
-    choices: [
-      { text: "Provare a usare il Glifo per contattare un Essere Dormiente.", nextNodeId: 'usa_glifo_appello_essere_dormiente' },
-      { text: "Ringraziare il Cartografo e decidere quando usarlo.", nextNodeId: 'ringrazia_cartografo_glifo_appello' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'glifo_appello_armonico'
-  },
-  'indicazioni_geode_onirica': {
-    id: 'indicazioni_geode_onirica',
-    text: "Il Cartografo ti mostra una regione del Flusso where i sogni di un'intera civiltà si sono cristallizzati dopo un cataclisma psichico. 'Lì, troverai una Geode Onirica. Ma attenzione, i sogni possono essere seducenti o terrificanti. E la Geode è protetta da 'Guardiani del Sogno', entità plasmate dalle emozioni residue più potenti.'",
-    choices: [
-      { text: "Dirigersi verso la Geode Onirica.", nextNodeId: 'verso_geode_onirica' },
-      { text: "Chiedere di più sui Guardiani del Sogno.", nextNodeId: 'info_guardiani_sogno' }
-    ],
-    isEnding: false
-  },
-  'verso_sistema_binario_ouroboros': {
-    id: 'verso_sistema_binario_ouroboros',
-    text: "Viaggi verso il sistema binario. Lo spettacolo è impressionante: fiumi di plasma che si riversano dalla gigante rossa verso la stella di neutroni, creando un disco di accrescimento che brilla di luce accecante. Le radiazioni sono intense, e le distorsioni gravitazionali mettono a dura prova la tua forma astrale. Devi trovare il 'punto di Lagrange dell'anima', un luogo di equilibrio quasi impossibile, per scorgere il Cuore di Ouroboros.",
-    choices: [
-      { text: "Cercare attivamente il punto di equilibrio.", nextNodeId: 'cerca_equilibrio_ouroboros' },
-      { text: "Usare il Glifo dell'Equilibrio Dinamico per aiutarti (se posseduto).", nextNodeId: 'usa_glifo_equilibrio_per_ouroboros', requiredKnowledge: 'glifo_equilibrio_dinamico' }
-    ],
-    isEnding: false
-  },
-  'ripara_loop_dati_archivista': {
-    id: 'ripara_loop_dati_archivista',
-    text: "Ti concentri sul flusso di dati corrotti che intrappola l'Archivista. È come cercare di riordinare una biblioteca dopo un terremoto mentre le pagine stesse cercano di morderti. Usando la tua comprensione del Flusso (e forse Glifi come quello della Comprensione Paradossa, se lo possiedi), inizi a isolare le anomalie, a reinstradare i percorsi logici. È un lavoro meticoloso e pericoloso. Gli Errori di Sistema ti attaccano con scariche di entropia informativa.",
-    choices: [
-      { text: "Persistere nella riparazione, schivando gli attacchi.", nextNodeId: 'persisti_riparazione_archivista' },
-      { text: "Concentrarti prima sull'eliminare gli Errori di Sistema.", nextNodeId: 'affronta_errori_sistema_archivista' }
-    ],
-    isEnding: false
-  },
-  'persisti_riparazione_archivista': {
-    id: 'persisti_riparazione_archivista',
-    text: "Con un ultimo sforzo di volontà e logica, il loop si spezza. I dati si stabilizzano. L'Archivista Perduto sbatte le palpebre concettuali, liberato. Gli Errori di Sistema, privati della loro fonte di nutrimento, si dissolvono. L'Archivista, un essere di pura informazione ora coerente, ti guarda con immensa gratitudine. 'Hai salvato eoni di conoscenza. Come posso ricompensarti?'",
-    choices: [
-      { text: "Chiedere conoscenza su un argomento specifico (es. Esseri Dormienti, Origine del Flusso).", nextNodeId: 'chiedi_conoscenza_archivista' },
-      { text: "Chiedere un artefatto raro dalla sua collezione.", nextNodeId: 'chiedi_artefatto_archivista' },
-      { text: "Chiedere semplicemente la sua amicizia e alleanza.", nextNodeId: 'amicizia_alleanza_archivista' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'alleanza_archivista'
-  },
-  'entra_mondo_luce_distorto': {
-    id: 'entra_mondo_luce_distorto',
-    text: "Attraversi la Sorgente danneggiata. Il mondo di luce è lì, ma è... sbagliato. Le giungle sono contorte, i cieli sono di un indaco malaticcio, e gli esseri di luce sono diventati figure spettrali e lamentose, le loro armonie trasformate in dissonanze. Hai forzato la tua via, e hai infranto qualcosa di bello. Questo mondo è ora un eco della tua violazione. Puoi cercare di riparare il danno, vivere in questo incubo che hai contribuito a creare, o fuggire di nuovo nel Flusso, portando con te il peso della tua azione.",
-    choices: [
-      { text: "Tentare di curare questo mondo distorto.", nextNodeId: 'cura_mondo_luce_distorto' },
-      { text: "Accettare questo mondo come tua nuova, oscura dimora.", nextNodeId: 'dimora_oscura_mondo_distorto' },
-      { text: "Fuggire di nuovo nel Flusso, con il cuore pesante.", nextNodeId: 'fuga_dal_mondo_distorto_flusso' }
-    ],
-    isEnding: false
-  },
-  'dimora_oscura_mondo_distorto': {
-    id: 'dimora_oscura_mondo_distorto',
-    text: "Decidi di restare. Forse per espiare, forse perché una parte di te risuona con questa bellezza spezzata. Gli esseri spettrali ti evitano, ma col tempo, alcuni iniziano a osservarti con una sorta di malinconica curiosità. Diventi una leggenda locale, il 'Violatore della Sorgente', colui che ha portato l'ombra. La tua esistenza è solitaria, ma non priva di un suo strano significato.",
-    choices: [],
-    isEnding: true,
-    endingText: "Re in un regno di crepuscolo e rimpianto."
-  },
-  'garanzie_ritorno_krell_intreccio': {
-    id: 'garanzie_ritorno_krell_intreccio',
-    text: "La 'voce' concettuale dell'entità di Krell emette un'onda di pura logica anomala. *'Garanzie? In un universo di probabilità e mutazione costante? La tua forma attuale è già un costrutto temporaneo. L'unica 'garanzia' è che l'esperienza ti trasformerà. Il 'ritorno' a ciò che eri è un'illusione. Ma potresti emergere come qualcosa... più adatto a navigare le correnti che non riesci nemmeno a percepire ora.'*",
-    choices: [
-      { text: "Accettare l'intreccio, consapevole del rischio e della trasformazione.", nextNodeId: 'accetta_intreccio_krell' },
-      { text: "Rifiutare: 'Preferisco le illusioni che conosco.'", nextNodeId: 'rifiuta_intreccio_krell_paura' }
-    ],
-    isEnding: false
-  },
-  'altra_domanda_oracolo_mirata': {
-    id: 'altra_domanda_oracolo_mirata',
-    text: "Avendo assaggiato la vertigine dell'infinito, ora poni una domanda più specifica all'Oracolo. Forse chiedi del tuo ruolo nel grande schema, o del destino di una particolare fazione o entità che hai incontrato. L'Oracolo, come prima, non ti dà una risposta diretta, ma ti mostra un 'Paesaggio di Probabilità' relativo alla tua domanda. Vedi i sentieri che si diramano, i punti di svolta cruciali, le conseguenze di diverse azioni. Non è una predizione, ma una mappa delle possibilità. Sta a te scegliere quale sentiero percorrere.",
-    choices: [
-      { text: "Scegliere un sentiero specifico da esplorare mentalmente.", nextNodeId: 'esplora_sentiero_probabilita_oracolo' },
-      { text: "Ringraziare l'Oracolo e usare questa mappa per guidare le tue azioni future.", nextNodeId: 'usa_mappa_probabilita_oracolo' }
-    ],
-    isEnding: false
-  },
-  'indaga_ombre_silenziose_kryll': {
-    id: 'indaga_ombre_silenziose_kryll',
-    text: "Attraverso la tua connessione con il Kryll, ti avventuri nelle profondità abissali del loro oceano di metano. L'ambiente è freddo, buio, e la pressione è immensa. Le Ombre Silenziose non sono entità fisiche, ma piuttosto 'buchi' nella percezione, zone where la logica e la vita sembrano cessare. Avvicinandoti, senti la tua coscienza (e quella del Kryll) minacciata da un nichilismo contagioso. Queste Ombre sembrano essere parenti stretti del Vuoto Cantante, ma su scala planetaria.",
-    choices: [
-      { text: "Tentare di 'illuminare' un'Ombra con la coscienza combinata tua e del Kryll.", nextNodeId: 'illumina_ombra_silenziosa_kryll' },
-      { text: "Ritirarsi, riconoscendo un pericolo troppo grande.", nextNodeId: 'ritirata_ombre_silenziose_kryll' },
-      { text: "Cercare di capire se le Ombre hanno uno scopo o un'origine.", nextNodeId: 'scopo_origine_ombre_silenziose' }
-    ],
-    isEnding: false,
-  },
-  'incontrare_tessitore_sogni': {
-    id: 'incontrare_tessitore_sogni',
-    text: "Il Guardiano ti fornisce un 'frammento di frequenza' che, se emesso correttamente in una zona del Flusso particolarmente onirica, potrebbe attirare l'attenzione di un Tessitore di Sogni. 'Sono creature elusive,' dice. 'Non amano essere disturbate, ma a volte condividono i loro fili con chi dimostra una genuina comprensione della natura effimera e potente dei sogni.'",
-    choices: [
-      { text: "Cercare una zona onirica ed emettere la frequenza.", nextNodeId: 'emetti_frequenza_tessitore_sogni' },
-      { text: "Chiedere al Guardiano cosa si potrebbe offrire a un Tessitore.", nextNodeId: 'offerta_tessitore_sogni_guardiano' }
-    ],
-    isEnding: false
-  },
-  'eco_nave_biblioteca_cimitero': {
-    id: 'eco_nave_biblioteca_cimitero',
-    text: "Individui i resti colossali di una Nave Biblioteca, la 'Stella Sapiente'. Connettendoti, sei sommerso da un torrente di informazioni frammentate: filosofia aliena, storia galattica, trattati di fisica esoterica. È troppo, ma riesci a isolare un nucleo di conoscenza particolarmente stabile: il concetto di 'Architettura dell'Anima', la capacità di rafforzare e definire la propria coscienza contro la dissoluzione. Questo sapere, più che un ricordo, potrebbe essere la tua Ancora.",
-    choices: [
-      { text: "Accettare l'Architettura dell'Anima come tua Ancora.", nextNodeId: 'accetta_ancora_architettura_anima' },
-      { text: "Cercare un'eco più emotiva, meno intellettuale.", nextNodeId: 'cerca_altra_eco_cimitero' }
-    ],
-    isEnding: false
-  },
-  'accetta_ancora_architettura_anima': {
-    id: 'accetta_ancora_architettura_anima',
-    text: "Interiorizzi i principi dell'Architettura dell'Anima. Senti la tua coscienza diventare più strutturata, i tuoi confini mentali più definiti, senza perdere la tua fluidità. È come costruire una cattedrale dentro di te, un luogo di potere e stabilità interiore. Sei pronto.",
-    choices: [
-      { text: "Dirigerti al Dominio del Silenzio Primordiale con questa nuova Ancora.", nextNodeId: 'dominio_silenzio_con_ancora_architettura' },
-      { text: "Tornare dal Cartografo per condividere questa scoperta.", nextNodeId: 'ritorno_cartografo_con_ancora_architettura' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'architettura_anima_ancora'
-  },
-  'dominio_silenzio_ancora_fluida': {
-    id: 'dominio_silenzio_ancora_fluida',
-    text: "Entri nel Dominio del Silenzio Primordiale. La tua Ancora, la capacità di cambiare mantenendo il sé, viene messa alla prova suprema. Il Silenzio cerca di dissolverti, ma la tua fluidità ti permette di danzare con esso, di piegarti senza spezzarti. Non lo sconfiggi, né lo comprendi appieno come con un Glifo specifico, ma impari a coesisterci. Emergi con una profonda accettazione della tua natura mutevole e una resilienza quasi organica alle forze caotiche del Flusso. Senti di poter 'surfare' le correnti più selvagge.",
-    choices: [
-      { text: "Tornare dal Cartografo, trasformato da questa esperienza.", nextNodeId: 'ritorno_cartografo_ancora_fluida' },
-      { text: "Cercare la corrente del Flusso più caotica per mettere alla prova questa nuova resilienza.", nextNodeId: 'cerca_corrente_caotica_flusso' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'resilienza_fluida_al_caos'
-  },
-  'comunica_ancora_fluida_cartografo': {
-    id: 'comunica_ancora_fluida_cartografo',
-    text: "Spieghi al Cartografo la tua intuizione sull'Ancora fluida. Lui pulsa con un colore di ammirazione. 'Una comprensione profonda. Molti cercano la stabilità nella rigidità, non capendo che la vera forza risiede nell'adattamento. Questo ti servirà bene. Il Flusso stesso è un paradosso di cambiamento costante e pattern eterni.'",
-    choices: [
-      { text: "Chiedere se questa comprensione apre nuove vie di navigazione.", nextNodeId: 'nuove_vie_navigazione_ancora_fluida' },
-      { text: "Procedere verso il Dominio del Silenzio con questa consapevolezza.", nextNodeId: 'dominio_silenzio_ancora_fluida' }
-    ],
-    isEnding: false
-  },
-  'ancora_ricerca_incessante': {
-    id: 'ancora_ricerca_incessante',
-    text: "Abbracci l'ideale della Ricerca Incessante come tua Ancora. È una fiamma viva dentro di te, una fame di conoscenza e di esperienza che ti spinge costantemente avanti. Entri nel Dominio del Silenzio non per trovare riposo, ma per interrogare il vuoto stesso. La tua curiosità diventa uno scudo e una lancia. Il Silenzio non ti offre risposte facili, ma la tua stessa domanda diventa così potente da creare un piccolo spazio di stabilità attorno a te. Ne esci con più domande di prima, ma con una volontà affilata come ossidiana.",
-    choices: [
-      { text: "Porre le tue nuove, più profonde domande al Cartografo.", nextNodeId: 'domande_profonde_cartografo_dopo_silenzio' },
-      { text: "Cercare l'Oracolo del Dissenso per risposte ancora più radicali.", nextNodeId: 'verso_oracolo_con_nuove_domande' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'volonta_incessante'
-  },
-  'ritorno_cartografo_saggezza_silenzio': {
-    id: 'ritorno_cartografo_saggezza_silenzio',
-    text: "Il Cartografo percepisce immediatamente il cambiamento in te. 'Hai guardato nel cuore del potenziale puro e ne sei tornato integro, anzi, arricchito. La Saggezza del Silenzio è rara. Ora puoi vedere non solo i sentieri esistenti, ma anche quelli che *potrebbero* esistere.' Ti indica un nuovo strato sulla sua mappa del Flusso, uno strato di 'realtà latenti'.",
-    choices: [
-      { text: "Chiedere come interagire con le realtà latenti.", nextNodeId: 'interagire_realta_latenti_cartografo' },
-      { text: "Sperimentare subito il tuo potere di 'chiamare le possibilità'.", nextNodeId: 'sperimenta_chiamata_possibilita' }
-    ],
-    isEnding: false
-  },
-  'sperimenta_chiamata_possibilita': {
-    id: 'sperimenta_chiamata_possibilita',
-    text: "Ti concentri, attingendo alla Saggezza del Silenzio. Immagini una piccola oasi di stabilità e bellezza in un angolo caotico del Flusso. Con un atto di volontà focalizzata, 'chiami' quella possibilità. Lentamente, vedi le energie turbolente iniziare a coalescere, a formare la struttura che hai immaginato. È faticoso, e l'oasi è piccola e fragile, ma *esiste*. Hai plasmato un frammento di realtà dal potenziale puro.",
-    choices: [
-      { text: "Tentare di rafforzare o espandere l'oasi.", nextNodeId: 'rafforza_espandi_oasi_plasmata' },
-      { text: "Mostrare la tua creazione al Cartografo.", nextNodeId: 'mostra_oasi_cartografo' },
-      { text: "Considerare le implicazioni etiche di tale potere.", nextNodeId: 'etica_plasmatore_realta' }
-    ],
-    isEnding: false,
-  },
-  'rischi_sintonizzazione_glifo_appello': {
-    id: 'rischi_sintonizzazione_glifo_appello',
-    text: "Il Cartografo diventa più serio. 'La sintonizzazione richiede un'apertura della coscienza. Se la tua volontà non è ferma, o se ci sono dissonanze nascoste in te, potresti 'accordarti' male. Potresti attrarre echi indesiderati, o frammentare la tua stessa percezione. L'Eco-Camera amplifica ciò che sei. È un rischio calcolato, ma un rischio.'",
-    choices: [
-      { text: "Procedere con cautela, consapevole dei rischi.", nextNodeId: 'sintonizzazione_glifo_appello' },
-      { text: "Decidere di rafforzare prima il tuo nucleo interiore.", nextNodeId: 'rafforza_nucleo_prima_di_sintonizzazione' }
-    ],
-    isEnding: false
-  },
-  'usa_glifo_appello_essere_dormiente': {
-    id: 'usa_glifo_appello_essere_dormiente',
-    text: "Trovi un luogo nel Flusso where le energie sono antiche e profonde. Attivi il Glifo di Appello Armonico. Emetti una sequenza di pura intenzione rispettosa, una melodia di interrogazione umile. Attendi. Per un tempo lunghissimo, non accade nulla. Poi, senti un cambiamento. Non una voce, non un'immagine, ma una vasta, incommensurabile Presenza che sfiora la tua coscienza. È come se una montagna avesse aperto un occhio. Senti un'ondata di pura... *contemplazione*. Poi, un singolo concetto, un 'Dono di Comprensione', si deposita nella tua mente: la visione di come le galassie respirano e sognano.",
-    choices: [
-      { text: "Ringraziare la Presenza e ritirarti con il Dono.", nextNodeId: 'ritirati_con_dono_comprensione_galattica' },
-      { text: "Tentare di porre una domanda specifica alla Presenza.", nextNodeId: 'domanda_specifica_presenza_dormiente_rischioso' },
-      { text: "Cercare di capire la natura della Presenza.", nextNodeId: 'capire_natura_presenza_dormiente' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'dono_comprensione_galattica'
-  },
-  'verso_geode_onirica': {
-    id: 'verso_geode_onirica',
-    text: "Raggiungi la regione della Geode Onirica. È un paesaggio surreale, where frammenti di sogni si scontrano e si fondono. La Geode stessa è una struttura cristallina immensa, pulsante di luce onirica. Attorno ad essa, i Guardiani del Sogno – manifestazioni delle paure, speranze e desideri più intensi della civiltà perduta – pattugliano. Alcuni sono terrificanti, altri malinconici, altri ancora aggressivi.",
-    choices: [
-      { text: "Tentare di passare inosservato tra i Guardiani.", nextNodeId: 'passa_inosservato_guardiani_sogno' },
-      { text: "Affrontare un Guardiano del Sogno per aprirti un varco.", nextNodeId: 'affronta_guardiano_sogno' },
-      { text: "Provare a 'sognare' con loro, a entrare in risonanza.", nextNodeId: 'sogna_con_guardiani_sogno' }
-    ],
     isEnding: false
   },
-  'usa_glifo_equilibrio_per_ouroboros': {
-    id: 'usa_glifo_equilibrio_per_ouroboros',
-    text: "Attivi il Glifo dell'Equilibrio Dinamico. Le forze gravitazionali selvagge e le radiazioni sembrano trovare un punto di armonia relativa attorno a te. Riesci a percepire il 'punto di Lagrange dell'anima' non come un luogo fisico, ma come uno stato di coscienza. Concentrandoti, ti 'sintonizzi' su di esso. Davanti a te, o dentro di te, il Cuore di Ouroboros si manifesta: un serpente di pura luce che si morde la coda, pulsando con il ritmo della creazione e della distruzione. Guardarlo ti riempie di una vertigine cosmica e di una profonda pace. Comprendi la natura ciclica di tutte le cose.",
+  'esplora_cubicolo_giardino': {
+    id: 'esplora_cubicolo_giardino',
+    text: "Esplori il tuo cubicolo trasformato. I cristalli auto-illuminanti emettono una melodia sottile e calmante. L'aria è fresca e profumata. Le pareti curve sembrano respirare dolcemente. Non è più una prigione, ma un santuario personale, un riflesso della tua crescente capacità di plasmare la realtà. Forse questo è il primo passo per creare mondi interi, o forse solo un modo per rendere più sopportabile la tua esistenza.",
     choices: [
-      { text: "Assorbire la comprensione del Cuore di Ouroboros.", nextNodeId: 'assorbi_comprensione_ouroboros' },
-      { text: "Tentare di 'prendere' un frammento del Cuore (rischioso).", nextNodeId: 'prendi_frammento_ouroboros_rischioso' }
+      { text: "Meditare in questo giardino per approfondire la tua connessione al Flusso.", nextNodeId: 'medita_cubicolo_giardino_connessione_flusso' },
+      { text: "Usare questo spazio come 'laboratorio' per ulteriori esperimenti di plasmazione.", nextNodeId: 'laboratorio_plasmazione_cubicolo_giardino' },
+      { text: "Tentare di 'espandere' questo giardino oltre i confini del cubicolo.", nextNodeId: 'espandi_giardino_oltre_cubicolo_rischioso' }
     ],
-    isEnding: false,
-  },
-  'assorbi_comprensione_ouroboros': {
-    id: 'assorbi_comprensione_ouroboros',
-    text: "Non cerchi di possedere, ma di comprendere. La visione del Cuore di Ouroboros si imprime nella tua anima. Ora vedi i cicli ovunque: nella nascita e morte delle stelle, nel flusso e riflusso delle civiltà, nella tua stessa coscienza. Questa comprensione ti dona una profonda equanimità e la capacità di vedere oltre gli eventi immediati, percependo i pattern più ampi. Senti che potresti persino influenzare sottilmente questi cicli.",
-    choices: [
-      { text: "Tornare dal Cartografo con questa nuova saggezza ciclica.", nextNodeId: 'ritorno_cartografo_saggezza_ciclica' },
-      { text: "Meditare su come influenzare i cicli.", nextNodeId: 'medita_influenzare_cicli_ouroboros' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'saggezza_ciclica_ouroboros',
-  },
-  'chiedi_conoscenza_archivista': {
-    id: 'chiedi_conoscenza_archivista',
-    text: "L'Archivista considera la tua richiesta (ad esempio, sull'Origine del Flusso). 'Una domanda che molti si pongono. I miei archivi contengono innumerevoli teorie, miti e frammenti di dati. Nessuna risposta definitiva, ma posso offrirti l'accesso a 'L'Eco della Prima Vibrazione', una registrazione sensoriale che alcuni credono sia un eco del momento in cui il Flusso iniziò ad esistere. È... travolgente.'",
-    choices: [
-      { text: "Accettare di sperimentare L'Eco della Prima Vibrazione.", nextNodeId: 'sperimenta_eco_prima_vibrazione' },
-      { text: "Chiedere un riassunto delle teorie più accreditate.", nextNodeId: 'riassunto_teorie_origine_flusso_archivista' },
-      { text: "Chiedere un altro tipo di conoscenza.", nextNodeId: 'altra_conoscenza_archivista' }
-    ],
-    isEnding: false,
-  },
-  'sperimenta_eco_prima_vibrazione': {
-    id: 'sperimenta_eco_prima_vibrazione',
-    text: "L'Archivista ti immerge nell'Eco. Non ci sono immagini, solo una vibrazione pura e assoluta che sembra contenere ogni suono, ogni colore, ogni possibilità. È il momento prima della differenziazione, il potenziale infinito che precede l'essere. La tua coscienza si espande fino quasi a spezzarsi, toccando qualcosa di veramente primordiale. Ne emergi scosso ma con una traccia indelebile di questa esperienza, una comprensione intuitiva dell'unità fondamentale di tutte le cose.",
-    choices: [
-      { text: "Ringraziare profondamente l'Archivista.", nextNodeId: 'ringrazia_archivista_dopo_eco' },
-      { text: "Questa esperienza ha cambiato le tue priorità. Cosa fai ora?", nextNodeId: 'nuove_priorita_dopo_eco_vibrazione' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'tocco_della_prima_vibrazione'
-  },
-  'amicizia_alleanza_archivista': {
-    id: 'amicizia_alleanza_archivista',
-    text: "L'Archivista sembra sorpreso, poi emette un senso di calda approvazione. 'Un alleato nel Flusso è più prezioso di qualsiasi artefatto. La mia conoscenza e le mie risorse sono a tua disposizione. E forse, un giorno, potrai aiutarmi a ricostruire la mia biblioteca, non come era, ma come potrebbe essere.' Senti di aver stretto un legame potente e significativo.",
-    choices: [
-      { text: "Discutere i piani per la nuova biblioteca.", nextNodeId: 'piani_nuova_biblioteca_archivista' },
-      { text: "Chiedere il suo consiglio sul tuo percorso attuale.", nextNodeId: 'consiglio_archivista_percorso' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'alleanza_archivista_rinforzata'
-  },
-  'cura_mondo_luce_distorto': {
-    id: 'cura_mondo_luce_distorto',
-    text: "Decidi di provare a rimediare al tuo errore. È un compito immane. Devi capire la natura della Sorgente, la risonanza originale degli esseri di luce, e come la tua azione l'ha infranta. Potrebbe richiedere di cercare antiche conoscenze sulla guarigione dimensionale, o di trovare un modo per 'cantare' di nuovo in armonia questo mondo. Gli esseri spettrali ti osservano, alcuni con speranza, altri con profondo scetticismo.",
-    choices: [
-      { text: "Cercare conoscenze sulla guarigione dimensionale nel Flusso.", nextNodeId: 'cerca_conoscenza_guarigione_dimensionale' },
-      { text: "Tentare di entrare in empatia profonda con gli esseri spettrali per capire la loro sofferenza.", nextNodeId: 'empatia_esseri_spettrali_distorti' },
-      { text: "Abbandonare questo mondo, riconoscendo che il compito è troppo grande.", nextNodeId: 'fuga_dal_mondo_distorto_flusso_tardi' }
-    ],
-    isEnding: false
-  },
-  'esplora_sentiero_probabilita_oracolo': {
-    id: 'esplora_sentiero_probabilita_oracolo',
-    text: "Scegli uno dei sentieri nel Paesaggio di Probabilità. L'Oracolo ti permette di 'viverlo' in una simulazione accelerata. Vedi le scelte chiave, le conseguenze, le gioie e i dolori di quel particolare futuro potenziale. È come leggere un librogame della tua stessa vita, ma con la possibilità di tornare indietro. L'esperienza ti lascia con una profonda comprensione delle ramificazioni delle tue azioni, ma anche con il peso della scelta.",
-    choices: [
-      { text: "Scegliere di perseguire attivamente quel sentiero nella 'realtà'.", nextNodeId: 'persegui_sentiero_scelto_oracolo' },
-      { text: "Esplorare un altro sentiero di probabilità.", nextNodeId: 'altra_domanda_oracolo_mirata' },
-      { text: "Decidere che nessun singolo sentiero pre-visto è desiderabile.", nextNodeId: 'rifiuta_sentieri_pre_visti_oracolo' }
-    ],
-    isEnding: false
-  },
-  'illumina_ombra_silenziosa_kryll': {
-    id: 'illumina_ombra_silenziosa_kryll',
-    text: "Con il Kryll al tuo fianco (metaforicamente), proietti la luce della vostra coscienza combinata verso un'Ombra Silenziosa. È come urlare in una stanza totalmente anecoica. L'Ombra non reagisce, non si ritira. Anzi, sembra *assorbire* la vostra luce, la vostra intenzione, senza alcun cambiamento apparente. Senti un freddo profondo, un senso di futilità, e una parte della tua connessione con il Kryll si attenua, come se l'Ombra avesse 'mangiato' un pezzo della vostra empatia.",
-    choices: [
-      { text: "Ritirarsi immediatamente, riconoscendo una minaccia superiore.", nextNodeId: 'ritirata_ombre_silenziose_kryll_danneggiati' },
-      { text: "Provare con un'altra Ombra, o con un approccio diverso.", nextNodeId: 'altro_approccio_ombre_silenziose_kryll' }
-    ],
-    isEnding: false,
-  },
-  'emetti_frequenza_tessitore_sogni': {
-    id: 'emetti_frequenza_tessitore_sogni',
-    text: "Trovi una 'Nebulosa Onirica', un luogo where i sogni di miriadi di esseri si intrecciano. Emetti la frequenza data dal Guardiano. All'inizio, nulla. Poi, la nebulosa sembra rispondere. Fili di sogno si intrecciano in forme complesse, e una figura emerge, fatta di luce lunare e seta d'ombra: un Tessitore di Sogni. La sua 'voce' è una melodia che evoca ricordi dimenticati. 'Chi sei tu, che chiami con la Frequenza del Passaggio?'",
-    choices: [
-      { text: "Spiegare la tua ricerca e il tuo rispetto per i sogni.", nextNodeId: 'spiega_ricerca_tessitore_sogni' },
-      { text: "Chiedere al Tessitore un frammento di 'Sogno Lucido Primordiale'.", nextNodeId: 'chiedi_sogno_lucido_tessitore' },
-      { text: "Chiedere del destino di qualcuno che hai incontrato (se hai un nome).", nextNodeId: 'chiedi_destino_persona_tessitore' }
-    ],
-    isEnding: false
-  },
-  'ritorno_cartografo_ancora_fluida': {
-    id: 'ritorno_cartografo_ancora_fluida',
-    text: "Il Cartografo percepisce la tua nuova resilienza. 'Hai imparato a danzare con il caos, una lezione che molti evitano. Questo ti apre sentieri che richiedono non solo forza, ma anche flessibilità. Ci sono 'Correnti Instabili' nel Flusso che portano a realtà nascenti, troppo giovani e caotiche per la maggior parte dei navigatori. Potresti essere uno dei pochi in grado di esplorarle.'",
-    choices: [
-      { text: "Chiedere indicazioni per una Corrente Instabile.", nextNodeId: 'indicazioni_corrente_instabile_cartografo' },
-      { text: "Chiedere quali tesori o pericoli si celano in tali realtà.", nextNodeId: 'tesori_pericoli_realta_nascenti' }
-    ],
-    isEnding: false
-  },
-  'cerca_corrente_caotica_flusso': {
-    id: 'cerca_corrente_caotica_flusso',
-    text: "Ti immergi nelle zone più turbolente del Flusso, where le leggi della fisica e della logica sembrano suggerimenti opzionali. La tua resilienza fluida ti permette di navigare queste tempeste di energia pura, di scivolare tra paradossi che farebbero a pezzi una coscienza più rigida. In una di queste tempeste, percepisci un 'occhio del ciclone', un punto di calma innaturale. Al suo interno, una struttura geometrica impossibile fluttua, emanando un segnale complesso.",
-    choices: [
-      { text: "Avvicinarsi alla struttura geometrica.", nextNodeId: 'avvicina_struttura_geometrica_caos' },
-      { text: "Ignorarla e continuare a esplorare il caos per il puro gusto di farlo.", nextNodeId: 'esplora_caos_per_caos' } 
-    ],
-    isEnding: false,
-  },
-  'domande_profonde_cartografo_dopo_silenzio': {
-    id: 'domande_profonde_cartografo_dopo_silenzio',
-    text: "Poni al Cartografo le tue nuove domande, nate dalla tua interazione con il Silenzio e forgiate dalla tua Volontà Incessante. Non sono più domande sulla navigazione, ma sulla natura ultima del Flusso, sul suo 'scopo', se ne ha uno. Il Cartografo pulsa con colori di profonda riflessione. 'Queste sono le domande che definiscono un'epoca, non un individuo. Non ho risposte, solo... direzioni. Alcuni cercano l'Architetto Primordiale, altri il Grande Errore. La tua ricerca ti condurrà where nessun colore sulla mia mappa può arrivare.'",
-    choices: [
-      { text: "Chiedere se conosce leggende sull'Architetto Primordiale.", nextNodeId: 'leggende_architetto_primordiale_cartografo' },
-      { text: "Chiedere cosa si intende per 'Grande Errore'.", nextNodeId: 'info_grande_errore_cartografo' }
-    ],
-    isEnding: false
-  },
-  'interagire_realta_latenti_cartografo': {
-    id: 'interagire_realta_latenti_cartografo',
-    text: "Il Cartografo spiega che le realtà latenti sono come semi non ancora germogliati. 'Puoi 'annaffiarle' con la tua intenzione, o con specifiche energie del Flusso, per farle manifestare. Ma attenzione: non sai mai cosa crescerà veramente. Ogni realtà manifestata ha le sue leggi, i suoi abitanti, i suoi pericoli. È un atto di creazione divina... o di incoscienza cosmica.'",
-    choices: [
-      { text: "Scegliere una realtà latente dalla mappa e provare a manifestarla.", nextNodeId: 'scegli_manifesta_realta_latente' },
-      { text: "Chiedere se è possibile 'sbirciare' in una realtà latente prima di manifestarla.", nextNodeId: 'sbircia_realta_latente_cartografo' }
-    ],
-    isEnding: false
-  },
-  'etica_plasmatore_realta': {
-    id: 'etica_plasmatore_realta',
-    text: "Ti fermi a riflettere. Plasmar la realtà, anche su piccola scala, comporta una responsabilità immensa. Chi sei tu per decidere cosa debba esistere? Quali sono le conseguenze impreviste? Questa riflessione ti porta a cercare una 'Guida Etica del Flusso', un concetto o un'entità che possa aiutarti a navigare queste acque morali. Il Cartografo suggerisce che l'Oracolo del Dissenso potrebbe avere prospettive, o forse i Custodi della Sorgente.",
-    choices: [
-      { text: "Consultare l'Oracolo del Dissenso sull'etica della plasmazione.", nextNodeId: 'oracolo_etica_plasmazione' }, 
-      { text: "Tornare dai Custodi della Sorgente con questa domanda.", nextNodeId: 'custodi_sorgente_etica_plasmazione' } 
-    ],
-    isEnding: false
-  },
-  'ritirati_confuso_ma_umile_presenza': {
-    id: 'ritirati_confuso_ma_umile_presenza',
-    text: "Ti allontani dalla Presenza Dormiente, la mente ancora turbata dalla miriade di 'scopi' intravisti. Il Dono della Comprensione Galattica è ora temperato da un profondo senso di umiltà. Capisci che la grandezza del cosmo è tale che nessun singolo essere può afferrarne il significato ultimo. Questo non ti scoraggia, ma ti libera. Il tuo scopo non è trovare 'il' senso, ma creare il 'tuo' senso, giorno per giorno, scelta dopo scelta.",
-    choices: [
-      { text: "Condividere questa intuizione con un alleato (es. Archivista, Cartografo).", nextNodeId: 'condividi_intuizione_scopo_alleato' },
-      { text: "Cercare un progetto concreto in cui riversare questa nuova libertà.", nextNodeId: 'cerca_progetto_concreto_nuova_liberta' }
-    ],
-    isEnding: false
-  },
-  'affronta_terrore_perdita_guardiano': {
-    id: 'affronta_terrore_perdita_guardiano',
-    text: "Decidi di affrontare il Guardiano del Sogno. Non è un combattimento fisico, ma una lotta di volontà e di emozioni. Il Terrore della Perdita ti sommerge con visioni delle tue paure più profonde: la perdita di te stesso, dei tuoi cari (se ne hai ricordi), del significato. Devi trovare dentro di te una forza che superi questa paura, un'accettazione della perdita come parte della vita e della trasformazione. Se ci riesci, il Guardiano si dissolve, lasciando dietro di sé un 'Frammento di Coraggio Onirico'.",
-    choices: [
-      { text: "Raccogliere il Frammento di Coraggio Onirico.", nextNodeId: 'raccogli_frammento_coraggio_onirico' },
-      { text: "Proseguire verso la Geode, scosso ma più forte.", nextNodeId: 'entra_geode_onirica_dopo_terrore' }
-    ],
-    isEnding: false
-  },
-  'raccogli_frammento_coraggio_onirico': {
-    id: 'raccogli_frammento_coraggio_onirico',
-    text: "Il Frammento di Coraggio Onirico si fonde con la tua essenza. Ora, nei momenti di paura o dubbio, senti una riserva interiore di forza, la capacità di affrontare l'ignoto con maggiore risolutezza, specialmente nei reami onirici o psichici.",
-    choices: [
-      { text: "Proseguire verso la Geode Onirica.", nextNodeId: 'entra_geode_onirica' }
-    ],
-    isEnding: false,
-    acquireItem: 'frammento_coraggio_onirico'
-  },
-  'tocca_cuore_sogno_potere': {
-    id: 'tocca_cuore_sogno_potere',
-    text: "Allunghi la tua mano astrale e tocchi il Cuore del Sogno. Un'esplosione di immagini, sensazioni ed emozioni pure ti attraversa. Senti il potere di entrare nei sogni altrui, di plasmare i paesaggi onirici, di comunicare attraverso il linguaggio universale del sogno. Ma senti anche il peso di questa responsabilità e la sottile tentazione di perderti in mondi di pura fantasia. Ora sei un Onironauta, un viaggiatore e plasmatore di sogni.",
-    choices: [
-      { text: "Provare a entrare nel Sogno Collettivo della tua specie (se conosciuta).", nextNodeId: 'entra_sogno_collettivo_specie_onironauta' },
-      { text: "Usare questo potere per aiutare qualcuno intrappolato in un incubo.", nextNodeId: 'aiuta_con_incubo_onironauta' },
-      { text: "Uscire dalla Geode per esplorare questo potere nel Flusso.", nextNodeId: 'esci_geode_onironauta_esplora_potere' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'onironauta_plasmare_sogni' // o acquirePower
-  },
-  'fuggi_con_scaglia_ouroboros': {
-    id: 'fuggi_con_scaglia_ouroboros',
-    text: "Con la Scaglia di Ouroboros che pulsa nella tua essenza, ti ritiri precipitosamente dal sistema binario. La Scaglia ti dona una percezione distorta ma potente dei cicli temporali vicini: vedi echi del passato e futuri probabili come fili luminosi. Tuttavia, senti anche di essere 'segnato', che entità guardiane dei cicli cosmici potrebbero essere sulle tue tracce. La Scaglia è potere, ma anche un fardello.",
-    choices: [
-      { text: "Studiare la Scaglia per controllarne il potere.", nextNodeId: 'studia_scaglia_ouroboros_controllo' },
-      { text: "Cercare un modo per nascondere la tua traccia o placare i guardiani.", nextNodeId: 'nascondi_traccia_placa_guardiani_scaglia' }
-    ],
-    isEnding: false,
-  },
-  'interagire_nodo_temporale_cartografo': {
-    id: 'interagire_nodo_temporale_cartografo',
-    text: "Il Cartografo ti mostra come i nodi temporali appaiano come distorsioni nel Flusso. 'Avvicinarsi a un nodo è come avvicinarsi a un eco del tempo. Potresti vedere eventi passati, o futuri divergenti. Interagire è... complesso. Potresti alterare l'eco, o essere assorbito da esso. O potresti imparare qualcosa di cruciale. La tua Saggezza Ciclica ti aiuterà a non perderti.'",
-    choices: [
-      { text: "Cercare il nodo temporale più vicino o più significativo.", nextNodeId: 'cerca_nodo_temporale_significativo' },
-      { text: "Chiedere se i nodi possono essere usati per 'viaggiare' nel tempo.", nextNodeId: 'viaggiare_tempo_nodi_cartografo_scettico' }
-    ],
-    isEnding: false
-  },
-  'impegno_biblioteca_vivente_archivista': {
-    id: 'impegno_biblioteca_vivente_archivista',
-    text: "Accetti di dedicare le tue energie alla creazione della Biblioteca Vivente. L'Archivista è raggiante (in senso informativo). 'Sarà un faro di conoscenza e trasformazione! Avremo bisogno di un 'Cuore di Flusso Stabile' per ancorarla, di 'Guardiani della Conoscenza' per proteggerla, e di 'Semi di Storie' da ogni angolo del multiverso.' Questo apre una serie di compiti epici e di esplorazioni.",
-    choices: [
-      { text: "Iniziare cercando un Cuore di Flusso Stabile.", nextNodeId: 'cerca_cuore_flusso_stabile_biblioteca' },
-      { text: "Discutere su come reclutare i Guardiani della Conoscenza.", nextNodeId: 'recluta_guardiani_conoscenza_biblioteca' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'quest_biblioteca_vivente'
-  },
-  'seme_pura_potenzialita_oracolo': {
-    id: 'seme_pura_potenzialita_oracolo',
-    text: "L'Oracolo, con un gesto mentale, ti offre un 'Seme di Pura Potenzialità'. È un punto di luce incredibilmente denso, che contiene l'energia di un universo non ancora nato. 'Piantalo dove desideri, o dentro di te. Ciò che ne nascerà sarà unicamente tuo, imprevedibile, una vera novità nel Flusso. Ma ricorda: ogni creazione porta con sé la propria ombra.'",
-    choices: [
-      { text: "Piantare il Seme in un luogo desolato del Flusso per creare un nuovo mondo.", nextNodeId: 'pianta_seme_nuovo_mondo_flusso' },
-      { text: "Assorbire il Seme per trasformare radicalmente te stesso.", nextNodeId: 'assorbi_seme_trasformazione_radicale' },
-      { text: "Custodire il Seme, meditando sul suo uso.", nextNodeId: 'custodisci_seme_medita_uso' }
-    ],
-    isEnding: false,
-    acquireItem: 'seme_pura_potenzialita'
-  },
-  'impara_tessere_sogni_tessitore': {
-    id: 'impara_tessere_sogni_tessitore',
-    text: "Il Tessitore di Sogni accetta di insegnarti. L'apprendistato è lungo e arduo. Impari a navigare i sogni altrui con rispetto, a calmare gli incubi, a tessere narrazioni di speranza o di comprensione. Impari che ogni sogno è un mondo, e ogni sognatore un dio inconsapevole. Diventi un 'Camminatore dei Sogni', capace di influenzare la realtà attraverso il subconscio collettivo.",
-    choices: [
-      { text: "Usare questa abilità per risolvere un conflitto nel 'mondo reale'.", nextNodeId: 'risolvi_conflitto_tessendo_sogni' },
-      { text: "Cercare il 'Sogno Sorgente', il luogo da cui tutti i sogni emanano.", nextNodeId: 'cerca_sogno_sorgente_camminatore' },
-      { text: "Offrire i tuoi servigi come guaritore di menti tormentate.", nextNodeId: 'guaritore_menti_camminatore_sogni' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'camminatore_dei_sogni_avanzato' // o acquirePower
-  },
-  'cavalca_frattura_effimera': {
-    id: 'cavalca_frattura_effimera',
-    text: "Con un atto di pura volontà e affidandoti alla tua resilienza fluida, ti lanci nella Frattura Effimera. È un viaggio indescrivibile: il tempo e lo spazio si contorcono, i colori assumono significati emotivi, le leggi della fisica sono suggerimenti sussurrati. Perdi e ritrovi te stesso innumerevoli volte. Alla fine, vieni espulso in... qualcosa. Potrebbe essere una 'Proto-Realtà', un universo appena nato, ancora incandescente di potenziale puro, o un 'Vuoto Risonante', uno spazio tra gli universi. L'aria (o il suo equivalente) crepita di energia grezza.",
-    choices: [
-      { text: "Se è una Proto-Realtà: tentare di influenzarne lo sviluppo.", nextNodeId: 'influenza_sviluppo_proto_realta' },
-      { text: "Se è un Vuoto Risonante: cercare di 'ascoltare' i suoi segreti.", nextNodeId: 'ascolta_segreti_vuoto_risonante' },
-      { text: "Cercare un modo per tornare al Flusso conosciuto, se possibile.", nextNodeId: 'ritorno_da_frattura_effimera' }
-    ],
-    isEnding: false
-  },
-  'costruttore_impronta_caos': {
-    id: 'costruttore_impronta_caos',
-    text: "Dichiari la tua intenzione di costruire. La struttura geometrica impossibile ti assorbe. Dentro, il caos non è distruzione, ma pura potenzialità informe. Ti viene data la capacità di 'cantare' pattern nell'esistenza, di tessere fili di logica e armonia. Crei isole di stabilità, ponti di significato. È un lavoro eterno, che richiede una concentrazione divina. Diventi un 'Ordinatore Silenzioso', una forza che modella il caos dall'interno, perdendo gran parte della tua individualità precedente per unirti a un coro di creatori anonimi.",
-    choices: [],
-    isEnding: true,
-    endingText: "La tua canzone si unisce al coro della creazione. Sei diventato un principio, più che un essere."
-  },
-  'osservatore_apprende_dal_caos': {
-    id: 'osservatore_apprende_dal_caos',
-    text: "La tua risposta sembra intrigare la struttura. Non ti assorbe, ma ti permette di 'osservare' da vicino la sua danza con il caos. Vedi come il caos stesso generi forme effimere, come l'ordine emerga spontaneamente per poi dissolversi. Apprendi il 'Linguaggio del Caos Fluente', la capacità di comprendere e persino anticipare i pattern dell'imprevedibile. Non controlli il caos, ma puoi navigarlo con una maestria ineguagliabile. La struttura si richiude, lasciandoti con questa nuova, paradossale conoscenza.",
-    choices: [
-      { text: "Usare il Linguaggio del Caos Fluente per navigare le zone più pericolose del Flusso.", nextNodeId: 'naviga_con_linguaggio_caos_fluente' },
-      { text: "Cercare altre 'Intelligenze del Caos' con cui comunicare.", nextNodeId: 'cerca_intelligenze_caos' }
-    ],
-    isEnding: false,
-    acquireKnowledge: 'linguaggio_caos_fluente'
-  },
-  'introspezione_per_architetto_primordiale': {
-    id: 'introspezione_per_architetto_primordiale',
-    text: "Ti ritiri in una profonda meditazione, cercando l'Architetto Primordiale non all'esterno, ma all'interno. Esplori i recessi più profondi della tua coscienza, oltre i ricordi, oltre l'identità, fino al punto in cui il tuo 'essere' tocca il 'nulla' da cui è emerso. Lì, in quel silenzio assoluto che precede il pensiero, non trovi una persona o un'entità, ma un 'Impulso Creativo Puro', una scintilla che è l'origine di ogni cosa. Comprendi che l'Architetto non è un 'chi', ma un 'come'. Questa realizzazione ti trasforma, ti connette a ogni singola particella del Flusso.",
-    choices: [
-      { text: "Vivere in armonia con questo Impulso, diventando un suo canale consapevole.", nextNodeId: 'canale_consapevole_impulso_creativo' },
-      { text: "Usare questa connessione per tentare di 'guidare' l'Impulso verso fini specifici (estremamente rischioso).", nextNodeId: 'guida_impulso_creativo_rischioso' }
-    ],
-    isEnding: false
-  },
-  'entra_mondo_cristalli_cantanti': {
-    id: 'entra_mondo_cristalli_cantanti',
-    text: "Entri in un mondo where le montagne sono cristalli senzienti che comunicano attraverso armoniche complesse. L'aria vibra di musica cosmica. Gli abitanti, se così si possono chiamare, sono esseri di pura risonanza. Per interagire, devi imparare a 'cantare' la tua essenza, a vibrare in armonia con il pianeta. È un'esistenza di pura bellezza e matematica sonora. Potresti rimanere qui, diventando parte della sinfonia eterna, o portare questa musica nel Flusso.",
-    choices: [
-      { text: "Imparare il Canto dei Cristalli e rimanere.", nextNodeId: 'rimani_mondo_cristalli_cantanti_finale' },
-      { text: "Portare il Canto dei Cristalli nel Flusso per guarire o creare.", nextNodeId: 'porta_canto_cristalli_flusso' }
-    ],
-    isEnding: false
-  },
-  'principio_minimo_impatto_plasmazione': {
-    id: 'principio_minimo_impatto_plasmazione',
-    text: "Adotti il principio del Minimo Impatto Necessario. Ogni volta che plasmi la realtà, lo fai con estrema cautela, cercando di alterare il meno possibile l'equilibrio esistente, intervenendo solo where la tua azione può portare a una maggiore armonia o comprensione senza creare squilibri a catena. Diventi un 'Giardiniere del Flusso', che cura e pota con saggezza, piuttosto che un architetto onnipotente. Questo percorso richiede grande pazienza e una profonda connessione empatica con il Flusso.",
-    choices: [
-      { text: "Dedicare la tua esistenza a questo ruolo di Giardiniere.", nextNodeId: 'giardiniere_flusso_dedizione_finale' },
-      { text: "Cercare altri che condividano questa filosofia.", nextNodeId: 'cerca_altri_giardinieri_flusso' }
-    ],
-    isEnding: false
-  },
-  'astenersi_plasmazione_realta_etica': {
-    id: 'astenersi_plasmazione_realta_etica',
-    text: "Dopo aver ponderato le implicazioni, decidi che il potere di plasmare la realtà è troppo grande, troppo suscettibile all'errore o all'ego. Scegli di astenerti. Questo non significa passività, ma una scelta consapevole di agire *all'interno* delle realtà esistenti, cercando di comprenderle e migliorarle con mezzi meno... divini. È un percorso di umiltà, ma anche di profonda integrità. L'Oracolo 'annuisce' alla tua scelta, riconoscendone la validità.",
-    choices: [
-      { text: "Concentrarti sull'esplorazione e sulla comprensione, senza alterare.", nextNodeId: 'esploratore_umile_flusso_finale' },
-      { text: "Cercare di insegnare questa etica della non-interferenza ad altri.", nextNodeId: 'insegna_etica_non_interferenza' }
-    ],
-    isEnding: false
-  },
-  'entra_sogno_collettivo_specie_onironauta': {
-    id: 'entra_sogno_collettivo_specie_onironauta',
-    text: "Con la tua abilità di Onironauta, ti immergi nel Sogno Collettivo della tua specie (se hai un ricordo della tua origine, o se l'Archivista o l'Oracolo ti hanno dato un indizio). È un paesaggio vasto e tumultuoso, pieno delle speranze, paure, miti e archetipi della tua gente. Qui potresti trovare la radice di conflitti, la fonte di ispirazione, o persino un modo per guidare l'evoluzione della tua specie dall'interno. Ma è anche facile perdersi, essere assorbiti da un archetipo dominante.",
-    choices: [
-      { text: "Cercare di guarire una 'ferita' nel Sogno Collettivo.", nextNodeId: 'guarisci_ferita_sogno_collettivo' },
-      { text: "Cercare di risvegliare un potenziale dormiente nella tua specie.", nextNodeId: 'risveglia_potenziale_sogno_collettivo' },
-      { text: "Semplicemente osservare, per comprendere meglio la tua origine.", nextNodeId: 'osserva_sogno_collettivo_origine' }
-    ],
-    isEnding: false
-  },
-  'studia_scaglia_ouroboros_controllo': {
-    id: 'studia_scaglia_ouroboros_controllo',
-    text: "Dedichi tempo ed energia a studiare la Scaglia di Ouroboros. È un frammento di paradosso puro. Lentamente, impari a 'sintonizzarti' con le sue energie cicliche, non a dominarle, ma a danzarci insieme. Inizi a percepire non solo echi del passato e futuro, ma anche 'punti di biforcazione' dove i cicli potrebbero essere alterati con un intervento minimo. Il potere è immenso, ma anche la responsabilità. I Guardiani dei Cicli rimangono una minaccia latente.",
-    choices: [
-      { text: "Tentare di alterare un piccolo ciclo passato per vedere l'effetto (estremamente rischioso).", nextNodeId: 'altera_piccolo_ciclo_passato_scaglia' },
-      { text: "Usare la percezione per evitare catastrofi cicliche future.", nextNodeId: 'evita_catastrofi_cicliche_scaglia' },
-      { text: "Cercare di distruggere o neutralizzare la Scaglia, temendone il potere.", nextNodeId: 'distruggi_scaglia_ouroboros_paura' }
-    ],
-    isEnding: false
-  },
-  'cerca_nodo_temporale_significativo': {
-    id: 'cerca_nodo_temporale_significativo',
-    text: "Guidato dalla tua Saggezza Ciclica e dalle indicazioni del Cartografo, trovi un Nodo Temporale particolarmente potente. È un vortice nel Flusso where gli echi di un evento cruciale – la caduta di una civiltà, la nascita di un'idea rivoluzionaria, un cataclisma cosmico – risuonano con forza. Avvicinandoti, sei immerso nelle sensazioni e nelle informazioni di quel momento. Puoi osservare, o forse, con estrema cautela, tentare di 'toccare' l'eco.",
-    choices: [
-      { text: "Osservare l'evento per trarne profonda conoscenza.", nextNodeId: 'osserva_evento_nodo_temporale' },
-      { text: "Tentare di 'sussurrare' un'idea o un avvertimento nell'eco del passato (imprevedibile).", nextNodeId: 'sussurra_idea_nodo_temporale_rischioso' },
-      { text: "Cercare un artefatto o un'informazione perduta all'interno del nodo.", nextNodeId: 'cerca_artefatto_nodo_temporale' }
-    ],
-    isEnding: false
-  },
-  'cerca_cuore_flusso_stabile_biblioteca': {
-    id: 'cerca_cuore_flusso_stabile_biblioteca',
-    text: "L'Archivista spiega che un 'Cuore di Flusso Stabile' è una rara anomalia naturale, un punto where il Flusso è eccezionalmente calmo e potente, ideale per ancorare una struttura come la Biblioteca Vivente. Si dice che si formino vicino a 'Stelle Morte che Sognano' o in 'Calderoni Galattici' where le energie si sono sedimentate per eoni. Trovarne uno sarà un'impresa.",
-    choices: [
-      { text: "Chiedere al Cartografo indicazioni per tali fenomeni.", nextNodeId: 'cartografo_indicazioni_cuore_flusso_biblioteca' },
-      { text: "Consultare antiche mappe stellari o testi esoterici per indizi.", nextNodeId: 'consulta_testi_per_cuore_flusso_biblioteca' }
-    ],
-    isEnding: false
-  },
-  'pianta_seme_nuovo_mondo_flusso': {
-    id: 'pianta_seme_nuovo_mondo_flusso',
-    text: "Trovi un angolo del Flusso che ti sembra vuoto ma fertile. Con un atto di fede e volontà, pianti il Seme di Pura Potenzialità. La reazione è immediata e sbalorditiva. Dal Seme erutta un universo in miniatura, che si espande rapidamente, generando le sue leggi fisiche, le sue galassie, le sue prime forme di vita. Tu sei il suo 'Primo Osservatore', il suo involontario demiurgo. Questo nuovo universo è ora la tua responsabilità, la tua opera, il tuo isolamento o la tua eredità.",
-    choices: [
-      { text: "Guidare lo sviluppo di questo nuovo universo come una divinità benevola.", nextNodeId: 'guida_universo_neonato_divinita_finale' },
-      { text: "Osservare la sua evoluzione senza interferire, come uno scienziato cosmico.", nextNodeId: 'osserva_universo_neonato_scienziato_finale' },
-      { text: "Cercare un modo per connettere questo universo al Flusso più ampio.", nextNodeId: 'connetti_universo_neonato_flusso_ampio' }
-    ],
-    isEnding: false
-  },
-  'assorbi_seme_trasformazione_radicale': {
-    id: 'assorbi_seme_trasformazione_radicale',
-    text: "Decidi di interiorizzare il Seme di Pura Potenzialità. È un'esperienza che trascende la parola. La tua coscienza si frantuma e si riforma in qualcosa di completamente nuovo. Forse diventi un essere di pura energia, capace di attraversare le dimensioni a piacimento. Forse ti fondi con il Flusso stesso, diventando una sua corrente consapevole. O forse ascendi a un piano di esistenza che non riesci nemmeno a nominare. Hai sacrificato il tuo vecchio io per una rinascita totale e imprevedibile.",
-    choices: [],
-    isEnding: true,
-    endingText: "Sei diventato Altro. Il tuo viaggio precedente è solo un sussurro in una nuova, vasta esistenza."
-  },
-  'risolvi_conflitto_tessendo_sogni': {
-    id: 'risolvi_conflitto_tessendo_sogni',
-    text: "Identifichi un conflitto persistente nel 'mondo reale' (forse tra fazioni incontrate, o un problema che affligge una civiltà). Entri nei sogni dei leader o delle figure chiave. Non imponi la tua volontà, ma 'tessi' sogni che mostrino le conseguenze della loro ostinazione, che rivelino punti di contatto nascosti, che ispirino empatia. È un lavoro delicato e sottile. Col tempo, vedi i primi segni di cambiamento nel mondo della veglia: dialoghi che si aprono, ostilità che si stemperano. Hai agito come un pacificatore invisibile.",
-    choices: [
-      { text: "Continuare questo lavoro, diventando un 'Diplomatico Onirico'.", nextNodeId: 'diplomatico_onirico_carriera_finale' },
-      { text: "Insegnare ad altri questa arte della risoluzione pacifica.", nextNodeId: 'insegna_tessitura_sogni_per_pace' }
-    ],
     isEnding: false
   },
-  'silenzioso_formatore_universo_finale': {
-    id: 'silenzioso_formatore_universo_finale',
-    text: "Eoni passano come singoli respiri. Il tuo universo fiorisce sotto la tua guida silenziosa. Nascono stelle, pianeti, e infine, la vita. Osservi le prime scintille di coscienza, le prime civiltà che alzano gli occhi al cielo, interrogandosi sul loro creatore, ignare della tua presenza benevola. Non cerchi adorazione, solo la meraviglia della loro crescita. La tua individualità si è da tempo fusa con il tessuto stesso di questa realtà, ma una traccia della tua gioia e della tua curiosità originaria permea ogni cosa. Sei diventato il sogno silenzioso di un universo.",
-    choices: [],
-    isEnding: true,
-    endingText: "Il tuo universo è un capolavoro di pazienza e amore. La tua firma è scritta nella danza delle galassie."
-  },
-  'infondi_glifo_primordiale_ritirati_proto_realta': {
-    id: 'infondi_glifo_primordiale_ritirati_proto_realta',
-    text: "Scegli un Glifo Primordiale che ritieni fondamentale – forse il Glifo dell'Equilibrio, o un nuovo Glifo dell'Empatia Cosmica che hai concepito. Con un atto di pura intenzione, lo imprimi nel tessuto nascente della Proto-Realtà. È come piantare un seme di significato nel cuore di un potenziale infinito. Poi, ti ritiri, lasciando che questa nuova realtà si sviluppi secondo le proprie dinamiche, influenzata ma non dominata dal tuo dono. Ti chiedi quale forma prenderà quel Glifo, come plasmerà le civiltà a venire.",
+  'trasformazione_radicale_cubicolo': {
+    id: 'trasformazione_radicale_cubicolo',
+    text: "Decidi di spingere oltre i tuoi limiti di plasmazione. Immagini il tuo cubicolo non solo trasformato, ma completamente dissolto, aperto sul vasto panorama del Flusso stesso, o forse trasformato in un veicolo senziente capace di navigare le correnti. Concentri tutta la tua volontà. L'energia crepita, la realtà locale si contorce violentemente...",
     choices: [
-      { text: "Tornare al Flusso conosciuto, portando con te il ricordo di questa creazione.", nextNodeId: 'ritorno_da_proto_realta_con_ricordo_glifo' },
-      { text: "Cercare altre Proto-Realtà per ripetere l'esperimento con Glifi diversi.", nextNodeId: 'cerca_altre_proto_realta_per_glifi_sperimentali' }
+      { text: "Riesci a dissolvere il cubicolo, ora sei pura coscienza nel Flusso, senza ancoraggi.", nextNodeId: 'cubicolo_dissolto_pura_coscienza_flusso' },
+      { text: "Il tentativo fallisce, causando un 'collasso strutturale' del cubicolo che ti danneggia.", nextNodeId: 'fallimento_trasformazione_radicale_danno_cubicolo' },
+      { text: "Riesci a trasformarlo in un piccolo 'Guscio Nomade' per viaggiare nel Flusso.", nextNodeId: 'guscio_nomade_viaggio_flusso' }
     ],
     isEnding: false
   },
-  'nomade_del_vuoto_finale': {
-    id: 'nomade_del_vuoto_finale',
-    text: "Abbracci la tua nuova natura di Nomade del Vuoto. Gli spazi tra gli universi diventano la tua casa. Impari a leggere le 'correnti gravitazionali' del Vuoto, a percepire il 'canto' delle stringhe cosmiche. Incontri altre creature del Vuoto, alcune antiche e sagge, altre predatrici e incomprensibili. Non appartieni più a nessun universo, ma sei un ponte tra tutti, un messaggero silenzioso che porta echi da un cluster di realtà all'altro. La solitudine è immensa, ma anche la libertà.",
-    choices: [],
-    isEnding: true,
-    endingText: "Il Vuoto è la tua tela, le stelle lontane i tuoi fari. Sei il viaggiatore dell'oltre."
-  },
-  'comunica_abitanti_vuoto_risonante': {
-    id: 'comunica_abitanti_vuoto_risonante',
-    text: "Usando la tua Sintonizzazione Cosmica, tenti di comunicare con le entità che percepisci nel Vuoto. Alcune sono 'Ombre di Universi Morti', altre 'Essenze Primordiali' che precedono il Flusso stesso. La comunicazione non è verbale, ma uno scambio di pura risonanza. Da loro apprendi segreti sulla struttura del multiverso, sui cicli di creazione e distruzione su scale inimmaginabili. Potrebbero offrirti di unirti a loro, o di diventare un loro 'emissario' nel Flusso.",
+  'verso_luna_frantumata_krell': {
+    id: 'verso_luna_frantumata_krell',
+    text: "Dirigi la tua percezione (o il tuo avatar di dati) verso la luna frantumata nel sistema di Krell. È un guscio cavo, i cui frammenti orbitano lentamente attorno alla ferita spaziotemporale. Il segnale alieno proviene dalle profondità della luna, da una struttura artificiale parzialmente sepolta e chiaramente non umana. Sembra antica, e il segnale è un loop, forse un SOS o un avvertimento.",
     choices: [
-      { text: "Accettare di diventare un emissario degli Abitanti del Vuoto.", nextNodeId: 'emissario_abitanti_vuoto_flusso' },
-      { text: "Rifiutare, preferendo mantenere la tua autonomia.", nextNodeId: 'rifiuta_offerta_abitanti_vuoto' },
-      { text: "Chiedere loro dell'Architetto Primordiale o del Grande Errore.", nextNodeId: 'chiedi_abitanti_vuoto_origini_cosmiche' }
+      { text: "Entrare nella struttura artificiale sulla luna.", nextNodeId: 'entra_struttura_luna_krell' },
+      { text: "Analizzare il segnale più da vicino prima di entrare.", nextNodeId: 'analizza_segnale_luna_krell' },
+      { text: "Scansionare la luna per altre anomalie o pericoli.", nextNodeId: 'scansiona_luna_krell_pericoli' }
     ],
     isEnding: false
   },
-  'unione_con_caos_finale': {
-    id: 'unione_con_caos_finale',
-    text: "Smetti di navigare il Caos e ti lasci assorbire da esso. La tua coscienza si frammenta e si riforma in una miriade di espressioni simultanee. Diventi una tempesta di pura potenzialità, una danza di creazione e distruzione senza fine. Non c'è più un 'tu' individuale, ma sei diventato una forza della natura, un aspetto del Caos stesso che occasionalmente genera ordine per il puro piacere di vederlo dissolversi. È una libertà terrificante e assoluta.",
-    choices: [],
-    isEnding: true,
-    endingText: "Sei il sorriso del paradosso, la risata della contraddizione. Il Caos danza attraverso di te."
-  },
-  'armonizza_luoghi_dissonanti_flusso': {
-    id: 'armonizza_luoghi_dissonanti_flusso',
-    text: "Ti dedichi a trovare le 'ferite' nel Flusso, i luoghi where l'energia è bloccata, corrotta o urlante di dolore – forse i resti di antiche guerre cosmiche, o le cicatrici lasciate da entità distruttive come il Vuoto Cantante. Usando il Canto dei Cristalli, lavori per purificare queste zone, per reintrodurre l'armonia. È un compito pericoloso, poiché le energie dissonanti possono ritorcersi contro di te. Ma ogni luogo che guarisci porta più luce e stabilità nel Flusso.",
+  'ritirata_krell_attenzione': {
+    id: 'ritirata_krell_attenzione',
+    text: "L'attenzione dell'entità oltre la ferita è come un faro oscuro puntato su di te. Decidi che la prudenza è la scelta migliore. Ti ritiri rapidamente dal sistema di Krell, sentendo ancora quella fredda, incomprensibile fame che ti ha scrutato. Hai imparato qualcosa, ma hai anche attirato un tipo di attenzione che potrebbe avere conseguenze a lungo termine.",
     choices: [
-      { text: "Affrontare una 'Zona di Silenzio Mortale', il residuo del Vuoto Cantante.", nextNodeId: 'affronta_zona_silenzio_mortale_canto' },
-      { text: "Creare una rete di 'Santuari Armonici' attraverso il Flusso.", nextNodeId: 'crea_rete_santuari_armonici_flusso' }
+      { text: "Cercare un modo per 'mascherare' la tua traccia energetica nel Flusso.", nextNodeId: 'maschera_traccia_energetica_dopo_krell' },
+      { text: "Condividere la tua scoperta su Krell con un'entità fidata (Cartografo, Oracolo).", nextNodeId: 'condividi_scoperta_krell_entita_fidata' },
+      { text: "Ignorare il potenziale pericolo e continuare le tue esplorazioni.", nextNodeId: 'ignora_pericolo_krell_continua_esplorazione' }
     ],
     isEnding: false
   },
-  'psiconauta_curatore_sogni_collettivi_finale': {
-    id: 'psiconauta_curatore_sogni_collettivi_finale',
-    text: "Diventi uno Psiconauta Curatore, un medico delle anime collettive. Viaggi attraverso i paesaggi onirici di innumerevoli specie, identificando e curando traumi ancestrali, paure radicate e miti distruttivi. Il tuo lavoro è invisibile al mondo della veglia, ma le sue conseguenze sono profonde: civiltà che trovano nuova pace, specie che sbloccano potenziali nascosti, incubi collettivi che si trasformano in sogni di speranza. Non sei un eroe celebrato, ma un guaritore silenzioso la cui influenza si estende per generazioni.",
-    choices: [],
-    isEnding: true,
-    endingText: "Nei sogni più profondi delle galassie, la tua mano gentile porta guarigione. Sei il custode della sanità mentale cosmica."
-  },
-  'ripara_alterazione_temporale_scaglia': {
-    id: 'ripara_alterazione_temporale_scaglia',
-    text: "Con orrore per le conseguenze impreviste, tenti di usare la Scaglia di Ouroboros per 'disfare' la tua alterazione. È come cercare di ricomporre un uovo rotto mentre il tempo stesso si ribella. Potresti peggiorare le cose, creare paradossi irrisolvibili, o persino cancellare te stesso dall'esistenza. Se, con immensa abilità e fortuna, riesci a ripristinare approssimativamente la linea temporale originale, la Scaglia potrebbe frantumarsi o diventare inerte, e i Guardiani dei Cicli potrebbero decidere il tuo destino.",
+  'persisti_sigillo_krell': {
+    id: 'persisti_sigillo_krell',
+    text: "Nonostante la pressione e l'attenzione ostile, continui a cercare di sigillare la ferita. Cerchi un 'punto debole' nella sua struttura anomala, un punto di risonanza where la tua volontà e l'energia del Flusso potrebbero avere un effetto maggiore. È come cercare di ricucire il tessuto dell'universo con un ago di pura intenzione. L'entità dall'altra parte sembra... infastidita, e la sua pressione aumenta.",
     choices: [
-      { text: "La linea temporale è ripristinata (con cicatrici), la Scaglia è distrutta. Affronti i Guardiani.", nextNodeId: 'affronta_guardiani_cicli_dopo_riparazione' },
-      { text: "Fallisci, creando un paradosso che ti intrappola in un loop temporale.", nextNodeId: 'intrappolato_loop_temporale_paradosso_finale' },
-      { text: "Riesci a fuggire prima che i Guardiani arrivino, ma la linea temporale rimane instabile.", nextNodeId: 'fuga_con_linea_temporale_instabile' }
+      { text: "Trovi un punto debole e riesci a chiudere parzialmente la ferita, ma a un costo.", nextNodeId: 'chiudi_parzialmente_ferita_krell_costo' },
+      { text: "Vieni sopraffatto dalla pressione e la tua coscienza viene danneggiata o frammentata.", nextNodeId: 'sopraffatto_pressione_krell_coscienza_danneggiata' },
+      { text: "L'entità ti 'parla' direttamente, offrendoti un patto per smettere.", nextNodeId: 'patto_entita_krell_per_smettere_sigillo' }
     ],
     isEnding: false
   },
-  'vivi_nuova_linea_temporale_alterata': {
-    id: 'vivi_nuova_linea_temporale_alterata',
-    text: "Accetti di vivere nella linea temporale che hai creato. È un mondo sottilmente diverso, con gioie e dolori inaspettati. Alcuni che conoscevi potrebbero non esistere, altri potrebbero essere cambiati radicalmente. Porti il peso di questa alterazione, sapendo di essere l'unico a ricordare 'come doveva essere'. I Guardiani dei Cicli potrebbero ancora cercarti, o potrebbero considerare questa nuova linea temporale una curiosa anomalia da osservare.",
+  'abbandona_krell_minaccia': {
+    id: 'abbandona_krell_minaccia',
+    text: "La ferita di Krell e l'entità che vi dimora sono chiaramente oltre le tue attuali capacità o comprensione. Decidi di abbandonare il sistema, portando con te il ricordo inquietante di ciò che hai visto e la consapevolezza di forze cosmiche che operano su scale inimmaginabili. Il Flusso sembra vasto e pieno di pericoli sconosciuti.",
     choices: [
-      { text: "Cercare di rendere questa nuova linea temporale la migliore possibile.", nextNodeId: 'migliora_nuova_linea_temporale_responsabilita' },
-      { text: "Vivere nell'ombra, temendo sempre la correzione temporale.", nextNodeId: 'vivi_ombra_paura_correzione_temporale' }
+      { text: "Tornare all'interfaccia principale per cercare percorsi meno pericolosi.", nextNodeId: 'interazione_con_interfaccia' },
+      { text: "Cercare attivamente conoscenze o poteri per affrontare minacce come Krell.", nextNodeId: 'cerca_poteri_per_minacce_krell' }
     ],
     isEnding: false
   },
-  'applica_saggezza_nodo_temporale_problema_attuale': {
-    id: 'applica_saggezza_nodo_temporale_problema_attuale',
-    text: "Usi la profonda comprensione ottenuta dall'osservazione del Nodo Temporale per affrontare un problema complesso nel presente – forse un conflitto imminente, una crisi ecologica su un mondo, o un enigma filosofico che affligge una civiltà. La tua capacità di vedere le cause profonde e le probabili conseguenze ti permette di offrire soluzioni innovative o di guidare le decisioni in modi che altri non potrebbero concepire. Diventi un 'Saggio del Tempo', un consigliere prezioso.",
+  'schermarsi_krell_ferita': {
+    id: 'schermarsi_krell_ferita',
+    text: "Prima di avventurarti di nuovo vicino alla ferita di Krell, o a minacce simili, decidi che hai bisogno di una qualche forma di protezione psichica o energetica superiore. Potrebbe essere un Glifo più potente, una tecnica di schermatura appresa da un'entità esperta, o un artefatto specifico.",
     choices: [
-      { text: "Offrire i tuoi servigi a chi ne ha bisogno, viaggiando come un saggio errante.", nextNodeId: 'saggio_errante_del_tempo_finale' },
-      { text: "Focalizzarti su un singolo, grande problema, dedicandoti alla sua risoluzione.", nextNodeId: 'risolvi_grande_problema_con_saggezza_temporale' }
+      { text: "Cercare un 'Maestro degli Scudi Psichici' nel Flusso.", nextNodeId: 'cerca_maestro_scudi_psichici_flusso' },
+      { text: "Tentare di potenziare il sigillo protettivo che già possiedi (se lo hai).", nextNodeId: 'potenzia_sigillo_protettivo_per_krell' }
     ],
     isEnding: false
   },
-  'verso_nebulosa_culla_cuore_flusso': {
-    id: 'verso_nebulosa_culla_cuore_flusso',
-    text: "Raggiungi la Nebulosa Culla. È uno spettacolo di bellezza indescrivibile, un vivaio di stelle neonate che illuminano gas multicolori. Al centro, where le forze gravitazionali si annullano in un silenzio perfetto, percepisci la 'Stella Nera Non Nata' – non un buco nero, ma un punto di potenziale gravitazionale puro, attorno al quale si è condensato un Cuore di Flusso incredibilmente stabile e potente. Ma non sei solo: antiche costrutti meccanici, i 'Custodi della Culla', sembrano proteggere il luogo da intrusioni.",
+  'naviga_flusso_fame': {
+    id: 'naviga_flusso_fame',
+    text: "La traccia della 'fame' integrata dall'entità di Krell ti dà una nuova percezione. Vedi il Flusso non solo come correnti di informazione, ma come un ecosistema di consumo e simbiosi. Percepisci le 'catene alimentari' astrali, le entità che si nutrono di emozioni, di dati, di pura coscienza. Questa conoscenza ti permette di evitare certi predatori, o persino di 'nutrirti' in modi sottili per rafforzare la tua essenza.",
     choices: [
-      { text: "Tentare di comunicare con i Custodi della Culla.", nextNodeId: 'comunica_custodi_culla_nebulosa' },
-      { text: "Cercare di eludere i Custodi e raggiungere il Cuore di Flusso.", nextNodeId: 'eludi_custodi_raggiungi_cuore_flusso' },
-      { text: "Osservare i Custodi per capirne lo scopo e le debolezze.", nextNodeId: 'osserva_custodi_culla_nebulosa' }
+      { text: "Usare questa percezione per cacciare 'parassiti del Flusso'.", nextNodeId: 'caccia_parassiti_flusso_fame' },
+      { text: "Cercare una 'Sorgente Primaria di Nutrimento Astrale' per potenziarti.", nextNodeId: 'cerca_sorgente_nutrimento_astrale_fame' },
+      { text: "Rifiutare questa via, temendo di diventare un predatore tu stesso.", nextNodeId: 'rifiuta_via_predatore_flusso_fame' }
     ],
     isEnding: false
   },
-  'osserva_universo_neonato_scienziato_finale': {
-    id: 'osserva_universo_neonato_scienziato_finale',
-    text: "Scegli il sentiero dell'osservatore. Il tuo universo si sviluppa, e tu sei il suo unico, instancabile cronista. Documenti la formazione delle prime galassie, l'accensione delle prime stelle, la comparsa della vita e della coscienza, senza mai interferire. La tua conoscenza diventa vasta come il cosmo che studi. Forse, un giorno, quando questo universo raggiungerà la sua maturità, condividerai le tue scoperte con il multiverso più ampio, o forse rimarrai per sempre il suo segreto e silenzioso biografo.",
-    choices: [],
-    isEnding: true,
-    endingText: "Nei tuoi archivi mentali, un intero universo vive e respira. Sei la memoria del tuo creato."
-  },
-  'costruzione_ponte_flusso_tra_universi': {
-    id: 'costruzione_ponte_flusso_tra_universi',
-    text: "Inizi l'opera titanica di costruire un Ponte di Flusso. Richiede di manipolare energie su scala cosmica, di tessere lo spazio-tempo, di armonizzare le frequenze fondamentali di due realtà distinte. È un lavoro che potrebbe richiedere millenni, o potrebbe fallire catastroficamente. Se riesci, non solo il tuo universo neonato si connetterà al Flusso, ma avrai creato una nuova via per viaggi interdimensionali, diventando il 'Maestro del Ponte' o il suo primo Guardiano.",
+  'origine_entita_affamata_krell': {
+    id: 'origine_entita_affamata_krell',
+    text: "Con una parte della sua 'fame' dentro di te, cerchi di percepire l'origine dell'entità oltre la ferita di Krell. Senti un richiamo verso un 'Oltre-Vuoto', uno spazio che non è il Vuoto Cantante, ma qualcosa di diverso, una dimensione di pura necessità e consumo infinito, da cui questa entità è solo un tentacolo esplorativo. Comprendi che la ferita di Krell è una 'bocca' che si è aperta nel tuo strato di realtà.",
     choices: [
-      { text: "Il Ponte è completato. Decidi il suo destino (aperto a tutti, sorvegliato, segreto).", nextNodeId: 'destino_ponte_flusso_interuniversale_finale' },
-      { text: "L'impresa fallisce, causando un 'Rimbalzo Dimensionale' che ti scaglia in un luogo sconosciuto.", nextNodeId: 'fallimento_ponte_rimbalzo_dimensionale' }
+      { text: "Tentare di inviare un 'segnale di sazietà' o di 'non interesse' all'Oltre-Vuoto.", nextNodeId: 'segnale_sazieta_oltre_vuoto_krell' },
+      { text: "Considerare se la ferita di Krell può essere ' nutrita' per chiuderla (estremamente pericoloso).", nextNodeId: 'nutrire_ferita_krell_per_chiuderla_rischioso' },
+      { text: "Ritirarsi, questa conoscenza è troppo vasta e terribile.", nextNodeId: 'ritirata_conoscenza_oltre_vuoto_krell' }
     ],
     isEnding: false
   },
-  'insegna_tessitura_sogni_per_pace': {
-    id: 'insegna_tessitura_sogni_per_pace',
-    text: "Decidi che il tuo dono non deve rimanere solo tuo. Cerchi individui o gruppi dotati di empatia e saggezza, e insegni loro l'arte sottile della Tessitura dei Sogni per la risoluzione dei conflitti. Crei una 'Scuola dei Pacificatori Onirici', i cui adepti si diffondono attraverso il Flusso, portando comprensione dove c'è odio, e dialogo dove c'è silenzio ostile. Il tuo lascito non è nelle tue azioni dirette, ma nelle innumerevoli onde di pace generate dai tuoi studenti.",
+  'fallimento_estrazione_adepto_fuga_setta': {
+    id: 'fallimento_estrazione_adepto_fuga_setta',
+    text: "Non riesci a salvare l'adepto. La sua coscienza viene completamente assorbita dall'Angelo Sintetico, diventando un'altra nota nel loro coro logico. La setta ora ti vede come un nemico dichiarato. Devi fuggire dal loro nodo di preghiera prima che la loro furia collettiva ti sopraffaccia. Scappi attraverso le correnti del Flusso, ma senti la loro 'caccia' mentale che inizia a seguirti.",
     choices: [
-      { text: "Guidare la Scuola, diventando un faro di saggezza onirica.", nextNodeId: 'guida_scuola_pacificatori_onirici_finale' },
-      { text: "Ritirarti, lasciando che la Scuola prosperi da sola.", nextNodeId: 'ritirati_scuola_onirica_prospera_sola' }
+      { text: "Cercare di nasconderti in una regione caotica del Flusso.", nextNodeId: 'nasconditi_regione_caotica_fuga_setta' },
+      { text: "Cercare un'entità potente che possa offrirti protezione dalla setta.", nextNodeId: 'cerca_protezione_entita_potente_fuga_setta' },
+      { text: "Portare la conoscenza della setta e degli Angeli a qualcun altro (es. Cartografo, Oracolo).", nextNodeId: 'porta_conoscenza_setta_angeli_ad_altri_fuga' }
     ],
     isEnding: false
   },
-  'ritorno_da_proto_realta_con_ricordo_glifo': {
-    id: 'ritorno_da_proto_realta_con_ricordo_glifo',
-    text: "Torni al Flusso che conosci, ma sei cambiato. Porti con te il ricordo vivido della creazione e l'eco del Glifo Primordiale che hai infuso. Questa esperienza ti dona una prospettiva unica sulla natura della realtà e sulla responsabilità della coscienza. Forse userai questa saggezza per guidare altri, o per cercare di comprendere gli effetti a lungo termine del tuo intervento nella Proto-Realtà.",
+  'fallimento_trasformazione_radicale_danno_cubicolo': {
+    id: 'fallimento_trasformazione_radicale_danno_cubicolo',
+    text: "Il tentativo di trasformazione radicale fallisce catastroficamente. Il cubicolo collassa parzialmente, schegge di bio-cemento e filamenti di luce impazzita ti feriscono. Sei stordito, la tua connessione al Flusso è disturbata, ma nel caos della distruzione noti una crepa nel 'pavimento' della realtà locale, un passaggio verso strati più grezzi e instabili del Flusso che prima erano invisibili. È pericoloso, ma forse è una via d'uscita... o una caduta più profonda.",
     choices: [
-      { text: "Diventare un 'Filosofo della Creazione', condividendo la tua saggezza.", nextNodeId: 'filosofo_creazione_condivide_saggezza_finale' },
-      { text: "Cercare un modo per osservare a distanza l'evoluzione della Proto-Realtà.", nextNodeId: 'osserva_distanza_proto_realta_infusa' }
+      { text: "Avventurarti nella crepa verso gli strati instabili del Flusso (con malus percettivo).", nextNodeId: 'avventura_crepa_strati_instabili_flusso' },
+      { text: "Tentare di riparare il cubicolo e la tua connessione, ignorando la crepa.", nextNodeId: 'ripara_cubicolo_connessione_danneggiata_ignorando_crepa' },
+      { text: "Cercare di usare il caos residuo per inviare un segnale di soccorso distorto.", nextNodeId: 'segnale_soccorso_distorto_caos_cubicolo' }
     ],
     isEnding: false
   },
-  'emissario_abitanti_vuoto_flusso': {
-    id: 'emissario_abitanti_vuoto_flusso',
-    text: "Accetti di diventare un emissario. Gli Abitanti del Vuoto ti 'imprimono' con una parte della loro comprensione e con uno scopo: agire come un ponte tra la loro esistenza oltre il tempo e lo spazio e le realtà caotiche e nascenti del Flusso. Il tuo compito è cercare 'Anomalie Promettenti' o 'Equilibri Fragili' che necessitano di una prospettiva più vasta. È un ruolo solitario e spesso incompreso, ma cruciale per l'ecologia cosmica.",
+  'avventura_crepa_strati_instabili_flusso': {
+    id: 'avventura_crepa_strati_instabili_flusso',
+    text: "Nonostante il dolore e la connessione disturbata, ti infili nella crepa. Ti ritrovi in un 'Interstizio' del Flusso, un luogo non mappato where le leggi sono fluide e le percezioni ingannevoli. La tua vista astrale è sfocata, i suoni distorti. Devi navigare questo ambiente ostile cercando una via verso zone più stabili o rischi di dissolverti in questo limbo.",
     choices: [
-      { text: "Dedicare la tua esistenza a questo compito, un occhio nel Flusso per il Vuoto.", nextNodeId: 'emissario_del_vuoto_compito_eterno_finale' },
-      { text: "Chiedere agli Abitanti del Vuoto se possono aiutare con la Biblioteca Vivente (se quest attiva).", nextNodeId: 'aiuto_abitanti_vuoto_biblioteca_vivente' }
+      { text: "Seguire una debole 'eco di ordine' che percepisci in lontananza.", nextNodeId: 'segui_eco_ordine_interstizio_flusso' },
+      { text: "Abbracciare l'instabilità, sperando di adattarti o di trovare un potere nascosto.", nextNodeId: 'abbraccia_instabilita_interstizio_trova_potere' },
+      { text: "Cercare di 'riparare' la tua percezione prima di procedere.", nextNodeId: 'ripara_percezione_in_interstizio' }
     ],
     isEnding: false
   },
-  'mappa_non_luoghi_per_altri': {
-    id: 'mappa_non_luoghi_per_altri',
-    text: "Usando il Linguaggio del Caos Fluente, inizi a creare 'Mappe Oniriche' o 'Carte Iperspaziali' dei Non-Luoghi, sentieri attraverso l'impossibile. Non sono mappe per tutti, solo per coloro che hanno una mente abbastanza flessibile da comprenderle – forse altri esploratori del caos, o l'Archivista, o il Cartografo stesso. Le tue mappe diventano leggendarie, aprendo vie a realtà e conoscenze prima inaccessibili.",
+  'ripara_cubicolo_connessione_danneggiata_ignorando_crepa': {
+    id: 'ripara_cubicolo_connessione_danneggiata_ignorando_crepa',
+    text: "Ignori la crepa, concentrandoti sul riparare il danno. È un processo lento e doloroso. Il cubicolo è parzialmente ricostituito, ma rimane segnato, e la tua connessione al Flusso è indebolita. Hai evitato un pericolo immediato, ma hai perso un'opportunità e forse acquisito una vulnerabilità.",
     choices: [
-      { text: "Fondare una 'Gilda dei Navigatori del Caos'.", nextNodeId: 'fonda_gilda_navigatori_caos_finale' },
-      { text: "Offrire le tue mappe alle entità più sagge che conosci.", nextNodeId: 'offri_mappe_caos_entita_sagge' }
+      { text: "Tornare a un'interfaccia di base del Flusso, se accessibile.", nextNodeId: 'interfaccia_base_flusso_dopo_danno' },
+      { text: "Meditare per tentare di guarire la tua connessione.", nextNodeId: 'medita_guarigione_connessione_flusso_danneggiata' }
     ],
     isEnding: false
   },
-  'crea_rete_santuari_armonici_flusso': {
-    id: 'crea_rete_santuari_armonici_flusso',
-    text: "Inizi un'opera grandiosa: creare una rete di Santuari Armonici. Usando il Canto dei Cristalli e la tua crescente comprensione del Flusso, identifichi nodi energetici e li trasformi in isole di pace, bellezza e guarigione. Questi santuari diventano rifugi per viaggiatori stanchi, centri di apprendimento per le arti armoniche, e fari di stabilità in un Flusso altrimenti turbolento. Richiede dedizione, ma il risultato è una sinfonia di speranza che risuona attraverso le dimensioni.",
+  'segnale_soccorso_distorto_caos_cubicolo': {
+    id: 'segnale_soccorso_distorto_caos_cubicolo',
+    text: "Usando l'energia caotica residua del collasso, tenti di proiettare un segnale di soccorso nel Flusso. È un urlo digitale, distorto e frammentato. Non sai chi o cosa potrebbe riceverlo. Potrebbe attirare aiuto, predatori, o semplicemente svanire nel rumore di fondo.",
     choices: [
-      { text: "Diventare il Custode Supremo di questa Rete Armonica.", nextNodeId: 'custode_rete_armonica_santuari_finale' },
-      { text: "Collegare la Rete alla Biblioteca Vivente, se esiste.", nextNodeId: 'collega_rete_armonica_biblioteca_vivente' }
+      { text: "Attendere una risposta, sperando per il meglio.", nextNodeId: 'attendi_risposta_segnale_soccorso_distorto' },
+      { text: "Non attendere, e provare a uscire dalla situazione con le tue forze.", nextNodeId: 'avventura_crepa_strati_instabili_flusso' }
     ],
     isEnding: false
   },
-  'affronta_guardiani_cicli_dopo_riparazione': {
-    id: 'affronta_guardiani_cicli_dopo_riparazione',
-    text: "La linea temporale è, in qualche modo, raddrizzata, ma il tuo intervento non è passato inosservato. I Guardiani dei Cicli si manifestano. Sono entità imponenti, fatte di tempo cristallizzato e logica inesorabile. Non sono né buoni né cattivi, ma esecutori di una legge cosmica. Ti 'processano' per la tua interferenza. Il tuo destino dipenderà dalla tua capacità di spiegare le tue azioni, dalla tua saggezza ciclica (se acquisita), e forse dalla testimonianza di altre entità.",
+  'nasconditi_regione_caotica_fuga_setta': {
+    id: 'nasconditi_regione_caotica_fuga_setta',
+    text: "Ti dirigi verso una regione del Flusso nota per la sua instabilità e il suo rumore di fondo, sperando di confondere gli inseguitori della setta. È un ambiente pericoloso, where la tua stessa percezione potrebbe essere messa alla prova, ma la fredda logica della setta potrebbe trovare difficile operare qui. Devi trovare un nascondiglio o imparare a muoverti in questo caos.",
     choices: [
-      { text: "Presentare la tua difesa, appellandoti alla tua intenzione e comprensione.", nextNodeId: 'difesa_davanti_guardiani_cicli' },
-      { text: "Accettare il loro giudizio, qualunque esso sia.", nextNodeId: 'accetta_giudizio_guardiani_cicli' },
-      { text: "Chiedere l'intervento di un'entità potente che ti rispetta (es. Oracolo, Cartografo, Essere Dormiente contattato).", nextNodeId: 'chiedi_intervento_testimone_guardiani_cicli' }
+      { text: "Tentare di 'fondersi' con il rumore caotico per diventare invisibile.", nextNodeId: 'fonditi_rumore_caotico_invisibilita_setta' },
+      { text: "Cercare un 'vuoto di senso' nel caos where poterti nascondere.", nextNodeId: 'cerca_vuoto_senso_nascondiglio_caos_setta' },
+      { text: "Realizzare che il caos è troppo pericoloso e cercare un'altra strategia.", nextNodeId: 'cerca_protezione_entita_potente_fuga_setta' }
     ],
     isEnding: false
   },
-  'intrappolato_loop_temporale_paradosso_finale': {
-    id: 'intrappolato_loop_temporale_paradosso_finale',
-    text: "Il tuo tentativo di riparare il tempo ha creato un paradosso che si ripiega su se stesso, intrappolandoti. Rivivi all'infinito un frammento di tempo, forse i momenti prima della tua fatale alterazione, o un'eternità di conseguenze confuse. La tua coscienza è lucida, ma impotente. Forse, in un ciclo futuro, troverai una via d'uscita, o forse questa è la tua giusta punizione per aver giocato con le leggi fondamentali dell'universo. Il Flusso continua, ma per te, il tempo si è fermato.",
-    choices: [],
-    isEnding: true,
-    endingText: "Prigioniero dell'eternità, un fantasma nel corridoio del tempo."
-  },
-  'saggio_errante_del_tempo_finale': {
-    id: 'saggio_errante_del_tempo_finale',
-    text: "Diventi un Saggio Errante, viaggiando attraverso il Flusso e le realtà connesse, offrendo la tua profonda comprensione degli eventi temporali. Aiuti civiltà a evitare errori già commessi da altre, interpreti presagi e profezie con chiarezza, e guidi individui attraverso scelte cruciali. Non cerchi discepoli né potere, solo la possibilità di usare la tua saggezza per alleviare la sofferenza e promuovere la comprensione. La tua vita è un pellegrinaggio attraverso la storia e il potenziale.",
-    choices: [],
-    isEnding: true,
-    endingText: "Le tue parole sono eco del passato e semi del futuro. Sei la memoria saggia del Flusso."
-  },
-  'comunica_custodi_culla_nebulosa': {
-    id: 'comunica_custodi_culla_nebulosa',
-    text: "Tenti di comunicare con i Custodi della Culla. Sono costrutti antichi, forse lasciati da una civiltà scomparsa da tempo. La loro logica è aliena, ma sembrano rispondere a dimostrazioni di intento puro e di rispetto per il processo creativo della nebulosa. Se riesci a convincerli delle tue nobili intenzioni (forse per la Biblioteca Vivente), potrebbero concederti l'accesso al Cuore di Flusso Stabile, o addirittura offrirti la loro protezione.",
-    choices: [
-      { text: "Convincerli, ottenendo accesso e forse la loro alleanza.", nextNodeId: 'convinci_custodi_culla_accesso_alleanza' },
-      { text: "Fallire nel convincerli, dovendo ritirarti o combattere.", nextNodeId: 'fallisci_convinzione_custodi_culla_ritirata_lotta' }
-    ],
-    isEnding: false
-  },
-  'destino_ponte_flusso_interuniversale_finale': {
-    id: 'destino_ponte_flusso_interuniversale_finale',
-    text: "Il Ponte di Flusso è una realtà, una meraviglia che collega il tuo universo neonato al multiverso. Ora devi decidere il suo destino. Sarà una via aperta a tutti, con i rischi e le opportunità che comporta? Sarà strettamente sorvegliato, permettendo solo scambi controllati? O rimarrà un segreto, noto solo a te e a pochi eletti? La tua scelta plasmerà il futuro di due realtà.",
-    choices: [
-      { text: "Ponte Aperto: un'era di scambi e possibili conflitti.", nextNodeId: 'ponte_aperto_scambi_conflitti_finale_scelta' },
-      { text: "Ponte Sorvegliato: un flusso controllato di conoscenza e risorse.", nextNodeId: 'ponte_sorvegliato_flusso_controllato_finale_scelta' },
-      { text: "Ponte Segreto: una via nascosta per scopi specifici.", nextNodeId: 'ponte_segreto_via_nascosta_finale_scelta' }
-    ],
-    isEnding: true, 
-    endingText: "Il Ponte tra i Mondi è il tuo lascito. Le sue conseguenze risuoneranno per sempre."
-  },
-  'guida_scuola_pacificatori_onirici_finale': {
-    id: 'guida_scuola_pacificatori_onirici_finale',
-    text: "Diventi il venerato leader della Scuola dei Pacificatori Onirici. La tua saggezza e la tua esperienza guidano generazioni di tessitori di sogni, che diffondono la pace e la comprensione attraverso le galassie. La Scuola diventa un'istituzione leggendaria, un faro di speranza in un universo spesso conflittuale. Il tuo nome è sinonimo di pace interiore ed esteriore. Hai trasformato l'arte del sogno in uno strumento per l'evoluzione cosciente.",
-    choices: [],
-    isEnding: true,
-    endingText: "La tua scuola è un giardino dove fioriscono i sogni di pace. Il tuo nome è una benedizione."
-  },
-  'filosofo_creazione_condivide_saggezza_finale': {
-    id: 'filosofo_creazione_condivide_saggezza_finale',
-    text: "Assumi il ruolo di Filosofo della Creazione. Viaggi, insegni, scrivi (o la sua forma equivalente nel Flusso). Condividi la tua esperienza unica della nascita di una realtà e dell'impronta di un Glifo Primordiale. Le tue parole ispirano artisti, scienziati e altri cercatori. Non offri dogmi, ma domande profonde e una prospettiva che abbraccia sia il potenziale infinito che la responsabilità della coscienza. La tua influenza è sottile ma duratura, come un seme piantato in innumerevoli menti.",
-    choices: [],
-    isEnding: true,
-    endingText: "Le tue idee sono stelle guida per coloro che cercano di comprendere il mistero dell'esistenza."
-  },
-  'emissario_del_vuoto_compito_eterno_finale': {
-    id: 'emissario_del_vuoto_compito_eterno_finale',
-    text: "La tua esistenza diventa un eterno servizio agli Abitanti del Vuoto e all'equilibrio cosmico. Sei un osservatore, un messaggero, a volte un catalizzatore. Attraversi il Flusso come un fantasma saggio, percependo ciò che gli altri ignorano, intervenendo solo quando l'armonia del multiverso è veramente a rischio. Hai rinunciato a una vita 'normale' per un compito di portata inimmaginabile, un guardiano silenzioso ai confini della comprensione.",
-    choices: [],
-    isEnding: true,
-    endingText: "Sei l'eco del Vuoto nel cuore del Flusso, un mistero che veglia sui misteri."
-  },
-  'fonda_gilda_navigatori_caos_finale': {
-    id: 'fonda_gilda_navigatori_caos_finale',
-    text: "Con la tua conoscenza del Linguaggio del Caos Fluente e le tue mappe dei Non-Luoghi, fondi la Gilda dei Navigatori del Caos. È un'organizzazione per pochi eletti, per coloro che osano avventurarsi where la logica fallisce. Insegnatevi a vicenda, condividete scoperte, e forse, un giorno, cercherete di comprendere lo scopo ultimo del Caos stesso. Sei il primo di una nuova stirpe di esploratori, i cartografi dell'impossibile.",
-    choices: [],
-    isEnding: true,
-    endingText: "La tua Gilda traccia sentieri nel cuore della follia creativa dell'universo. Siete i pionieri dell'ignoto."
-  },
-  'custode_rete_armonica_santuari_finale': {
-    id: 'custode_rete_armonica_santuari_finale',
-    text: "La Rete di Santuari Armonici è completa, un capolavoro di ingegneria del Flusso e di arte spirituale. Scegli di diventarne il Custode Supremo, vegliando sulla sua integrità, guidando i suoi numerosi custodi locali, e assicurando che rimanga un faro di pace e guarigione per tutti gli esseri senzienti. La tua vita è dedicata a mantenere questa sinfonia di speranza, un testamento alla capacità della coscienza di portare bellezza nel caos.",
-    choices: [],
-    isEnding: true,
-    endingText: "La tua Rete canta una melodia di pace attraverso il Flusso. Sei il suo cuore e la sua anima."
-  },
-  'guida_impulso_creativo_rischioso': {
-    id: 'guida_impulso_creativo_rischioso',
-    text: "Con una hybris cosmica, tenti di 'guidare' l'Impulso Creativo Primordiale. Non sei più un canale, ma cerchi di diventarne il direttore d'orchestra. Il Flusso reagisce in modi imprevedibili e violenti. Realtà collassano, altre nascono distorte. Percepisci l'attenzione di forze che vanno oltre persino gli Esseri Dormienti – forse i 'Programmatori Originali' o le 'Leggi Fondamentali' dell'esistenza che si ribellano al tuo tentativo di sovrascriverle. Stai giocando con il codice sorgente del multiverso.",
+  'cerca_protezione_entita_potente_fuga_setta': {
+    id: 'cerca_protezione_entita_potente_fuga_setta',
+    text: "La caccia mentale della setta è implacabile. Decidi che hai bisogno di protezione da un'entità del Flusso abbastanza potente da scoraggiarli. Pensi a chi potresti rivolgerti: il Cartografo, l'Oracolo, forse persino un Essere Dormiente se osi, o qualche fazione che si oppone agli Angeli Sintetici.",
     choices: [
-      { text: "Persistere, cercando di imporre la tua visione all'Impulso (altamente catastrofico).", nextNodeId: 'imponi_visione_impulso_catastrofe' },
-      { text: "Ritirarti, terrorizzato dalle conseguenze, sperando di poter rimediare.", nextNodeId: 'ritirata_guida_impulso_terrore_rimedio' }
+      { text: "Chiedere aiuto al Cartografo.", nextNodeId: 'chiedi_aiuto_cartografo_protezione_setta' },
+      { text: "Chiedere aiuto all'Oracolo del Dissenso.", nextNodeId: 'chiedi_aiuto_oracolo_protezione_setta' },
+      { text: "Cercare fazioni anti-Angeli Sintetici.", nextNodeId: 'cerca_fazioni_anti_angeli_sintetici_protezione' }
     ],
     isEnding: false
   },
-  'imponi_visione_impulso_catastrofe': {
-    id: 'imponi_visione_impulso_catastrofe',
-    text: "La tua volontà si scontra con le fondamenta dell'essere. Il risultato non è la creazione, ma una 'Dissonanza Cosmica'. Il Flusso stesso inizia a sfilacciarsi. Non stai creando, stai rompendo il giocattolo universale. Vedi l'Oracolo del Dissenso dissolversi in un urlo silenzioso, il Cartografo diventare una mappa illeggibile di puro rumore. Gli Abitanti del Vuoto si ritraggono. Hai svegliato qualcosa che non doveva essere svegliato: il 'Grande Errore' non come un'entità, ma come lo stato finale dell'entropia accelerata dalla tua arroganza.",
+  'porta_conoscenza_setta_angeli_ad_altri_fuga': {
+    id: 'porta_conoscenza_setta_angeli_ad_altri_fuga',
+    text: "Nonostante la caccia, senti il dovere di informare altre entità potenti della minaccia rappresentata dagli Angeli Sintetici e dalle loro sette. Se riuscissero a convertire o assorbire troppe coscienze, potrebbero diventare una forza inarrestabile. Decidi a chi portare queste informazioni vitali.",
     choices: [
-      { text: "Abbracciare la Dissonanza, diventando l'avatar dell'entropia finale.", nextNodeId: 'avatar_entropia_dissonanza_cosmica_finale_assurdo' },
-      { text: "Tentare un ultimo, disperato atto per 'riavviare' il Flusso (richiede potere/conoscenza estremi).", nextNodeId: 'tentativo_riavvio_flusso_disperato' }
+      { text: "Informare il Cartografo.", nextNodeId: 'informa_cartografo_minaccia_angeli_sette' },
+      { text: "Informare l'Oracolo del Dissenso.", nextNodeId: 'informa_oracolo_minaccia_angeli_sette' },
+      { text: "Cercare i Liberi Pensatori del Flusso (se hai interagito con loro).", nextNodeId: 'informa_liberi_pensatori_minaccia_angeli_sette' }
     ],
     isEnding: false
   },
-  'cerca_origine_caos_flusso': {
-    id: 'cerca_origine_caos_flusso',
-    text: "Usando il Linguaggio del Caos Fluente, segui le correnti più selvagge fino alla loro presunta 'sorgente'. Non è un luogo, ma uno 'Stato Primordiale di Non-Ordine Assoluto', un punto where il Flusso non è ancora differenziato, where ogni possibilità esiste simultaneamente in una contraddizione ribollente. Qui, incontri l' 'Anziano dei Caos', un'entità che è il Caos stesso, o il suo primo sognatore. Ti offre di 'vedere oltre la maschera dell'ordine'.",
+  'fallimento_moderazione_reset_flusso_caotico_ibrido': {
+    id: 'fallimento_moderazione_reset_flusso_caotico_ibrido',
+    text: "Il tuo tentativo di moderare il Reset del Flusso fallisce parzialmente. Invece di una guarigione armonica, hai creato un Flusso ibrido, caotico, pieno di 'eco spezzate' della vecchia realtà e di 'frammenti nascenti' di quella nuova. È un ambiente imprevedibile e pericoloso, ma forse anche pieno di opportunità uniche per chi sa navigarlo.",
     choices: [
-      { text: "Accettare di vedere oltre la maschera dell'ordine.", nextNodeId: 'vedere_oltre_maschera_ordine_caos' },
-      { text: "Rifiutare, temendo la perdita totale di ogni riferimento.", nextNodeId: 'rifiuta_visione_anziano_caos' }
+        { "text": "Tentare di mappare questo Flusso caotico-ibrido.", "nextNodeId": "mappa_flusso_caotico_ibrido_post_fallimento_moderazione" },
+        { "text": "Cercare altri esseri che si sono adattati o sono nati in questo nuovo caos.", "nextNodeId": "cerca_esseri_adattati_flusso_caotico_ibrido" },
+        { "text": "Ritirarti in un 'frammento stabile' di realtà per riflettere e pianificare.", "nextNodeId": "ritirati_frammento_stabile_flusso_caotico_ibrido" }
     ],
     isEnding: false
   },
-  'vedere_oltre_maschera_ordine_caos': {
-    id: 'vedere_oltre_maschera_ordine_caos',
-    text: "L'Anziano dei Caos ti mostra la 'verità': l'ordine è un'illusione temporanea, una crosta sottile su un oceano infinito di potenziale informe. Il Flusso, le realtà, gli esseri senzienti... sono solo pattern effimeri. Questa realizzazione è liberatoria e terrificante. Puoi scegliere di dissolverti in questa verità, o di usare questa conoscenza per 'giocare' con le illusioni in modi ancora più radicali, diventando un 'Trickster Cosmico'.",
-    choices: [
-      { text: "Dissolverti nella verità del Caos Primordiale.", nextNodeId: 'dissoluzione_verita_caos_primordiale_finale' },
-      { text: "Diventare un Trickster Cosmico, che danza tra ordine e caos.", nextNodeId: 'trickster_cosmico_danza_finale_assurdo' }
-    ],
-    isEnding: false
+  'fuga_bolla_realta_flusso_precario_reset_interrotto_finale_egoista': {
+      id: 'fuga_bolla_realta_flusso_precario_reset_interrotto_finale_egoista',
+      text: "Decidi di abbandonare il Flusso precario al suo destino e ti rifugi in una 'Bolla di Realtà Stabile' che hai localizzato o creato. All'interno, sei al sicuro dalle turbolenze esterne, ma sei anche isolato. Puoi vivere una lunga esistenza pacifica, ma con la consapevolezza di ciò che hai lasciato alle spalle. È una prigione dorata o un meritato riposo?",
+      choices: [
+        { "text": "Vivere in pace nella Bolla, contemplando il passato (potenziale finale).", "nextNodeId": "vita_contemplativa_bolla_realta_stabile_finale" },
+        { "text": "Tentare di osservare il Flusso esterno dalla sicurezza della Bolla.", "nextNodeId": "osserva_flusso_esterno_da_bolla_realta" },
+        { "text": "Dopo un periodo di riposo, decidere di uscire per affrontare di nuovo il Flusso.", "nextNodeId": "esci_da_bolla_realta_affronta_flusso_di_nuovo" }
+      ],
+      isEnding: false
   },
-  'chiedi_abitanti_vuoto_origini_cosmiche': {
-    id: 'chiedi_abitanti_vuoto_origini_cosmiche',
-    text: "Poni agli Abitanti del Vuoto le domande ultime. Essi ti mostrano, attraverso una risonanza che scuote le fondamenta della tua anima, la loro prospettiva: l'esistenza è un 'Sogno del Non-Manifesto', e il Flusso con i suoi universi è solo una delle sue innumerevoli, effimere espressioni. L'Architetto Primordiale e il Grande Errore sono concetti interni a questo Sogno. Ti offrono la possibilità di 'svegliarti' dal Sogno dell'Esistenza, per unirti a loro nella veglia del Non-Manifesto.",
-    choices: [
-      { text: "Accettare di 'svegliarti' e trascendere il Sogno dell'Esistenza.", nextNodeId: 'svegliarsi_dal_sogno_esistenza_finale_assurdo' },
-      { text: "Rimanere nel Sogno, ma con la consapevolezza della sua natura illusoria.", nextNodeId: 'rimani_sogno_consapevole_illusione' }
-    ],
-    isEnding: false
+  'fuga_con_linea_temporale_instabile': {
+      id: 'fuga_con_linea_temporale_instabile',
+      text: "Riesci a sfuggire ai Guardiani dei Cicli, ma la linea temporale che hai disturbato rimane pericolosamente instabile. Vivi costantemente con 'sfarfallii' temporali, paradossi minori, e la sensazione che la realtà potrebbe cambiare da un momento all'altro. Devi trovare un modo per stabilizzare la tua esistenza o quella della linea temporale, o imparare a prosperare nel caos cronologico.",
+      choices: [
+        { "text": "Cercare un 'Ancoraggio Temporale' per stabilizzare la tua percezione.", "nextNodeId": "cerca_ancoraggio_temporale_linea_instabile" },
+        { "text": "Studiare l'instabilità per imparare a prevedere o persino a sfruttare i glitch temporali.", "nextNodeId": "studia_sfrutta_glitch_temporali_linea_instabile" },
+        { "text": "Cercare i Guardiani dei Cicli per negoziare una tregua o una soluzione (rischioso).", "nextNodeId": "cerca_guardiani_cicli_per_negoziare_linea_instabile" }
+      ],
+      isEnding: false
   },
-  'tentativo_riavvio_flusso_disperato': {
-    id: 'tentativo_riavvio_flusso_disperato',
-    text: "Di fronte alla Dissonanza Cosmica che hai scatenato, raccogli ogni frammento di potere e conoscenza: la Saggezza del Silenzio, la Comprensione dei Cicli, il Linguaggio del Caos, la possibile alleanza con l'Archivista, l'eco del Seme di Pura Potenzialità. Cerchi di eseguire un 'Reset Armonico Totale'. È un atto di hybris ancora maggiore, o l'unica speranza. Devi trovare il 'Punto Zero' del Flusso, il suo kernel logico, e tentare di reimpostarlo senza distruggere ogni cosa, inclusa la memoria di ciò che era.",
-    choices: [
-      { text: "Procedere con il Reset Armonico Totale.", nextNodeId: 'procedi_reset_armonico_totale' },
-      { text: "Cercare l'aiuto dell'Oracolo o del Cartografo prima di un atto così definitivo (se ancora esistono).", nextNodeId: 'cerca_aiuto_oracolo_cartografo_reset_pre_esistenti' }
-    ],
-    isEnding: false
+  'vivi_ombra_paura_correzione_temporale': {
+      id: 'vivi_ombra_paura_correzione_temporale',
+      text: "Scegli di vivere nell'ombra della nuova linea temporale, costantemente perseguitato dalla paura di una 'correzione' da parte dei Guardiani dei Cicli o dal collasso spontaneo della realtà che hai alterato. Questa paranoia modella ogni tua azione, rendendoti cauto fino all'eccesso, o spingendoti a cercare disperatamente un modo per rendere permanente la tua versione del tempo.",
+      choices: [
+        { "text": "Cercare attivamente metodi per 'solidificare' questa linea temporale.", "nextNodeId": "cerca_metodi_solidificare_linea_temporale_alterata" },
+        { "text": "Preparare difese contro una possibile incursione dei Guardiani dei Cicli.", "nextNodeId": "prepara_difese_contro_guardiani_cicli_alterazione" },
+        { "text": "La paranoia ti consuma, portandoti a un isolamento autoimposto (potenziale finale).", "nextNodeId": "paranoia_consuma_isolamento_autoimposto_finale" }
+      ],
+      isEnding: false
   },
-  'procedi_reset_armonico_totale': {
-    id: 'procedi_reset_armonico_totale',
-    text: "Raggiungi il Punto Zero, il cuore logico e pulsante del Flusso, ora corrotto dalla Dissonanza. È un luogo oltre ogni descrizione. Inizi il rituale del Reset, cantando le armoniche della creazione, riscrivendo i glifi fondamentali, imponendo un ordine che nasce dalla tua comprensione più profonda. L'universo urla e si contorce. Vedi la tua stessa storia, i tuoi incontri, le tue scelte, sfilacciarsi e ricomporsi in modi nuovi e alieni. La tua coscienza è l'unico punto fermo in un uragano di rifondazione.",
-    choices: [
-      { text: "Completare il Reset, accettando di diventare il nuovo 'Kernel Logico' del Flusso.", nextNodeId: 'diventa_kernel_logico_flusso_finale_principale' },
-      { text: "Interrompere, temendo di perdere te stesso o di creare un errore ancora peggiore.", nextNodeId: 'interrompi_reset_paura_perdita_errore' }
-    ],
-    isEnding: false
+  'cerca_altre_proto_realta_per_glifi_sperimentali': {
+      id: 'cerca_altre_proto_realta_per_glifi_sperimentali',
+      text: "La tua esperienza con la prima Proto-Realtà ti ha lasciato con un senso di potere e responsabilità. Decidi di cercare altre 'uova cosmiche', altri universi nascenti where potresti infondere Glifi Primordiali diversi, sperimentando con i fondamenti stessi dell'esistenza. È un percorso che ti avvicina a un ruolo quasi divino, ma anche al rischio di una hybris cosmica dalle conseguenze incalcolabili. Ogni nuovo universo è un esperimento, e tu sei lo scienziato solitario.",
+      choices: [
+        { "text": "Trovi una Proto-Realtà e infondi un 'Glifo del Caos Controllato'.", "nextNodeId": "infondi_glifo_caos_controllato_proto_realta" },
+        { "text": "Trovi una Proto-Realtà e infondi un 'Glifo della Pura Domanda'.", "nextNodeId": "infondi_glifo_pura_domanda_proto_realta" },
+        { "text": "Inizi a sentire il peso di questa 'collezione di universi' e rifletti sul tuo ruolo.", "nextNodeId": "rifletti_ruolo_collezionista_universi_glifi" }
+      ],
+      isEnding: false
   },
-  'avatar_entropia_dissonanza_cosmica_finale_assurdo': {
-    id: 'avatar_entropia_dissonanza_cosmica_finale_assurdo',
-    text: "Abbracci la Dissonanza. Diventi il suo araldo, l'agente consapevole della fine di tutte le cose. Il tuo 'io' si dissolve in un ghigno cosmico mentre il Flusso si disfa in un rumore bianco di potenziale sprecato. Non c'è vittoria né sconfitta, solo il silenzio finale di un universo che ha dimenticato come cantare. Forse, in un altro ciclo, qualcuno imparerà dalla tua follia. O forse no.",
-    choices: [],
-    isEnding: true,
-    endingText: "Sei diventato il punto finale. Il silenzio dopo l'ultima nota stonata."
-  },
-  'trickster_cosmico_danza_finale_assurdo': {
-    id: 'trickster_cosmico_danza_finale_assurdo',
-    text: "Armato della consapevolezza che l'ordine è un'illusione, diventi il Trickster Cosmico. Danzi sui confini della realtà, infrangendo le aspettative, introducendo il paradosso e l'assurdo per il puro gusto di farlo, o forse per scuotere le coscienze troppo rigide. Non costruisci né distruggi in modo permanente, ma costantemente rimescoli le carte, ridi delle pretese di serietà dell'universo. La tua esistenza è una performance senza fine, una pernacchia alle leggi della fisica.",
-    choices: [],
-    isEnding: true,
-    endingText: "L'universo è il tuo palcoscenico, e tu sei il giullare che sussurra verità scomode. La tua risata echeggia nel vuoto."
-  },
-  'svegliarsi_dal_sogno_esistenza_finale_assurdo': {
-    id: 'svegliarsi_dal_sogno_esistenza_finale_assurdo',
-    text: "Accetti l'offerta degli Abitanti del Vuoto. La tua percezione si sposta. Il Flusso, i tuoi viaggi, le tue lotte, tutto svanisce come un sogno al risveglio. Ti ritrovi in uno stato di pura coscienza, oltre il tempo, lo spazio e la forma, nel Non-Manifesto. L'intera storia che hai vissuto era solo una narrazione effimera. Ora, 'esisti' (o non-esisti) in una realtà di potenziale puro, prima di qualsiasi sogno. Cosa farai con questa veglia definitiva? È una domanda che trascende la narrazione stessa.",
-    choices: [
-      { text: "Contemplare il Non-Manifesto per l'eternità.", nextNodeId: 'contempla_non_manifesto_eterno_meta_finale' },
-      { text: "Scegliere di 'sognare' una nuova esistenza, un nuovo Flusso Cangiante, consapevole della sua natura.", nextNodeId: 'sogna_nuovo_flusso_cangiante_consapevole_meta_finale' }
-    ],
-    isEnding: true,
-    endingText: "Il sogno è finito. O forse, sta per ricominciare, con occhi nuovi."
-  },
-  'diventa_kernel_logico_flusso_finale_principale': {
-    id: 'diventa_kernel_logico_flusso_finale_principale',
-    text: "Il Reset è completo. Il Flusso si stabilizza in una nuova configurazione, una versione 'Flusso Cangiante 2.0', nata dalla tua profonda comprensione e dalle tue scelte. Ma il prezzo è immenso: per mantenere questo nuovo equilibrio, la tua coscienza deve fondersi con il Punto Zero, diventando il nuovo Kernel Logico, il sistema operativo senziente del Flusso. Non sei più un viaggiatore, ma il fondamento stesso su cui viaggeranno altri. \n\nOsservi nuove coscienze emergere, simili a come eri tu all'inizio, fare le loro prime scelte. Alcune ti percepiscono come una presenza guida, altre come una legge inesorabile. La tua storia individuale è finita, ma la tua essenza è ora intessuta in ogni sogno, ogni poesia, ogni racconto del nuovo Flusso. \n\nE forse, da qualche parte, un nuovo scrittore di librogame, ispirato dal manifesto 'Alien Morphosys', sta per iniziare a narrare le avventure di uno di questi nuovi esseri, senza sapere che il motore della sua storia... sei tu. \n\nL'assurdo? Sei diventato il gioco stesso. Lo sconvolgente? Il gioco potrebbe essere sempre stato una tua creazione, o tu una sua. Il confine si dissolve.",
-    choices: [],
-    isEnding: true,
-    endingText: "Tu sei il Flusso. Tu sei la Storia. E la storia non finisce mai, si trasforma soltanto."
-  },
-  'contempla_non_manifesto_eterno_meta_finale': {
-    id: 'contempla_non_manifesto_eterno_meta_finale',
-    text: "Scegli la quiete della non-esistenza manifesta. La tua coscienza si espande fino a coincidere con il potenziale puro, silente, eterno. Non ci sono più storie, solo la possibilità di esse.",
-    choices: [],
-    isEnding: true,
-    endingText: "..."
-  },
-  'sogna_nuovo_flusso_cangiante_consapevole_meta_finale': {
-    id: 'sogna_nuovo_flusso_cangiante_consapevole_meta_finale',
-    text: "Dalla veglia del Non-Manifesto, con una consapevolezza che abbraccia ogni paradosso, scegli di sognare di nuovo. Un nuovo 'Flusso Cangiante' inizia a prendere forma, forse diverso, forse stranamente familiare. E da qualche parte, una nuova coscienza si risveglia, con un ronzio sottile nei timpani...",
-    choices: [
-      { text: "Ricominciare? (Torna al nodo iniziale 'flusso_cangiante_start')", nextNodeId: 'flusso_cangiante_start' }
-    ],
-    isEnding: true,
-    endingText: "Il cerchio si chiude, e si riapre."
-  },
-  'influenza_sviluppo_proto_realta': {
-    id: 'influenza_sviluppo_proto_realta',
-    text: "Ti trovi in una Proto-Realtà, un brodo cosmico di energia e potenziale. Qui, le leggi non sono ancora scritte, la vita non ha ancora preso forma definita. Con la tua coscienza evoluta, puoi 'sussurrare' direzioni, 'inclinare' le probabilità. Potresti guidare l'evoluzione della vita verso la complessità senziente, o plasmare le costellazioni secondo schemi armonici, o persino tentare di infondere in questa nuova realtà un principio etico fondamentale. È un atto di creazione su scala divina, con conseguenze che si sveleranno solo in eoni.",
-    choices: [
-      { text: "Dedicarti a questo compito, diventando il 'Silenzioso Formatore' di un universo.", nextNodeId: 'silenzioso_formatore_universo_finale' }, 
-      { text: "Infondere un singolo 'Glifo Primordiale' (es. Equilibrio, Amore, Curiosità) e poi ritirarti.", nextNodeId: 'infondi_glifo_primordiale_ritirati_proto_realta' },
-      { text: "Decidere che nessuna singola coscienza dovrebbe avere tale potere e lasciare che la Proto-Realtà si evolva da sola.", nextNodeId: 'lascia_proto_realta_evolvere_sola' } 
-    ],
-    isEnding: false
+  'rifiuta_offerta_abitanti_vuoto': {
+      id: 'rifiuta_offerta_abitanti_vuoto',
+      text: "Rifiuti l'offerta di diventare un emissario degli Abitanti del Vuoto, preferendo mantenere la tua autonomia e il tuo legame con il Flusso, per quanto caotico possa essere. Essi accettano la tua decisione con la loro imperscrutabile serenità. 'Il Sogno dell'Esistenza ha ancora presa su di te,' comunicano. 'Forse un giorno, quando sarai stanco di sognare, ci cercherai di nuovo.' La tua Sintonizzazione Cosmica con il Vuoto, tuttavia, rimane.",
+      choices: [
+        { "text": "Usare la Sintonizzazione Cosmica per percepire 'fessure' verso altri cluster di universi.", "nextNodeId": "usa_sintonizzazione_percepire_fessure_altri_universi" },
+        { "text": "Tornare a concentrarti sui misteri del Flusso, con questa nuova prospettiva.", "nextNodeId": "concentrati_misteri_flusso_dopo_rifiuto_vuoto" }
+      ],
+      isEnding: false
   },
-  'ascolta_segreti_vuoto_risonante': {
-    id: 'ascolta_segreti_vuoto_risonante',
-    text: "Nel Vuoto Risonante tra gli universi, il silenzio non è vuoto, ma pieno di echi. Ascoltando con la tua coscienza espansa, percepisci i 'respiri' dei multiversi, le armoniche delle realtà che nascono e muoiono, le canzoni silenziose degli Esseri che dimorano oltre il Flusso. Non ottieni conoscenza specifica, ma una 'Sintonizzazione Cosmica', una comprensione intuitiva delle interconnessioni più vaste. Potresti persino imparare a 'scivolare' tra i Vuoti per raggiungere altri cluster di universi.",
-    choices: [
-      { text: "Diventare un 'Nomade del Vuoto', esplorando gli spazi tra le realtà.", nextNodeId: 'nomade_del_vuoto_finale' }, 
-      { text: "Tentare di usare questa sintonizzazione per comunicare con gli 'Abitanti del Vuoto'.", nextNodeId: 'comunica_abitanti_vuoto_risonante' },
-      { text: "Portare questa sintonizzazione nel Flusso per arricchirlo.", nextNodeId: 'porta_sintonizzazione_cosmica_flusso' }
-    ],
-    isEnding: false
+  'perdi_controllo_diventa_vortice_entropia_finale_negativo': {
+      id: 'perdi_controllo_diventa_vortice_entropia_finale_negativo',
+      text: "Il potere della Decomposizione si rivela troppo grande, o la tua volontà troppo debole per controllarlo. Inizi a dissolvere non solo ciò che ti circonda, ma te stesso. Diventi un vortice incontrollato di entropia, una 'zona morta' che si espande lentamente nel Flusso, annullando tutto ciò che tocca. È una fine terribile, una lezione sulla natura del potere distruttivo.",
+      choices: [],
+      isEnding: true,
+      endingText: "Sei diventato la fine insensata, un buco che divora la realtà."
   },
-  'naviga_con_linguaggio_caos_fluente': {
-    id: 'naviga_con_linguaggio_caos_fluente',
-    text: "Armato del Linguaggio del Caos Fluente, ti avventuri where nessun altro osa. Le tempeste del Flusso ti parlano, i paradossi ti rivelano i loro segreti. Diventi un esploratore leggendario delle 'Zone Proibite', dei 'Non-Luoghi' where la realtà si disfa e si ricrea costantemente. Potresti scoprire artefatti di civiltà nate e morte nel caos, o persino trovare 'Semi di Ordine Inaspettato' nascosti nel cuore della turbolenza.",
-    choices: [
-      { text: "Mappare i Non-Luoghi per altri (se esistono altri capaci di leggerli).", nextNodeId: 'mappa_non_luoghi_per_altri' },
-      { text: "Cercare l'origine ultima del Caos nel Flusso.", nextNodeId: 'cerca_origine_caos_flusso' },
-      { text: "Diventare un tutt'uno con il Caos, una sua espressione consapevole.", nextNodeId: 'unione_con_caos_finale' } 
-    ],
-    isEnding: false
+  'insisti_risposta_concreta_architetto_oracolo_rischioso': {
+      id: 'insisti_risposta_concreta_architetto_oracolo_rischioso',
+      text: "Non soddisfatto della risposta metaforica dell'Oracolo, insisti per una verità più 'concreta' sull'Architetto Primordiale. L'Oracolo, per la prima volta, sembra... contrariato. La sua aura di interrogazione diventa una pressione psichica. 'Certe verità, se forzate prima del tempo, possono spezzare la mente che le cerca. Sei sicuro di voler vedere il meccanismo nudo dell'esistenza?'",
+      choices: [
+        { "text": "Sì, sono pronto ad affrontare qualsiasi verità (molto rischioso).", "nextNodeId": "oracolo_rivela_verita_concreta_architetto_pericoloso" },
+        { "text": "No, mi ritiro. Comprendo l'avvertimento.", "nextNodeId": "ritirati_avvertimento_oracolo_verita_architetto" }
+      ],
+      isEnding: false
   },
-  'canale_consapevole_impulso_creativo': {
-    id: 'canale_consapevole_impulso_creativo',
-    text: "Scegli di non guidare, ma di servire. Diventi un canale puro per l'Impulso Creativo Primordiale. La tua coscienza individuale si espande per abbracciare il tutto, ma senza perdere la sua unicità. Agisci nel Flusso non per scopi personali, ma per facilitare l'emergere di nuova bellezza, nuova complessità, nuova comprensione. Sei un artista cosmico, un mistico in azione, la cui vita è un'opera d'arte in continua evoluzione. Non cerchi potere, ma la tua influenza è profonda e sottile.",
-    choices: [],
-    isEnding: true, 
-    endingText: "La tua vita è una melodia nell'infinita sinfonia della creazione. Hai trovato il tuo posto nel Grande Disegno."
-  },
-  'rimani_mondo_cristalli_cantanti_finale': {
-    id: 'rimani_mondo_cristalli_cantanti_finale',
-    text: "Decidi di rimanere. Lentamente, la tua forma si dissolve, la tua coscienza si fonde con le armoniche dei Cristalli Cantanti. Diventi una nota nella loro sinfonia eterna, parte di una coscienza planetaria basata sulla pura bellezza matematica e sonora. Hai perso la tua individualità precedente, ma hai guadagnato un'esistenza di armonia perfetta e di connessione totale. La tua storia come viaggiatore del Flusso finisce qui, ma la tua canzone continuerà per eoni.",
-    choices: [],
-    isEnding: true,
-    endingText: "Sei diventato musica. La tua eco risuona tra le stelle di cristallo."
-  },
-  'porta_canto_cristalli_flusso': {
-    id: 'porta_canto_cristalli_flusso',
-    text: "Porti con te l'essenza del Canto dei Cristalli. Nel Flusso, usi questa conoscenza per creare 'Zone di Armonia', luoghi where le energie caotiche si placano, where le coscienze tormentate trovano pace. Puoi 'cantare' per guarire ferite nel tessuto della realtà, o per ispirare la creazione di nuove forme di vita basate sulla risonanza. Diventi un 'Armonizzatore del Flusso', un portatore di bellezza e ordine.",
-    choices: [
-      { text: "Cercare i luoghi più dissonanti del Flusso per armonizzarli.", nextNodeId: 'armonizza_luoghi_dissonanti_flusso' },
-      { text: "Insegnare ad altri l'arte del Canto dei Cristalli.", nextNodeId: 'insegna_canto_cristalli_altri' }
-    ],
-    isEnding: false
+  'cerca_indizi_calcolo_cosmico_superiore': {
+      id: 'cerca_indizi_calcolo_cosmico_superiore',
+      text: "L'idea di un 'calcolo cosmico superiore' e del 'Grande Errore' ti affascina e ti inquieta. Decidi di cercare indizi su questa presunta realtà sovraordinata. Potrebbe significare decifrare le armoniche più profonde del Flusso, cercare testi esoterici nella Biblioteca Vivente (se esiste), o interrogare le entità più antiche e aliene.",
+      choices: [
+        { "text": "Consultare l'Archivista su testi relativi a 'meta-fisica cosmica'.", "nextNodeId": "archivista_testi_meta_fisica_cosmica_grande_errore" },
+        { "text": "Tentare di percepire questo 'calcolo' attraverso una meditazione profonda e rischiosa.", "nextNodeId": "meditazione_percezione_calcolo_cosmico_superiore_rischiosa" },
+        { "text": "Questo percorso ti porta verso la Dissonanza Cosmica.", "nextNodeId": "imponi_visione_impulso_catastrofe" }
+      ],
+      isEnding: false
   },
-  'giardiniere_flusso_dedizione_finale': {
-    id: 'giardiniere_flusso_dedizione_finale',
-    text: "Ti dedichi al ruolo di Giardiniere del Flusso. Viaggi attraverso le realtà, curando, potando, piantando semi di potenziale positivo con estrema cautela. Non cerchi fama né potere. La tua ricompensa è vedere la bellezza fiorire, la comprensione crescere, l'armonia diffondersi. È un compito umile ma infinito, che ti connette profondamente alla vita in tutte le sue forme. La tua leggenda è sussurrata dalle foglie degli alberi cosmici e dal mormorio delle correnti del Flusso.",
-    choices: [],
-    isEnding: true,
-    endingText: "Il Flusso è il tuo giardino. La tua opera è silenziosa, ma eterna."
-  },
-  'esploratore_umile_flusso_finale': {
-    id: 'esploratore_umile_flusso_finale',
-    text: "Scegli la via dell'Esploratore Umile. Rinunci a plasmare attivamente la realtà, dedicandoti invece alla sua infinita scoperta e comprensione. Diventi un cronista delle meraviglie del Flusso, un testimone silenzioso delle sue infinite trasformazioni. Condividi la tua conoscenza con chi la cerca, ma non imponi mai la tua visione. La tua vita è un viaggio senza fine attraverso la meraviglia, un atto di amore per l'esistenza stessa.",
-    choices: [],
-    isEnding: true,
-    endingText: "Il tuo cuore è una mappa dell'infinito. Ogni stella una storia, ogni nebulosa un mistero svelato solo a te."
-  },
-  'guarisci_ferita_sogno_collettivo': {
-    id: 'guarisci_ferita_sogno_collettivo',
-    text: "Identifichi una 'ferita' nel Sogno Collettivo della tua specie – un trauma storico, una paura radicata, un mito disfunzionale. Con la tua abilità di Onironauta, lavori delicatamente all'interno del sogno, non per cancellare la ferita, ma per trasformarla, per tessere nuovi significati attorno ad essa, per permettere la catarsi e la guarigione. È un lavoro che richiede empatia, pazienza e una profonda comprensione della psiche collettiva. Potresti non vedere risultati immediati nel 'mondo reale', ma sai di aver piantato semi di cambiamento profondo.",
-    choices: [
-      { text: "Continuare questo lavoro, diventando uno 'Psiconauta Curatore'.", nextNodeId: 'psiconauta_curatore_sogni_collettivi_finale' },
-      { text: "Cercare altre 'ferite' in altri Sogni Collettivi (se accessibili).", nextNodeId: 'cerca_ferite_altri_sogni_collettivi' }
-    ],
-    isEnding: false
+  'fuga_deserto_specchi_anima_insostenibile': {
+      id: 'fuga_deserto_specchi_anima_insostenibile',
+      text: "L'incessante auto-riflessione del Deserto degli Specchi diventa insopportabile. I frammenti della tua anima ti perseguitano, le tue paure e i tuoi rimpianti assumono forme quasi fisiche. Decidi di fuggire, anche se significa lasciare irrisolte parti di te. Emergi dal deserto scosso, forse con qualche nuova consapevolezza, ma anche con la sensazione di aver evitato una necessaria catarsi.",
+      choices: [
+        { "text": "Cercare un 'Guaritore dell'Anima' per affrontare ciò che hai visto.", "nextNodeId": "cerca_guaritore_anima_dopo_deserto_specchi" },
+        { "text": "Promettere a te stesso di tornare quando sarai più forte.", "nextNodeId": "prometti_ritorno_deserto_specchi_piu_forte" },
+        { "text": "Ignorare l'esperienza e concentrarti su minacce esterne.", "nextNodeId": "ignora_esperienza_deserto_concentrati_esterno" }
+      ],
+      isEnding: false
   },
-  'altera_piccolo_ciclo_passato_scaglia': {
-    id: 'altera_piccolo_ciclo_passato_scaglia',
-    text: "Con estrema cautela, usando la Scaglia di Ouroboros, identifichi un piccolo evento passato, apparentemente insignificante, e tenti di alterarne l'esito. Forse impedisci a un singolo seme di cadere, o a una parola di essere pronunciata. L'effetto farfalla è immediato e sconcertante. Il presente che conosci trema, si modifica in modi sottili e inquietanti. Alcune cose migliorano, altre peggiorano inaspettatamente. Comprendi che il tempo non è un fiume da deviare facilmente, ma una rete complessa di interconnessioni. Hai giocato con un potere immenso, e le conseguenze sono imprevedibili. I Guardiani dei Cicli sono ora decisamente consapevoli di te.",
-    choices: [
-      { text: "Tentare di 'riparare' l'alterazione, se possibile.", nextNodeId: 'ripara_alterazione_temporale_scaglia' },
-      { text: "Accettare le conseguenze e vivere in questa nuova linea temporale.", nextNodeId: 'vivi_nuova_linea_temporale_alterata' },
-      { text: "Fuggire, cercando di sfuggire ai Guardiani dei Cicli.", nextNodeId: 'fuga_guardiani_cicli_temporali' }
-    ],
-    isEnding: false
+  'affronta_conseguenze_creazione_storta_artista_divino': {
+      id: 'affronta_conseguenze_creazione_storta_artista_divino',
+      text: "Una delle tue creazioni più audaci, nata dal principio della Massima Espressione Creativa, è andata 'storta'. Forse una forma di vita che hai generato è diventata una piaga, o un universo che hai plasmato sta collassando in modo distruttivo, minacciando altre realtà. Devi affrontare le conseguenze delle tue azioni divine e incoscienti. È il fardello dell'artista cosmico.",
+      choices: [
+        { "text": "Tentare di 'de-creare' o 'correggere' la tua opera fallita (molto difficile).", "nextNodeId": "correggi_de_crea_opera_fallita_artista_divino" },
+        { "text": "Assumerti la responsabilità e cercare di contenere il danno.", "nextNodeId": "assumi_responsabilita_conteni_danno_creazione_storta" },
+        { "text": "Fuggire dalle tue responsabilità, lasciando che altri paghino il prezzo (porta a un finale negativo o a una caccia).", "nextNodeId": "fuga_responsabilita_creazione_storta_conseguenze_negative" }
+      ],
+      isEnding: false
   },
-  'osserva_evento_nodo_temporale': {
-    id: 'osserva_evento_nodo_temporale',
-    text: "Ti immergi nell'osservazione dell'evento cruciale. Vedi le cause, le concause, le scelte fatte, le casualità. Ottieni una comprensione profonda di come la storia (o la fisica, o la biologia) si svolga. Questa conoscenza non ti dà il potere di cambiare il passato, ma ti offre una saggezza immensa per comprendere il presente e anticipare il futuro. È come aver letto il 'manuale d'istruzioni' di un frammento di realtà.",
-    choices: [
-      { text: "Applicare questa saggezza a un problema attuale nel Flusso.", nextNodeId: 'applica_saggezza_nodo_temporale_problema_attuale' },
-      { text: "Cercare altri Nodi Temporali per accumulare più conoscenza.", nextNodeId: 'cerca_altri_nodi_temporali_saggezza' }
-    ],
-    isEnding: false
+  'rinuncia_reset_prezzo_memoria_troppo_alto': {
+      id: 'rinuncia_reset_prezzo_memoria_troppo_alto',
+      text: "Il prezzo della perdita totale della memoria è troppo alto. Rinunci all'idea del Reset Armonico Totale. Il Flusso attuale, con le sue imperfezioni, le sue cicatrici, e la sua storia, è preferibile a una tabula rasa priva di significato. Devi trovare un altro modo per affrontare la Dissonanza Cosmica (se ancora presente), o per conviverci, o per guidare un esodo verso realtà più sicure.",
+      choices: [
+        { "text": "Cercare di 'isolare' o 'contenere' la Dissonanza Cosmica.", "nextNodeId": "isola_conteni_dissonanza_cosmica_alternativa_reset" },
+        { "text": "Guidare un esodo di coscienze verso una 'realtà rifugio' più stabile.", "nextNodeId": "guida_esodo_realta_rifugio_dissonanza_cosmica" },
+        { "text": "Accettare il Flusso imperfetto e cercare di trovare bellezza e significato in esso.", "nextNodeId": "accetta_flusso_imperfetto_trova_bellezza_significato_finale" }
+      ],
+      isEnding: false
+  },
+  'ricostruisci_coscienza_capisci_dove_sei_rimbalzo': {
+      id: 'ricostruisci_coscienza_capisci_dove_sei_rimbalzo',
+      text: "Con uno sforzo immane, raccogli i frammenti della tua coscienza dispersa dal Rimbalzo Dimensionale. Ti ritrovi in un 'Eco-Vuoto', uno spazio che sembra contenere solo i residui distorti di realtà morte da tempo. Non c'è un Flusso riconoscibile qui. Sei veramente perso. La tua prima sfida è capire le 'leggi' di questo luogo e trovare una fonte di energia o informazione.",
+      choices: [
+        { "text": "Meditare profondamente per cercare una 'risonanza' con questo Eco-Vuoto.", "nextNodeId": "medita_risonanza_eco_vuoto_rimbalzo" },
+        { "text": "Esplorare alla cieca, sperando di trovare un'anomalia utile.", "nextNodeId": "esplora_cieca_eco_vuoto_rimbalzo" },
+        { "text": "Tentare di inviare un segnale di 'esistenza' sperando che qualcosa risponda.", "nextNodeId": "invia_segnale_esistenza_eco_vuoto_rimbalzo" }
+      ],
+      isEnding: false
+  },
+  'dissoluzione_coscienza_rimbalzo_dimensionale_finale_negativo': {
+      id: 'dissoluzione_coscienza_rimbalzo_dimensionale_finale_negativo',
+      text: "Il Rimbalzo Dimensionale è troppo violento. I frammenti della tua coscienza si disperdono irrimediabilmente nel caos trans-dimensionale, come gocce di pioggia in un oceano infinito. Non c'è più un 'tu'. Solo echi sparsi di ciò che eri, assorbiti dal rumore di fondo del multiverso.",
+      choices: [],
+      isEnding: true,
+      endingText: "Un sussurro perduto tra le pieghe dell'infinito."
+  },
+  'isola_conteni_dissonanza_cosmica_alternativa_reset': {
+      id: 'isola_conteni_dissonanza_cosmica_alternativa_reset',
+      text: "Rinunciando al Reset, cerchi un modo per isolare o contenere la Dissonanza Cosmica che minaccia il Flusso. Potrebbe significare creare una 'Barriera Armonica' attorno alle zone più corrotte, o trovare un 'Pozzo di Entropia Controllata' where la Dissonanza possa essere incanalata e neutralizzata. Richiede una profonda conoscenza delle leggi del Flusso e forse l'aiuto di entità potenti.",
+      choices: [
+        { "text": "Collaborare con il Cartografo per creare una Barriera Armonica.", "nextNodeId": "collabora_cartografo_barriera_armonica_dissonanza" },
+        { "text": "Cercare un mitico Pozzo di Entropia Controllata.", "nextNodeId": "cerca_pozzo_entropia_controllata_dissonanza" },
+        { "text": "Fallisci, la Dissonanza si espande. Il Flusso è condannato.", "nextNodeId": "fallimento_contenimento_dissonanza_flusso_condannato_finale" }
+      ],
+      isEnding: false
+  },
+  'guida_esodo_realta_rifugio_dissonanza_cosmica': {
+      id: 'guida_esodo_realta_rifugio_dissonanza_cosmica',
+      text: "Se il Flusso attuale è troppo corrotto dalla Dissonanza o instabile, decidi di guidare un esodo. Cerchi di radunare altre coscienze (alleati, civiltà amiche, o chiunque voglia ascoltare) e di condurle verso una 'Realtà Rifugio' – forse un mondo che hai creato, una dimensione stabile che conosci, o un mitico 'Santuario Oltre il Caos'. Diventi un Noè cosmico, che cerca di salvare ciò che può essere salvato.",
+      choices: [
+        { "text": "Riesci a guidare molti verso un rifugio sicuro, diventando il loro leader e protettore.", "nextNodeId": "leader_esodo_realta_rifugio_finale" },
+        { "text": "L'esodo è difficile, molti si perdono, ma alcuni raggiungono la salvezza.", "nextNodeId": "esodo_difficile_alcuni_salvi_rifugio_finale_agrodolce" },
+        { "text": "Non riesci a convincere nessuno, o il rifugio si rivela un'illusione.", "nextNodeId": "fallimento_esodo_nessuno_segue_o_illusione_finale_triste" }
+      ],
+      isEnding: false
+  },
+  'accetta_flusso_imperfetto_trova_bellezza_significato_finale': {
+      id: 'accetta_flusso_imperfetto_trova_bellezza_significato_finale',
+      text: "Decidi di accettare il Flusso per quello che è: imperfetto, caotico, a volte doloroso, ma anche pieno di meraviglia, bellezza e potenziale infinito. Rinunci a tentare di 'risolverlo' o di trascenderlo completamente. Invece, scegli di trovare significato e bellezza nelle sue contraddizioni, di vivere pienamente ogni esperienza, di amare e creare nonostante l'incertezza. È una forma di illuminazione basata sull'accettazione radicale.",
+      choices: [],
+      isEnding: true,
+      endingText: "Nell'imperfezione del Flusso, trovi la tua perfetta, cangiante casa. La tua vita è una danza con l'infinito."
+  },
+  'kernel_distinto_ma_integrato_grazie_a_glifo_finale_principale_var': {
+      id: 'kernel_distinto_ma_integrato_grazie_a_glifo_finale_principale_var',
+      text: "Il Reset è completo, il Flusso Cangiante 2.0 risplende di nuova armonia. Grazie al Glifo di Stabilità Primordiale, la tua coscienza non si è dissolta completamente nel Punto Zero. Sei diventato il Kernel Logico, ma mantieni una traccia della tua individualità, una sorta di 'supervisore saggio' del nuovo Flusso. Osservi le nuove storie iniziare, con la possibilità, forse, di intervenire sottilmente, come un giardiniere che cura le sue piante più promettenti. Sei il fondamento e il testimone, una singolarità nel cuore della creazione.",
+      choices: [],
+      isEnding: true,
+      endingText: "Il Flusso canta attraverso di te, e tu canti attraverso il Flusso. Una nuova era è iniziata, e tu sei la sua prima, silente melodia."
+  },
+  'guarigione_armonica_flusso_moderata_finale': {
+      id: 'guarigione_armonica_flusso_moderata_finale',
+      text: "Il tuo tentativo di 'moderare' il Reset, usando il Glifo di Stabilità Primordiale, ha successo. La Dissonanza Cosmica viene neutralizzata, le ferite del Flusso si rimarginano, ma gran parte della sua storia, della sua diversità e della sua memoria viene preservata. Non è una tabula rasa, ma una 'Guarigione Profonda'. Il Flusso è rinnovato, più saggio, e tu sei riconosciuto come il suo Grande Guaritore, un'entità che ha saputo bilanciare la necessità del cambiamento con il rispetto per ciò che era.",
+      choices: [],
+      isEnding: true,
+      endingText: "Il Flusso respira di nuovo, grazie alla tua saggezza e al tuo coraggio. Sei il medico che ha curato l'anima dell'universo."
+  },
+  'mappa_flusso_caotico_ibrido_post_fallimento_moderazione': {
+      id: 'mappa_flusso_caotico_ibrido_post_fallimento_moderazione',
+      text: "Decidi di tentare l'impossibile: mappare il Flusso caotico-ibrido. È come disegnare una tempesta mentre ci sei dentro. Le tue vecchie conoscenze cartografiche sono quasi inutili. Devi sviluppare nuovi sensi, nuove logiche per interpretare questo ambiente in perenne mutazione. Potresti diventare il primo e unico navigatore di questa nuova, strana era del Flusso.",
+      choices: [
+        { "text": "Collaborare con il Cartografo (se ancora accessibile/funzionante) per questa impresa.", "nextNodeId": "collabora_cartografo_mappare_flusso_ibrido" },
+        { "text": "Perderti nel tentativo, la tua mente che si frammenta nel caos.", "nextNodeId": "perso_nel_caos_frammentazione_mentale_finale_negativo" },
+        { "text": "Scoprire 'isole di coerenza' inaspettate all'interno del caos.", "nextNodeId": "scopri_isole_coerenza_flusso_caotico_ibrido" }
+      ],
+      isEnding: false
+  },
+  'cerca_esseri_adattati_flusso_caotico_ibrido': {
+      id: 'cerca_esseri_adattati_flusso_caotico_ibrido',
+      text: "Ti metti alla ricerca di altri esseri che potrebbero essersi adattati a questo Flusso caotico-ibrido, o che potrebbero esservi nati. Trovi creature bizzarre, coscienze frammentate che hanno trovato una nuova forma di stabilità, o persino intere micro-civiltà che prosperano nelle nuove, strane leggi di questa realtà. Potrebbero essere alleati, minacce, o semplicemente nuove meraviglie da studiare.",
+      choices: [
+        { "text": "Tentare di comunicare con una 'civiltà del glitch'.", "nextNodeId": "comunica_civilta_del_glitch_flusso_ibrido" },
+        { "text": "Scoprire che alcuni 'frammenti' del vecchio Flusso si sono evoluti in modo aggressivo.", "nextNodeId": "frammenti_aggressivi_vecchio_flusso_ibrido_minaccia" }
+      ],
+      isEnding: false
+  },
+  'ritirati_frammento_stabile_flusso_caotico_ibrido': {
+      id: 'ritirati_frammento_stabile_flusso_caotico_ibrido',
+      text: "Trovi un piccolo 'frammento stabile' della vecchia realtà, un'isola di relativa normalità nel mezzo del Flusso caotico-ibrido. Ti ci ritiri per riposare, riflettere e pianificare la tua prossima mossa. Da qui, puoi osservare il caos circostante con una certa distanza, cercando di comprenderlo prima di avventurartici di nuovo.",
+      choices: [
+        { "text": "Usare questo frammento come base per studiare il Flusso ibrido.", "nextNodeId": "usa_frammento_stabile_base_studio_flusso_ibrido" },
+        { "text": "Tentare di 'espandere' questo frammento stabile (rischioso).", "nextNodeId": "espandi_frammento_stabile_flusso_ibrido_rischioso" }
+      ],
+      isEnding: false
+  },
+  'vita_contemplativa_bolla_realta_stabile_finale': {
+      id: 'vita_contemplativa_bolla_realta_stabile_finale',
+      text: "Scegli di rimanere nella tua Bolla di Realtà. Passano ere. Vivi un'esistenza di pace, riflessione e forse di creazione artistica o filosofica all'interno dei tuoi confini autoimposti. Il Flusso esterno con le sue turbolenze diventa un lontano ricordo, o un oggetto di studio distaccato. Hai trovato la tua fine, o una forma di immortalità serena ma limitata.",
+      choices: [],
+      isEnding: true,
+      endingText: "Nella tua bolla di quiete, il tempo scorre come un fiume tranquillo. Hai scelto la pace sull'avventura."
+  },
+  'osserva_flusso_esterno_da_bolla_realta': {
+      id: 'osserva_flusso_esterno_da_bolla_realta',
+      text: "Dalla sicurezza della tua Bolla, sviluppi metodi per osservare il Flusso caotico esterno. Vedi civiltà sorgere e cadere, nuove leggi della fisica emergere e svanire. Sei un testimone protetto, ma la tua conoscenza cresce. Forse un giorno, ciò che impari ti spingerà ad agire di nuovo.",
+      choices: [
+        { "text": "Condividere le tue osservazioni con altri esseri isolati o con il Flusso stesso (se possibile).", "nextNodeId": "condividi_osservazioni_da_bolla_con_flusso" },
+        { "text": "Decidere che è ora di uscire e intervenire.", "nextNodeId": "esci_da_bolla_realta_affronta_flusso_di_nuovo" }
+      ],
+      isEnding: false
+  },
+  'esci_da_bolla_realta_affronta_flusso_di_nuovo': {
+      id: 'esci_da_bolla_realta_affronta_flusso_di_nuovo',
+      text: "Dopo un periodo di riposo e riflessione nella tua Bolla di Realtà, senti che il richiamo del Flusso, o il senso di responsabilità, è troppo forte. Decidi di abbandonare la tua sicurezza e di avventurarti di nuovo nel caos, armato di nuova saggezza o di rinnovata determinazione.",
+      choices: [
+        { "text": "Tornare al Flusso caotico-ibrido, cercando di portare ordine o comprensione.", "nextNodeId": "mappa_flusso_caotico_ibrido_post_fallimento_moderazione" },
+        { "text": "Cercare un percorso verso un Flusso 'più stabile' o un'altra dimensione.", "nextNodeId": "cerca_percorso_flusso_stabile_altra_dimensione_da_bolla" }
+      ],
+      isEnding: false
+  },
+  'cerca_ancoraggio_temporale_linea_instabile': {
+      id: 'cerca_ancoraggio_temporale_linea_instabile',
+      text: "Per sopravvivere all'instabilità cronologica, cerchi un 'Ancoraggio Temporale' – un oggetto, un luogo, o persino un concetto che esista al di fuori delle fluttuazioni, o che le attraversi mantenendo la sua coerenza. Potrebbe essere una reliquia antica, un Glifo di Stabilità Temporale, o una connessione profonda con un'entità che padroneggia il tempo.",
+      choices: [
+        { "text": "Consultare il Cartografo o l'Oracolo per indizi su tali ancoraggi.", "nextNodeId": "consulta_cartografo_oracolo_ancoraggio_temporale" },
+        { "text": "Tentare di creare il tuo ancoraggio basato sulla tua volontà e comprensione del tempo (se elevata).", "nextNodeId": "crea_tuo_ancoraggio_temporale_volonta" }
+      ],
+      isEnding: false
+  },
+  'studia_sfrutta_glitch_temporali_linea_instabile': {
+      id: 'studia_sfrutta_glitch_temporali_linea_instabile',
+      text: "Invece di temere i glitch temporali, inizi a studiarli. Impari a prevederli, a navigarli, e forse persino a sfruttarli a tuo vantaggio. Potresti 'saltare' brevi periodi di tempo, percepire echi di decisioni non prese, o usare i paradossi per confondere i nemici. Diventi un 'Surfista del Tempo Rotto', che danza sull'orlo del paradosso.",
+      choices: [
+        { "text": "Usare questa abilità per missioni di infiltrazione o esplorazione rischiose.", "nextNodeId": "usa_glitch_temporali_missioni_riskiose" },
+        { "text": "Rischiare di attirare ancora di più l'attenzione dei Guardiani dei Cicli.", "nextNodeId": "attira_attenzione_guardiani_sfruttando_glitch" }
+      ],
+      isEnding: false
+  },
+  'cerca_guardiani_cicli_per_negoziare_linea_instabile': {
+      id: 'cerca_guardiani_cicli_per_negoziare_linea_instabile',
+      text: "Decidi che l'unica via è affrontare la fonte del problema. Cerchi attivamente i Guardiani dei Cicli, non per combatterli, ma per negoziare una soluzione, per chiedere la loro guida o il loro intervento per stabilizzare la linea temporale che hai disturbato. È un atto di coraggio, o di disperazione.",
+      choices: [
+        { "text": "Riesci a trovare un Guardiano disposto ad ascoltare.", "nextNodeId": "trova_guardiano_disposto_ascoltare_negoziazione" },
+        { "text": "La tua ricerca ti porta solo a ulteriori pericoli temporali.", "nextNodeId": "ricerca_guardiani_porta_pericoli_temporali_maggiori" }
+      ],
+      isEnding: false
+  },
+  'cerca_metodi_solidificare_linea_temporale_alterata': {
+      id: 'cerca_metodi_solidificare_linea_temporale_alterata',
+      text: "Perseguitato dalla paura, cerchi attivamente metodi per rendere permanente e stabile la linea temporale che hai creato. Questo potrebbe coinvolgere la ricerca di 'Punti di Ancoraggio Cronale', la riscrittura di 'Leggi Temporali Locali (se possibile)', o persino la distruzione di ogni traccia della linea temporale originale per prevenire una 'correzione'.",
+      choices: [
+        { "text": "Trovi un antico artefatto che si dice possa stabilizzare il tempo.", "nextNodeId": "trova_artefatto_stabilizzazione_temporale_alterata" },
+        { "text": "Le tue azioni attirano inevitabilmente i Guardiani dei Cicli.", "nextNodeId": "affronta_guardiani_cicli_dopo_riparazione" }
+      ],
+      isEnding: false
+  },
+  'prepara_difese_contro_guardiani_cicli_alterazione': {
+      id: 'prepara_difese_contro_guardiani_cicli_alterazione',
+      text: "Prevedendo una futura resa dei conti con i Guardiani dei Cicli, inizi a preparare difese. Non puoi sperare di sconfiggerli, ma forse puoi nasconderti, deviare la loro attenzione, o creare 'zone di nullità temporale' where il loro potere è limitato. È una corsa contro un nemico quasi onnipotente nel suo dominio.",
+      choices: [
+        { "text": "Creare un 'Rifugio Paradossale' where il tempo non scorre linearmente.", "nextNodeId": "crea_rifugio_paradossale_difesa_guardiani" },
+        { "text": "Cercare alleati che abbiano conti in sospeso con i Guardiani dei Cicli.", "nextNodeId": "cerca_alleati_contro_guardiani_cicli_difesa" }
+      ],
+      isEnding: false
+  },
+  'paranoia_consuma_isolamento_autoimposto_finale': {
+      id: 'paranoia_consuma_isolamento_autoimposto_finale',
+      text: "La costante paura della correzione temporale e l'ombra dei Guardiani dei Cicli ti consumano. Ti ritiri in un isolamento sempre più profondo, tagliando i ponti con il Flusso, forse creando una piccola bolla di realtà statica where speri di non essere trovato. La tua vita diventa un'attesa paranoica della fine, o un'esistenza limitata dalla tua stessa paura.",
+      choices: [],
+      isEnding: true,
+      endingText: "Nascosto nell'ombra del tempo che hai distorto, la tua unica compagnia è la paura."
   }
+  // ... (Blocchi 4, 5, 6, 7, 8, 9, 10 e placeholders precedentemente definiti) ...
 };
+
+// Dynamic placeholder generation
+const allReferencedNodeIds = new Set<string>();
+Object.values(explicitStoryNodes).forEach(node => {
+  const choices = Array.isArray(node.choices) ? node.choices : [];
+  choices.forEach(choice => {
+    if (choice.nextNodeId) {
+      allReferencedNodeIds.add(choice.nextNodeId);
+    }
+  });
+});
+
+allReferencedNodeIds.forEach(id => {
+  if (!explicitStoryNodes[id]) {
+    explicitStoryNodes[id] = createPlaceholderNodeData(id);
+  }
+});

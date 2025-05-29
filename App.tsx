@@ -16,7 +16,7 @@ import {
   KNOWLEDGE_ACQUIRED_TEXT,
   DEAD_END_TEXT
 } from './constants';
-import { THE_ADVENTURERS_GUILD_STORY, INITIAL_STORY_NODE_ID } from './storyData';
+import { explicitStoryNodes, INITIAL_STORY_NODE_ID } from './storyData'; // Changed THE_ADVENTURERS_GUILD_STORY to explicitStoryNodes
 import StoryDisplay from './components/StoryDisplay';
 import ChoiceSelector from './components/ChoiceSelector';
 import ErrorMessage from './components/ErrorMessage';
@@ -140,7 +140,7 @@ const App: React.FC = () => {
 
 
   useEffect(() => {
-    const storyGraph = THE_ADVENTURERS_GUILD_STORY;
+    const storyGraph = explicitStoryNodes; // Changed THE_ADVENTURERS_GUILD_STORY to explicitStoryNodes
     const initialNodeId = INITIAL_STORY_NODE_ID;
 
     if (storyGraph && Object.keys(storyGraph).length > 0 && initialNodeId && storyGraph[initialNodeId]) {
